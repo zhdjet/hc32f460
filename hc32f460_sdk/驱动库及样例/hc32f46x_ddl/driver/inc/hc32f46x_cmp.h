@@ -123,7 +123,7 @@ typedef enum en_cmp_inp4_sel
     CmpInp4None      = 0u,                      ///< None input
     CmpInp4PGAO      = 1u,                      ///< PGAO output
     CmpInp4PGAO_BP   = 2u,                      ///< PGAO_BP output
-    CmpInp4CMP1_INP4 = 3u,                      ///< CMP1_INP4
+    CmpInp4CMP1_INP4 = 4u,                      ///< CMP1_INP4
 } en_cmp_inp4_sel_t;
 
 /**

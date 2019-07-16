@@ -159,7 +159,7 @@ static uint8_t* USBD_HID_GetPos (void)
 }
 /**
  *******************************************************************************
- ** \brief SysTick IRQ function that get mouse posation and report it
+ ** \brief SysTick IRQ function that get mouse position and report it
  **
  ** \param [in]  None
  **

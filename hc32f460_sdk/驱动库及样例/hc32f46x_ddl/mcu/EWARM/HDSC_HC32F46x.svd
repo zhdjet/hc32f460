@@ -19734,7 +19734,7 @@
                         <field>
                             <name>INDEX</name>
                             <description>desc INDEX</description>
-                            <msb>1</msb>
+                            <msb>2</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>

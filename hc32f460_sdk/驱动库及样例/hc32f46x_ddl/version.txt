@@ -1,16 +1,19 @@
 version     date            comment
- 1.0.4      July 2	    1.modified SRAM_Init
-		            2.add SRAM_Init to clk_switch_sysclk sample, mainly setting sram 
-				read/write cycle
+1.0.4       July 16, 2019   1. modified CMP driver enumeration en_cmp_inp4_sel_t
+                            2. modify spelling mistake for "position"
+                            3. modify macro UART_DEBUG_PRINTF to hc32f46x_utility.h file
 
-            July 1, 2019   1. Fix bug for I2S_FuncCmd() function.
-                           2. Modify headfile hc32f46x.h for keyscan.
+            July 2, 2019    1. modified SRAM_Init
+                            2. add SRAM_Init to clk_switch_sysclk sample, mainly setting sram 
+                               read/write cycle
 
-            Jun 19, 2019   1. dma.c & dma.h
-			     - add readback to ensure write correct to DMA DMA_SetXx fun.
-		     	     - add wait running channel disable before DMA_ChannelCmd.
-			     - modified the functions DMA_SetXx & DMA_ChannelCmd void as en_result_t
-	
+            July 1, 2019    1. Fix bug for I2S_FuncCmd() function.
+                            2. Modify headfile hc32f46x.h for keyscan.
+
+            June 19, 2019   1. dma.c & dma.h
+                               - add readback to ensure write correct to DMA DMA_SetXx fun.
+                               - add wait running channel disable before DMA_ChannelCmd.
+                               - modified the functions DMA_SetXx & DMA_ChannelCmd void as en_result_t
 
             Jun 6, 2019     1. add USB CDC VCP 
                             2. comment assert() in usart baudrate failure case

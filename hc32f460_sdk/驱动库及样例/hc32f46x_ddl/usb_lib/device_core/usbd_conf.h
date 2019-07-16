@@ -128,7 +128,7 @@
 #define CDC_CMD_EP                        0x82  /* EP2 for CDC commands */
 #define APP_FOPS                          VCP_fops
 
-#define  USB_DESC_TYPE_BOS                0x0F
+#define USB_DESC_TYPE_BOS                 0x0F
 #define USB_DEVICE_CAPABITY_TYPE          0x10
 
 #define USBD_CFG_MAX_NUM                  1

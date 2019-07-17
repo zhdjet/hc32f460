@@ -465,6 +465,9 @@
 <FileName>hc32f46x_pwc.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32f46x_pwc.c</FilePath></File>
 <File>
+<FileName>hc32f46x_sram.c</FileName>
+<FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32f46x_sram.c</FilePath></File>
+<File>
 <FileName>hc32f46x_trng.c</FileName>
 <FileType>1</FileType><FilePath>..\..\..\..\driver\src\hc32f46x_trng.c</FilePath></File>
 

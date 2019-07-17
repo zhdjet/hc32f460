@@ -1969,6 +1969,9 @@
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32f46x_pwc.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32f46x_sram.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\..\..\..\driver\src\hc32f46x_timer0.c</name>
     </file>
 

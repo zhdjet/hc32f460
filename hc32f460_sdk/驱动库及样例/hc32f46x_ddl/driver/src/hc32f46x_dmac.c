@@ -1390,14 +1390,14 @@ en_result_t DMA_SetLLP(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, uint32_t u32Poi
 
 /**
  *******************************************************************************
- ** \brief  Set linked list pointer of the specified dma channel.
+ ** \brief  Set The DMA trigger source.
  **
  ** \param  [in] pstcDmaReg             The pointer to dma register
  ** \arg    M4_DMA1                     DMAC unit 1 registers
  ** \arg    M4_DMA2
  **
  ** \param  [in] u8Ch                   The specified dma channel.
- ** \param  [in] enSrc                  The DMA triggle source.
+ ** \param  [in] enSrc                  The DMA trigger source.
  **
  ** \retval None.
  **

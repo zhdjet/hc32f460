@@ -279,7 +279,7 @@ void PWC_PowerModeCfg(const stc_pwc_pwr_mode_cfg_t* pstcPwrMdCfg)
     ENABLE_PWR_REG_WRITE();
 
     M4_SYSREG->PWR_PWRC0 = (pstcPwrMdCfg->enPwrDownMd       |
-                           (pstcPwrMdCfg->enRLdo << 2)      |
+                           ((~pstcPwrMdCfg->enRLdo) << 2)   |
                            (pstcPwrMdCfg->enRetSram << 3)   |
                            (pstcPwrMdCfg->enIoRetain << 4));
 

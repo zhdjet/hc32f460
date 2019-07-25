@@ -40,63 +40,81 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file usbd_hid_core.h
+/** \file main.c
  **
- ** A detailed description is available at
- ** @link header file for the usbd_hid_core.c @endlink
+ ** \brief USB custom hid example.
  **
- **   - 2018-12-26  1.0  wangmin First version for USB demo.
+ **   - 2018-12-25  1.0  Wangmin First version for USB custom hid device demo.
  **
  ******************************************************************************/
-#ifndef __USB_HID_CORE_H_
-#define __USB_HID_CORE_H_
 
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include  "usbd_ioreq.h"
+#include "hc32_ddl.h"
+#include "usbd_usr.h"
+#include "usbd_desc.h"
+#include "usb_bsp.h"
 
 /*******************************************************************************
- * Global type definitions ('typedef')
+ * Local type definitions ('typedef')
  ******************************************************************************/
 
 /*******************************************************************************
- * Global pre-processor symbols/macros ('#define')
+ * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
+
+/*******************************************************************************
+ * Global variable definitions (declared in header file with 'extern')
+ ******************************************************************************/
+
+/*******************************************************************************
+ * Local function prototypes ('static')
+ ******************************************************************************/
+
+/*******************************************************************************
+ * Local variable definitions ('static')
+ ******************************************************************************/
+USB_OTG_CORE_HANDLE  USB_OTG_dev;
+
+/*******************************************************************************
+ * Function implementation - global ('extern') and local ('static')
+ ******************************************************************************/
+extern  void         USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev);
+
 /**
  *******************************************************************************
- ** \brief USBD_HID_Exported_Defines
+ ** \brief  main function
+ **
+ ** \param [in]  None
+ **
+ ** \retval int32_t Return value, if needed
  **
  ******************************************************************************/
-#define USB_HID_CONFIG_DESC_SIZ       41
-#define USB_HID_DESC_SIZ              9
-#define HID_MOUSE_REPORT_DESC_SIZE    74
+int32_t main (void)
+{
+    __IO uint32_t test = 0;
 
-#define HID_DESCRIPTOR_TYPE           0x21
-#define HID_REPORT_DESC               0x22
+    USBD_Init(&USB_OTG_dev,
+#ifdef USE_USB_OTG_FS
+              USB_OTG_FS_CORE_ID,
+#else
+              USB_OTG_HS_CORE_ID,
+#endif
+              &USR_desc,
+              &USBD_CUSTOMHID_cb,
+              &USR_cb);
 
-
-#define HID_REQ_SET_PROTOCOL          0x0B
-#define HID_REQ_GET_PROTOCOL          0x03
-
-#define HID_REQ_SET_IDLE              0x0A
-#define HID_REQ_GET_IDLE              0x02
-
-#define HID_REQ_SET_REPORT            0x09
-#define HID_REQ_GET_REPORT            0x01
-
-/*******************************************************************************
- * Global variable definitions ('extern')
- ******************************************************************************/
-extern USBD_Class_cb_TypeDef  USBD_HID_cb;
-/*******************************************************************************
-  Global function prototypes (definition in C source)
- ******************************************************************************/
-uint8_t USBD_HID_SendReport (USB_OTG_CORE_HANDLE  *pdev,
-                                 uint8_t *report,
-                                 uint16_t len);
-
-#endif  // __USB_HID_CORE_H_
+    while (1)
+    {
+        /* remote wakeup test */
+        if(test == 0x1)
+        {
+            USB_OTG_ActiveRemoteWakeup(&USB_OTG_dev);
+            test  = 0;
+        }
+    }
+}
 
 /*******************************************************************************
  * EOF (not truncated)

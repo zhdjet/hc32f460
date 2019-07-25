@@ -209,21 +209,6 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 
     PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USBFS, Enable);
 
-    PORT_SetBits(PortB, (Pin05 | Pin07));
-    stcPortInit.enPullUp = Enable;
-    stcPortInit.enPinMode = Pin_Mode_Out;
-    PORT_Init(PortB, (Pin05 | Pin07), &stcPortInit);
-//    while(1)
-//    {
-////        PORT_Toggle(PortB, (Pin05 | Pin07));
-//        M4_PORT->POTRB = (Pin05 | Pin07);
-//        __asm("nop");
-//        __asm("nop");
-//        __asm("nop");
-//        __asm("nop");
-//        __asm("nop");
-//
-//    }
 }
 
 /**

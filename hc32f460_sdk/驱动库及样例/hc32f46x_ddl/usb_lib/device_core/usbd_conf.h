@@ -79,7 +79,7 @@
 #define USBD_AUDIO_FREQ                 48000
 
 #define USBD_CFG_MAX_NUM                1 /* configuration numbers */
-#define USBD_ITF_MAX_NUM                1 /* interface numbers */
+//#define USBD_ITF_MAX_NUM                1 /* interface numbers */
 
 #define USB_MAX_STR_DESC_SIZ            64
 
@@ -101,8 +101,6 @@
     #define ZERO_IN_PACKET                512
     #define ZERO_OUT_PACKET               512
 #endif
-#define HID_IN_EP                       0x81
-#define HID_OUT_EP                      0x02
 
 #define HID_IN_PACKET                   4
 #define HID_OUT_PACKET                  4
@@ -123,9 +121,6 @@
                                                 APP_RX_DATA_SIZE*8/MAX_BAUDARATE*1000 should be > CDC_IN_FRAME_INTERVAL */
 #endif /* USE_USB_OTG_HS */
 
-#define CDC_IN_EP                         0x81  /* EP1 for data IN */
-#define CDC_OUT_EP                        0x01  /* EP1 for data OUT */
-#define CDC_CMD_EP                        0x82  /* EP2 for CDC commands */
 #define APP_FOPS                          VCP_fops
 
 #define USB_DESC_TYPE_BOS                 0x0F
@@ -135,12 +130,8 @@
 #define USBD_ITF_MAX_NUM                  1
 #define USB_MAX_STR_DESC_SIZ              64
 
-#define USBD_SELF_POWERED
-
 /* Class Layer Parameter */
 
-#define MSC_IN_EP                         0x81
-#define MSC_OUT_EP                        0x01
 #ifdef USE_USB_OTG_HS
     #ifdef USE_ULPI_PHY
         #define MSC_MAX_PACKET            512

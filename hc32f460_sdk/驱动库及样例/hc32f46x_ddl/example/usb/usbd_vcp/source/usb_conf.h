@@ -140,6 +140,11 @@
 *        so total FIFO size should be 1012 Only instead of 1024
 *******************************************************************************/
 
+/************** USB DEVICE ENDPOINT CONFIGURATION *****************************/
+#define CDC_IN_EP                         0x82  /* EP1 for data IN */
+#define CDC_OUT_EP                        0x02  /* EP1 for data OUT */
+#define CDC_CMD_EP                        0x81  /* EP2 for CDC commands */
+
 /****************** USB OTG HS CONFIGURATION **********************************/
 #ifdef USB_OTG_HS_CORE
     #define RX_FIFO_HS_SIZE                          512
@@ -169,9 +174,12 @@
 #ifdef USB_OTG_FS_CORE
     #define RX_FIFO_FS_SIZE                          128
     #define TX0_FIFO_FS_SIZE                          64
-    #define TX1_FIFO_FS_SIZE                         128
-    #define TX2_FIFO_FS_SIZE                          0
+    #define TX1_FIFO_FS_SIZE                          64
+    #define TX2_FIFO_FS_SIZE                          64
     #define TX3_FIFO_FS_SIZE                          0
+    #define TX4_FIFO_FS_SIZE                          0
+    #define TX5_FIFO_FS_SIZE                          0
+
 #ifdef USE_ULPI_PHY
     #define USB_OTG_ULPI_PHY_ENABLED
 #endif

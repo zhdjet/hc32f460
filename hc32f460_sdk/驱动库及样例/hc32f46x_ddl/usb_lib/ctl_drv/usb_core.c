@@ -306,7 +306,7 @@ USB_OTG_STS USB_OTG_SelectCore(USB_OTG_CORE_HANDLE *pdev,
         baseAddress                = USB_OTG_FS_BASE_ADDR;
         pdev->cfg.coreID           = USB_OTG_FS_CORE_ID;
         pdev->cfg.host_channels    = 12 ;
-        pdev->cfg.dev_endpoints    = 5 ;
+        pdev->cfg.dev_endpoints    = 6 ;
         pdev->cfg.TotalFifoSize    = 320; /* in 32-bits */
         pdev->cfg.phy_itface       = USB_OTG_EMBEDDED_PHY;
 
@@ -651,18 +651,18 @@ USB_OTG_STS USB_OTG_CoreInitDev (USB_OTG_CORE_HANDLE *pdev)
     uint32_t i;
     USB_OTG_DCFG_TypeDef    dcfg;
     USB_OTG_FSIZ_TypeDef    nptxfifosize;
-#ifdef USB_OTG_HS_CORE
+//#ifdef USB_OTG_HS_CORE
     USB_OTG_FSIZ_TypeDef    txfifosize;
-#endif
+//#endif
 //    USB_OTG_GRSTCTL_TypeDef greset = {.d32 = 0 };
-    USB_OTG_DCTL_TypeDef	  dctl;
+    USB_OTG_DCTL_TypeDef        dctl;
 
     depctl.d32 = 0;
     dcfg.d32 = 0;
     nptxfifosize.d32 = 0;
-#ifdef USB_OTG_HS_CORE
+//#ifdef USB_OTG_HS_CORE
     txfifosize.d32 = 0;
-#endif
+//#endif
     /* Device configuration register */
     dcfg.d32 = USB_OTG_READ_REG32( &pdev->regs.DREGS->DCFG);
     dcfg.b.perfrint = DCFG_FRAME_INTERVAL_80;
@@ -682,7 +682,7 @@ USB_OTG_STS USB_OTG_CoreInitDev (USB_OTG_CORE_HANDLE *pdev)
         nptxfifosize.b.startaddr = RX_FIFO_FS_SIZE;
         USB_OTG_WRITE_REG32( &pdev->regs.GREGS->GNPTXFSIZ, nptxfifosize.d32 );
 
-        #if 0
+        #if 1
         /* EP1 TX*/
         txfifosize.b.startaddr = nptxfifosize.b.startaddr + nptxfifosize.b.depth;
         txfifosize.b.depth = TX1_FIFO_FS_SIZE;
@@ -697,13 +697,17 @@ USB_OTG_STS USB_OTG_CoreInitDev (USB_OTG_CORE_HANDLE *pdev)
         txfifosize.b.startaddr += txfifosize.b.depth;
         txfifosize.b.depth = TX3_FIFO_FS_SIZE;
         USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[2], txfifosize.d32 );
+
+        /* EP4 TX*/
+        txfifosize.b.startaddr += txfifosize.b.depth;
+        txfifosize.b.depth = TX4_FIFO_FS_SIZE;
+        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[3], txfifosize.d32 );
+
+        /* EP5 TX*/
+        txfifosize.b.startaddr += txfifosize.b.depth;
+        txfifosize.b.depth = TX5_FIFO_FS_SIZE;
+        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[4], txfifosize.d32 );
         #endif
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[1], 0 );
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[2], 0 );
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[3], 0 );
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[4], 0 );
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[5], 0 );
-        USB_OTG_WRITE_REG32( &pdev->regs.GREGS->DPTXFSIZ[6], 0 );
     }
 #endif
 #ifdef USB_OTG_HS_CORE

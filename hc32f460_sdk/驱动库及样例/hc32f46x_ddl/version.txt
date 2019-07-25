@@ -1,5 +1,14 @@
 version     date            comment
-1.0.4       July 17, 2019   1. push usb_cdc_vcp sample
+1.0.4       
+            July 25, 2019   1.Modify usb_core.c, Configuration FIFO for each IN ENDPOINT.
+                            2.Add device class hid_custom.
+                              Add device class composite device(HID + CDC)
+                            3.modify device class name from "hid" to "hid_mouse".
+                              modify device class name from "vcp" to "cdc_vcp"
+                            4.Add example hid_custom.
+                              Add example composite device cdc_hid
+
+            July 17, 2019   1. push usb_cdc_vcp sample
                             2. modify *.ini file for MDK
                             3. modify project setting files due to sram configure
                             4. sync *.sfr with trunk

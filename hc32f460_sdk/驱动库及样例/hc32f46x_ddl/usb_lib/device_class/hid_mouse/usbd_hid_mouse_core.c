@@ -62,7 +62,7 @@
   *             - The Boot Interface Subclass
   *             - The Mouse protocol
   *             - Usage Page : Generic Desktop
-  *             - Usage : Joystick)
+  *             - Usage : Joystick
   *             - Collection : Application
   *
   * @note     In HS mode and when the DMA is used, all variables and data structures
@@ -76,7 +76,7 @@
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include "usbd_hid_core.h"
+#include "usbd_hid_mouse_core.h"
 #include "usbd_desc.h"
 #include "usbd_req.h"
 /*******************************************************************************
@@ -94,15 +94,15 @@
 /*******************************************************************************
  * Local function prototypes ('static')
  ******************************************************************************/
-static uint8_t  USBD_HID_Init (void  *pdev,
+uint8_t  USBD_HID_Init (void  *pdev,
                                uint8_t cfgidx);
-static uint8_t  USBD_HID_DeInit (void  *pdev,
+uint8_t  USBD_HID_DeInit (void  *pdev,
                                  uint8_t cfgidx);
-static uint8_t  USBD_HID_Setup (void  *pdev,
+uint8_t  USBD_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req);
-static uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
-static uint8_t  USBD_HID_DataIn (void  *pdev, uint8_t epnum);
-static uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
+uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
+uint8_t  USBD_HID_DataIn (void  *pdev, uint8_t epnum);
+uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
@@ -299,7 +299,7 @@ static uint8_t u8HidRevBuf[4];
  ** \param  cfgidx: Configuration index
  ** \retval status
  ******************************************************************************/
-static uint8_t  USBD_HID_Init (void  *pdev,
+uint8_t  USBD_HID_Init (void  *pdev,
                                uint8_t cfgidx)
 {
     /* Open EP IN */
@@ -332,7 +332,7 @@ static uint8_t  USBD_HID_Init (void  *pdev,
  ** \param  cfgidx: Configuration index
  ** \retval status
  ******************************************************************************/
-static uint8_t  USBD_HID_DeInit (void  *pdev,
+uint8_t  USBD_HID_DeInit (void  *pdev,
                                  uint8_t cfgidx)
 {
     /* Close HID EPs */
@@ -349,7 +349,7 @@ static uint8_t  USBD_HID_DeInit (void  *pdev,
  ** \param  req: usb requests
  ** \retval status
  ******************************************************************************/
-static uint8_t  USBD_HID_Setup (void  *pdev,
+uint8_t  USBD_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req)
 {
     uint16_t len = 0;
@@ -457,7 +457,7 @@ static uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
   ** \param  epnum: endpoint index
   ** \retval status
  ******************************************************************************/
-static uint8_t  USBD_HID_DataIn (void  *pdev,
+uint8_t  USBD_HID_DataIn (void  *pdev,
                               uint8_t epnum)
 {
     /* Ensure that the FIFO is empty before a new transfer, this condition could
@@ -466,7 +466,7 @@ static uint8_t  USBD_HID_DataIn (void  *pdev,
     return USBD_OK;
 }
 
-static uint8_t  USBD_HID_DataOut (void  *pdev,
+uint8_t  USBD_HID_DataOut (void  *pdev,
                               uint8_t epnum)
 {
 

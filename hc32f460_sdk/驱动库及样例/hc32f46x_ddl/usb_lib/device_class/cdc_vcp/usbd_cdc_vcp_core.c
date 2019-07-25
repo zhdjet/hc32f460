@@ -97,7 +97,7 @@
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include "usbd_cdc_core.h"
+#include "usbd_cdc_vcp_core.h"
 #include "usbd_desc.h"
 #include "usbd_req.h"
 
@@ -121,13 +121,13 @@ extern uint8_t USBD_DeviceDesc   [USB_SIZ_DEVICE_DESC];
 /*********************************************
    CDC Device library callbacks
  *********************************************/
-static uint8_t  usbd_cdc_Init        (void  *pdev, uint8_t cfgidx);
-static uint8_t  usbd_cdc_DeInit      (void  *pdev, uint8_t cfgidx);
-static uint8_t  usbd_cdc_Setup       (void  *pdev, USB_SETUP_REQ *req);
-static uint8_t  usbd_cdc_EP0_RxReady (void *pdev);
-static uint8_t  usbd_cdc_DataIn      (void *pdev, uint8_t epnum);
-static uint8_t  usbd_cdc_DataOut     (void *pdev, uint8_t epnum);
-static uint8_t  usbd_cdc_SOF         (void *pdev);
+uint8_t  usbd_cdc_Init        (void  *pdev, uint8_t cfgidx);
+uint8_t  usbd_cdc_DeInit      (void  *pdev, uint8_t cfgidx);
+uint8_t  usbd_cdc_Setup       (void  *pdev, USB_SETUP_REQ *req);
+uint8_t  usbd_cdc_EP0_RxReady (void *pdev);
+uint8_t  usbd_cdc_DataIn      (void *pdev, uint8_t epnum);
+uint8_t  usbd_cdc_DataOut     (void *pdev, uint8_t epnum);
+uint8_t  usbd_cdc_SOF         (void *pdev);
 
 /*********************************************
    CDC specific management functions
@@ -427,7 +427,7 @@ __USB_ALIGN_BEGIN uint8_t usbd_cdc_OtherCfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __USB_
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  usbd_cdc_Init (void  *pdev, uint8_t cfgidx)
+uint8_t  usbd_cdc_Init (void  *pdev, uint8_t cfgidx)
 {
     uint8_t *pbuf;
 
@@ -472,7 +472,7 @@ static uint8_t  usbd_cdc_Init (void  *pdev, uint8_t cfgidx)
   * @param  cfgidx: Configuration index
   * @retval status
   */
-static uint8_t  usbd_cdc_DeInit (void  *pdev, uint8_t cfgidx)
+uint8_t  usbd_cdc_DeInit (void  *pdev, uint8_t cfgidx)
 {
     /* Open EP IN */
     DCD_EP_Close(pdev, CDC_IN_EP);
@@ -496,7 +496,7 @@ static uint8_t  usbd_cdc_DeInit (void  *pdev, uint8_t cfgidx)
   * @param  req: usb requests
   * @retval status
   */
-static uint8_t  usbd_cdc_Setup (void  *pdev,
+uint8_t  usbd_cdc_Setup (void  *pdev,
                                 USB_SETUP_REQ *req)
 {
     uint16_t len=USB_CDC_DESC_SIZ;
@@ -592,7 +592,7 @@ static uint8_t  usbd_cdc_Setup (void  *pdev,
   * @param  pdev: device device instance
   * @retval status
   */
-static uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
+uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
 {
     if (cdcCmd != NO_CMD)
     {
@@ -612,7 +612,7 @@ static uint8_t  usbd_cdc_EP0_RxReady (void  *pdev)
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
+uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
 {
     uint16_t USB_Tx_ptr;
     uint16_t USB_Tx_length;
@@ -656,7 +656,7 @@ static uint8_t  usbd_cdc_DataIn (void *pdev, uint8_t epnum)
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
+uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
 {
     uint16_t USB_Rx_Cnt;
 
@@ -683,7 +683,7 @@ static uint8_t  usbd_cdc_DataOut (void *pdev, uint8_t epnum)
   * @param  epnum: endpoint number
   * @retval status
   */
-static uint8_t  usbd_cdc_SOF (void *pdev)
+uint8_t  usbd_cdc_SOF (void *pdev)
 {
     static uint32_t FrameCount = 0;
 

@@ -54,7 +54,7 @@
  * Include files
  ******************************************************************************/
 #include "hc32_ddl.h"
-#include "usbd_cdc_core.h"
+#include "usbd_cdc_vcp_core.h"
 #include "usbd_conf.h"
 
 /* C binding of definitions if building with C++ compiler */

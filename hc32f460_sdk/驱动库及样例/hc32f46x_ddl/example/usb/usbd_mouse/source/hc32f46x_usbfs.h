@@ -77,7 +77,7 @@
 #include "usbd_ioreq.h"
 #include "usbd_req.h"
 
-#include "usbd_hid_core.h"
+#include "usbd_hid_mouse_core.h"
 
 
 /*******************************************************************************

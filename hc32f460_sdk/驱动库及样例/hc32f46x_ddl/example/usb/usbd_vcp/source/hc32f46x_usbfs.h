@@ -77,7 +77,7 @@
 #include "usbd_ioreq.h"
 #include "usbd_req.h"
 
-#include "usbd_cdc_core.h"
+#include "usbd_cdc_vcp_core.h"
 
 
 /*******************************************************************************

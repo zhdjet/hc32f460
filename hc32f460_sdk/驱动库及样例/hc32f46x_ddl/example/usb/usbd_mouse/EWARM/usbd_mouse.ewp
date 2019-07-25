@@ -318,7 +318,7 @@
           <custom>{PROJ_MIDWARE_INC}</custom>
           <state>$PROJ_DIR$\..\..\..\..\usb_lib\ctl_drv</state>
           <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_core</state>
-          <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid</state>
+          <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid_mouse</state>
 
         </option>
         <option>
@@ -1284,7 +1284,7 @@
           <custom>{PROJ_MIDWARE_INC}</custom>
           <state>$PROJ_DIR$\..\..\..\..\usb_lib\ctl_drv</state>
           <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_core</state>
-          <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid</state>
+          <state>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid_mouse</state>
 
           <state>$PROJ_DIR$\..\..\..\..\utility</state>
         </option>
@@ -2007,7 +2007,7 @@
   <group>
     <name>device_class</name>
   <file>
-      <name>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid\usbd_hid_core.c</name>
+      <name>$PROJ_DIR$\..\..\..\..\usb_lib\device_class\hid_mouse\usbd_hid_mouse_core.c</name>
   </file>
   </group>
 

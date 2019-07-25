@@ -373,7 +373,7 @@
               <MiscControls>--diag_suppress=186,66</MiscControls>
               <Define>__DEBUG,HC32F46x,USE_DEVICE_DRIVER_LIB</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\..\..\mcu\common;..\source;..\..\..\..\driver\inc;;..\..\..\..\usb_lib\device_core;..\..\..\..\usb_lib\device_class\hid;..\..\..\..\usb_lib\ctl_drv</IncludePath>
+              <IncludePath>..\..\..\..\mcu\common;..\source;..\..\..\..\driver\inc;;..\..\..\..\usb_lib\device_core;..\..\..\..\usb_lib\device_class\hid_mouse;..\..\..\..\usb_lib\ctl_drv</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -511,9 +511,9 @@
     <GroupName>device_class</GroupName>
     <Files>
     <File>
-      <FileName>usbd_hid_core.c</FileName>
+      <FileName>usbd_hid_mouse_core.c</FileName>
       <FileType>1</FileType>
-      <FilePath>..\..\..\..\usb_lib\device_class\hid\usbd_hid_core.c</FilePath>
+      <FilePath>..\..\..\..\usb_lib\device_class\hid_mouse\usbd_hid_mouse_core.c</FilePath>
     </File>
     </Files>
   </Group>

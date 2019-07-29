@@ -202,16 +202,6 @@ static void SysClkIni(void)
 
     /* Set USB clock source */
     CLK_SetUsbClkSource(ClkUsbSrcUpllp);
-
-#if 0
-    /* Clk output.*/
-    stcOutputClkCfg.enOutputSrc = ClkOutputSrcUpllp;
-    stcOutputClkCfg.enOutputDiv = ClkOutputDiv8;
-    CLK_OutputClkConfig(ClkOutputCh1,&stcOutputClkCfg);
-    CLK_OutputClkCmd(ClkOutputCh1,Enable);
-
-    PORT_SetFunc(PortA, Pin08, Func_Mclkout, Disable);
-#endif
 }
 
 static void LedPortIni(void)
@@ -285,6 +275,7 @@ static void SW2_ExitIntIni(void)
  ******************************************************************************/
 void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 {
+    stc_port_init_t stcPortInit;
     /* clock config */
     SysClkIni();
 
@@ -297,12 +288,15 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
     printf("USBFS start !!\n");
 
     /* port config */
-    PORT_SetFunc(PortA, Pin08, Func_UsbF, Disable); //SOF
+    /* Disable digital function for DM DP */
+    MEM_ZERO_STRUCT(stcPortInit);
+    stcPortInit.enPinMode = Pin_Mode_Ana;
+    PORT_Init(PortA, Pin11, &stcPortInit);
+    PORT_Init(PortA, Pin12, &stcPortInit);
+    //PORT_SetFunc(PortA, Pin08, Func_UsbF, Disable); //SOF
     PORT_SetFunc(PortA, Pin09, Func_UsbF, Disable); //VBUS
-    PORT_SetFunc(PortA, Pin10, Func_UsbF, Disable); //ID
     PORT_SetFunc(PortA, Pin11, Func_UsbF, Disable); //DM
     PORT_SetFunc(PortA, Pin12, Func_UsbF, Disable); //DP
-    PORT_SetFunc(PortB, Pin08, Func_UsbF, Disable); //DRVVBUS
 
     PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USBFS, Enable);
 }
@@ -341,17 +335,7 @@ void USB_OTG_BSP_EnableInterrupt(void)
  ******************************************************************************/
 void USB_OTG_BSP_DriveVBUS(uint32_t speed, uint8_t state)
 {
-#if 0
-    /* Vbus control */
-    M4_PORT->PWPR = 0xA501;
-#if (USB_OTG_FS_BASE_ADDR == 0x400c0000) && defined USE_USB_OTG_FS
-    M4_PORT->PFSR006 = 0x0000;
-    M4_PORT->PCR006 = 0x0003;
-#else
-    M4_PORT->PFSR004 = 0x0000;
-    M4_PORT->PCR004 = 0x0003;
-#endif
-#endif
+
 }
 
 /**

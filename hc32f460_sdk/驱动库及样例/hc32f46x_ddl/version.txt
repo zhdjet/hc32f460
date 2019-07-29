@@ -1,5 +1,8 @@
 version     date            comment
 1.0.4       
+            July 29, 2019   1.modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
+                            2.modify the port configuration for USB example.
+
             July 25, 2019   1.Modify usb_core.c, Configuration FIFO for each IN ENDPOINT.
                             2.Add device class hid_custom.
                               Add device class composite device(HID + CDC)

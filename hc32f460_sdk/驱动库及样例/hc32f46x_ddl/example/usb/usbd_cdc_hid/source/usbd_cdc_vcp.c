@@ -123,24 +123,12 @@ static uint16_t VCP_Init(void)
 
     MEM_ZERO_STRUCT(stcInitCfg);
     MEM_ZERO_STRUCT(stcIrqRegiCfg);
-#if 0
-    // USART1
-    PORT_SetFunc(PortB, Pin01, Func_Usart1_Rx, Disable); //RX
-    PORT_SetFunc(PortB, Pin00, Func_Usart1_Tx, Disable); //TX
-    PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USART1, Enable);
-
-    // USART3
-    /* PB04 --> RX, PB05 --> TX for full-duplex */
-    PORT_SetFunc(PortB, Pin04, Func_Usart3_Rx, Disable); //RX
-    PORT_SetFunc(PortB, Pin05, Func_Usart3_Tx, Disable); //TX
-    PORT_DebugPortSetting(TRST, Disable);
-    PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USART3, Enable);
-#endif
 
     /* PC13 --> RX, PH02 --> TX for full-duplex */
     PORT_SetFunc(PortC, Pin13, Func_Usart4_Rx, Disable); //RX
     PORT_SetFunc(PortH, Pin02, Func_Usart4_Tx, Disable); //TX
     PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USART4, Enable);
+
     stcInitCfg.enClkMode        = UsartIntClkCkNoOutput;
     stcInitCfg.enClkDiv         = UsartClkDiv_1;
     stcInitCfg.enDataLength     = UsartDataBits8;

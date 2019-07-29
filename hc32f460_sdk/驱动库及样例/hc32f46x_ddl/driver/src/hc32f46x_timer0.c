@@ -121,6 +121,10 @@
 (   ((x) == Tim0_Sync)                             ||                          \
     ((x) == Tim0_Async))
 
+/* Parameter validity check for counter clock mode for M4_TMR01. */
+#define IS_VALID_CLK_MODE_UNIT01(x)                                            \
+(    (x) == Tim0_Async)
+
 /* Parameter validity check for external trigger event. */
 #define IS_VALID_TRIG_SRC_EVENT(x)                                             \
 (   (((x) >= EVT_PORT_EIRQ0) && ((x) <= EVT_PORT_EIRQ15))              ||      \
@@ -474,6 +478,11 @@ void TIMER0_BaseInit(M4_TMR0_TypeDef* pstcTim0Reg,en_tim0_channel_t enCh,
     DDL_ASSERT(IS_VALID_CLK_SYN_SRC(pstcBaseInit->Tim0_SyncClockSource));
     DDL_ASSERT(IS_VALID_CLK_ASYN_SRC(pstcBaseInit->Tim0_AsyncClockSource));
     DDL_ASSERT(IS_VALID_CLK_MODE(pstcBaseInit->Tim0_CounterMode));
+
+    if((M4_TMR01 == pstcTim0Reg)&&(Tim0_ChannelA == enCh))
+    {
+        DDL_ASSERT(IS_VALID_CLK_MODE_UNIT01(pstcBaseInit->Tim0_CounterMode));
+    }
 
     /*Read current BCONR register */
     stcBconrTmp = pstcTim0Reg->BCONR_f;

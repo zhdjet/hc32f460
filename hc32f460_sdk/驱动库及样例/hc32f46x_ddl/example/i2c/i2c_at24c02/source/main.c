@@ -201,6 +201,46 @@ static uint8_t E2_SendAdr(uint8_t u8Adr)
     return I2C_RET_OK;
 }
 
+/**
+ ******************************************************************************
+ ** \brief  Send data address to e2prom
+ **
+ ** \param  u8DataAdr  Data address to be send
+ **
+ ** \retval Process result
+ **         - I2C_RET_ERROR  Send failed
+ **         - I2C_RET_OK     Send success
+ ******************************************************************************/
+static uint8_t E2_SendDataAdr(uint8_t u8DataAdr)
+{
+    uint32_t u32TimeOut = TIMEOUT;
+
+    /* Wait tx buffer empty */
+    u32TimeOut = TIMEOUT;
+    while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
+    {
+        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+    }
+
+    /* Send one byte data */
+    I2C_SendData(I2C_CH, u8DataAdr);
+
+    /* Wait transfer end*/
+    u32TimeOut = TIMEOUT;
+    while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
+    {
+        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+    }
+
+    /* Check ACK */
+    u32TimeOut = TIMEOUT;
+    while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    {
+        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+    }
+
+    return I2C_RET_OK;
+}
 
 /**
  ******************************************************************************
@@ -492,7 +532,7 @@ int32_t main(void)
     u8Ret = E2_StartOrRestart(GENERATE_START);
     u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr(DATA_TEST_ADDR);
+    u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
     u8Ret = E2_WriteData(u8TxBuf, 1);
     JudgeResult(u8Ret);
@@ -507,7 +547,7 @@ int32_t main(void)
     JudgeResult(u8Ret);
     u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr(DATA_TEST_ADDR);
+    u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
 
     u8Ret = E2_StartOrRestart(GENERATE_RESTART);
@@ -535,7 +575,7 @@ int32_t main(void)
     JudgeResult(u8Ret);
     u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr(DATA_TEST_ADDR);
+    u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
     u8Ret = E2_WriteData(u8TxBuf, PAGE_LEN);
     JudgeResult(u8Ret);
@@ -550,7 +590,7 @@ int32_t main(void)
     JudgeResult(u8Ret);
     u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr(DATA_TEST_ADDR);
+    u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
 
     u8Ret = E2_StartOrRestart(GENERATE_RESTART);

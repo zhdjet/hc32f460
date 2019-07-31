@@ -1,5 +1,7 @@
 version     date            comment
 1.0.4       
+            July 31, 2019   1.Fix bug for i2c_at24c02 example.
+
             July 29, 2019   1.modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
                             2.modify the port configuration for USB example.
 

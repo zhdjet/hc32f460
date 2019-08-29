@@ -67,24 +67,24 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define IMAGE_BUFFER_SIZE    720
+#define IMAGE_BUFFER_SIZE    720u
 
-#define BUTTON_PORT         PortD
-#define BUTTON_PIN          Pin03
+#define BUTTON_PORT         (PortD)
+#define BUTTON_PIN          (Pin03)
 
-#define GET_BUTTON_KEY()    PORT_GetBit(PortD, Pin03)
+#define GET_BUTTON_KEY()    (PORT_GetBit(PortD, Pin03))
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT          PortE
-#define  LED0_PIN           Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT          PortA
-#define  LED1_PIN           Pin07
+#define  LED1_PORT          (PortA)
+#define  LED1_PIN           (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()      PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()      PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* USBH_USR_Private_Macros */
 extern USB_OTG_CORE_HANDLE          USB_OTG_Core;
@@ -94,36 +94,36 @@ extern USB_OTG_CORE_HANDLE          USB_OTG_Core;
  * Local variable definitions ('static')
  ******************************************************************************/
 uint8_t USBH_USR_ApplicationState = USH_USR_FS_INIT;
-uint8_t filenameString[15]  = {0};
+uint8_t filenameString[15]  = {0u};
 
 FATFS fatfs;
 FIL file;
 uint8_t Image_Buf[IMAGE_BUFFER_SIZE];
-uint8_t line_idx = 0;
+uint8_t line_idx = 0u;
 
 /*  Points to the DEVICE_PROP structure of current device */
 /*  The purpose of this register is to speed up the execution */
 
 USBH_Usr_cb_TypeDef USR_cb =
 {
-    USBH_USR_Init,
-    USBH_USR_DeInit,
-    USBH_USR_DeviceAttached,
-    USBH_USR_ResetDevice,
-    USBH_USR_DeviceDisconnected,
-    USBH_USR_OverCurrentDetected,
-    USBH_USR_DeviceSpeedDetected,
-    USBH_USR_Device_DescAvailable,
-    USBH_USR_DeviceAddressAssigned,
-    USBH_USR_Configuration_DescAvailable,
-    USBH_USR_Manufacturer_String,
-    USBH_USR_Product_String,
-    USBH_USR_SerialNum_String,
-    USBH_USR_EnumerationDone,
-    USBH_USR_UserInput,
-    USBH_USR_MSC_Application,
-    USBH_USR_DeviceNotSupported,
-    USBH_USR_UnrecoveredError
+    &USBH_USR_Init,
+    &USBH_USR_DeInit,
+    &USBH_USR_DeviceAttached,
+    &USBH_USR_ResetDevice,
+    &USBH_USR_DeviceDisconnected,
+    &USBH_USR_OverCurrentDetected,
+    &USBH_USR_DeviceSpeedDetected,
+    &USBH_USR_Device_DescAvailable,
+    &USBH_USR_DeviceAddressAssigned,
+    &USBH_USR_Configuration_DescAvailable,
+    &USBH_USR_Manufacturer_String,
+    &USBH_USR_Product_String,
+    &USBH_USR_SerialNum_String,
+    &USBH_USR_EnumerationDone,
+    &USBH_USR_UserInput,
+    &USBH_USR_MSC_Application,
+    &USBH_USR_DeviceNotSupported,
+    &USBH_USR_UnrecoveredError
 
 };
 
@@ -194,7 +194,7 @@ typedef struct
 
 BMP_POINT point;
 
-#define RGB565CONVERT(red, green, blue) (uint16_t) (((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3))
+#define RGB565CONVERT(red, green, blue) (uint16_t) ((((red) >> 3u) << 11u) | (((green) >> 2u) << 5u) | ((blue) >> 3u))
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -208,12 +208,12 @@ BMP_POINT point;
  ******************************************************************************/
 void USBH_USR_Init(void)
 {
-    static uint8_t startup = 0;
+    static uint8_t startup = 0u;
     stc_port_init_t stcPortInit;
 
-    if(startup == 0 )
+    if(startup == 0u )
     {
-        startup = 1;
+        startup = 1u;
 
         MEM_ZERO_STRUCT(stcPortInit);
         /*initiallize LED port*/
@@ -349,13 +349,17 @@ void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 
     id = itfDesc;
 
-    if((*id).bInterfaceClass  == 0x08)
+    if((*id).bInterfaceClass  == 0x08u)
     {
         printf((void *)MSG_MSC_CLASS);
     }
-    else if((*id).bInterfaceClass  == 0x03)
+    else if((*id).bInterfaceClass  == 0x03u)
     {
         printf((void *)MSG_HID_CLASS);
+    }
+    else
+    {
+        //
     }
 }
 
@@ -434,9 +438,7 @@ USBH_USR_Status USBH_USR_UserInput(void)
     /*Key B3 is in polling mode to detect user action */
     if(GET_BUTTON_KEY() == Reset)
     {
-
         usbh_usr_status = USBH_USR_RESP_OK;
-
     }
 
     return usbh_usr_status;
@@ -464,12 +466,13 @@ int USBH_USR_MSC_Application(void)
     FRESULT res;
     uint8_t writeTextBuff[] = "HDSC Connectivity line Host Demo application using FAT_FS   ";
     uint16_t bytesWritten, bytesToWrite;
+    uint32_t u32DevConnectTmp = 0ul;
 
     switch(USBH_USR_ApplicationState)
     {
         case USH_USR_FS_INIT:
             /* Initialises the File System*/
-            if ( f_mount( 0, &fatfs ) != FR_OK )
+            if ( f_mount( 0u, &fatfs ) != FR_OK )
             {
                 /* efs initialisation fails*/
                 printf("> Cannot initialize File System.\n");
@@ -493,18 +496,18 @@ int USBH_USR_MSC_Application(void)
 
         case USH_USR_FS_READLIST:
             printf((void *)MSG_ROOT_CONT);
-            Explore_Disk("0:/", 1);
-            line_idx = 0;
+            Explore_Disk("0:/", 1u);
+            line_idx = 0u;
             USBH_USR_ApplicationState = USH_USR_FS_WRITEFILE;
             break;
 
         case USH_USR_FS_WRITEFILE:
             printf("Press USER KEY to write file\n");
-            USB_OTG_BSP_mDelay(100);
+            USB_OTG_BSP_mDelay(100ul);
 
             /*Key B3 in polling*/
-            while((HCD_IsDeviceConnected(&USB_OTG_Core)) && \
-                (GET_BUTTON_KEY() != Reset))
+            u32DevConnectTmp = HCD_IsDeviceConnected(&USB_OTG_Core);
+            while((GET_BUTTON_KEY() != Reset) && u32DevConnectTmp)
             {
                 Toggle_Leds();
             }
@@ -518,15 +521,15 @@ int USBH_USR_MSC_Application(void)
             }
 
             /* Register work area for logical drives */
-            f_mount(0, &fatfs);
+            f_mount(0u, &fatfs);
 
             if(f_open(&file, "0:HC32.TXT",FA_CREATE_ALWAYS | FA_WRITE) == FR_OK)
             {
                 /* Write buffer to file */
-                bytesToWrite = sizeof(writeTextBuff);
-                res= f_write (&file, writeTextBuff, bytesToWrite, (void *)&bytesWritten);
+                bytesToWrite = (uint16_t)sizeof(writeTextBuff);
+                res= f_write (&file, writeTextBuff, (UINT)bytesToWrite, (void *)&bytesWritten);
 
-                if((bytesWritten == 0) || (res != FR_OK)) /*EOF or Error*/
+                if((bytesWritten == 0u) || (res != FR_OK)) /*EOF or Error*/
                 {
                     printf("> HC32.TXT CANNOT be writen.\n");
                 }
@@ -537,7 +540,7 @@ int USBH_USR_MSC_Application(void)
 
                 /*close file and filesystem*/
                 f_close(&file);
-                f_mount(0, NULL);
+                f_mount(0u, NULL);
             }
             else
             {
@@ -551,25 +554,25 @@ int USBH_USR_MSC_Application(void)
 
         case USH_USR_FS_DRAW:
             /*Key B3 in polling*/
-            while((HCD_IsDeviceConnected(&USB_OTG_Core)) && \
-            (GET_BUTTON_KEY() != Reset))
+            u32DevConnectTmp = HCD_IsDeviceConnected(&USB_OTG_Core);
+            while((GET_BUTTON_KEY() != Reset) && u32DevConnectTmp)
             {
                 Toggle_Leds();
             }
 
             while(HCD_IsDeviceConnected(&USB_OTG_Core))
             {
-                if ( f_mount( 0, &fatfs ) != FR_OK )
+                if ( f_mount( 0u, &fatfs ) != FR_OK )
                 {
                     /* fat_fs initialisation fails*/
-                    return(-1);
+                    return((int)(-1));
                 }
-                return Image_Browser("0:/");
+                return (int)Image_Browser("0:/");
             }
             break;
         default: break;
     }
-    return(0);
+    return((int)0);
 }
 
 /**
@@ -586,6 +589,7 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
     DIR dir;
     char *fn;
     char tmp[14];
+    uint32_t u32DevConnectTmp = 0ul;
 
     res = f_opendir(&dir, path);
     if (res == FR_OK)
@@ -593,7 +597,7 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
         while(HCD_IsDeviceConnected(&USB_OTG_Core))
         {
             res = f_readdir(&dir, &fno);
-            if (res != FR_OK || fno.fname[0] == 0)
+            if ((res != FR_OK )|| (fno.fname[0] == 0))
             {
                 break;
             }
@@ -606,24 +610,25 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
             strcpy(tmp, fn);
 
             line_idx++;
-            if(line_idx > 9)
+            if(line_idx > 9u)
             {
-                line_idx = 0;
+                line_idx = 0u;
                 printf("Press USER KEY to continue...\n");
 
                 /*Key B3 in polling*/
-                while((HCD_IsDeviceConnected(&USB_OTG_Core)) && \
-                (GET_BUTTON_KEY() != Reset))
+                u32DevConnectTmp = HCD_IsDeviceConnected(&USB_OTG_Core);
+                while((GET_BUTTON_KEY() != Reset) && u32DevConnectTmp)
                 {
                     Toggle_Leds();
                 }
             }
 
-            if(recu_level == 1)
+            if(recu_level == 1u)
             {
                 printf("   |__");
             }
-            else if(recu_level == 2)
+            //else if(recu_level == 2u)
+            else
             {
                 printf("   |   |__");
             }
@@ -638,9 +643,9 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
                 printf((void *)tmp);
             }
 
-            if(((fno.fattrib & AM_MASK) == AM_DIR)&&(recu_level == 1))
+            if(((fno.fattrib & AM_MASK) == AM_DIR)&&(recu_level == 1u))
             {
-                Explore_Disk(fn, 2);
+                Explore_Disk(fn, 2u);
             }
         }
     }
@@ -650,10 +655,11 @@ static uint8_t Explore_Disk (char* path , uint8_t recu_level)
 static uint8_t Image_Browser (char* path)
 {
     FRESULT res;
-    uint8_t ret = 1;
+    uint8_t ret = 1u;
     FILINFO fno;
     DIR dir;
     char *fn;
+    uint32_t u32DevConnectTmp = 0ul;
 
     res = f_opendir(&dir, path);
     if (res == FR_OK)
@@ -661,8 +667,14 @@ static uint8_t Image_Browser (char* path)
         for (;;)
         {
             res = f_readdir(&dir, &fno);
-            if (res != FR_OK || fno.fname[0] == 0) break;
-            if (fno.fname[0] == '.') continue;
+            if ((res != FR_OK) || (fno.fname[0] == (char)0))
+            {
+                break;
+            }
+            if (fno.fname[0] == '.')
+            {
+                continue;
+            }
 
             fn = fno.fname;
 
@@ -674,12 +686,13 @@ static uint8_t Image_Browser (char* path)
             {
                 if((strstr(fn, "bmp")) || (strstr(fn, "BMP")))
                 {
-                    res = f_open(&file, fn, FA_OPEN_EXISTING | FA_READ);
+                    //res = f_open(&file, fn, FA_OPEN_EXISTING | FA_READ); /* C-STAT */
+                    f_open(&file, fn, FA_OPEN_EXISTING | FA_READ);
                     Show_Image();
-                    USB_OTG_BSP_mDelay(100);
-                    ret = 0;
-                    while((HCD_IsDeviceConnected(&USB_OTG_Core)) && \
-                    (GET_BUTTON_KEY() != Reset))
+                    USB_OTG_BSP_mDelay(100ul);
+                    ret = 0u;
+                    u32DevConnectTmp = HCD_IsDeviceConnected(&USB_OTG_Core);
+                    while((GET_BUTTON_KEY() != Reset) && u32DevConnectTmp)
                     {
                         Toggle_Leds();
                     }
@@ -692,7 +705,7 @@ static uint8_t Image_Browser (char* path)
 #ifdef USE_USB_OTG_HS
     printf(" USB OTG HS MSC Host\n");
 #else
-    printf(" USB OTG FS MSC Host\n");
+    //printf(" USB OTG FS MSC Host\n");
 #endif
     printf ("     USB Host Library v2.1.0\n" );
     printf("> Disk capacity : %d * %d = %d Bytes\n",
@@ -712,20 +725,20 @@ static uint8_t Image_Browser (char* path)
  ******************************************************************************/
 static void Show_Image(void)
 {
-    uint16_t i = 0;
-    uint16_t numOfReadBytes = 0;
+    uint16_t i = 0u;
+    uint16_t numOfReadBytes = 0u;
     FRESULT res;
 
-    f_lseek (&file, 54-6);
+    f_lseek (&file, 54u-6u);
 
     while (HCD_IsDeviceConnected(&USB_OTG_Core))
     {
         res = f_read(&file, Image_Buf, IMAGE_BUFFER_SIZE, (void *)&numOfReadBytes);
-        if((numOfReadBytes == 0) || (res != FR_OK)) /*EOF or Error*/
+        if((numOfReadBytes == 0u) || (res != FR_OK)) /*EOF or Error*/
         {
             break;
         }
-        for(i = 0 ; i < IMAGE_BUFFER_SIZE; i+= 3)
+        for(i = 0u ; i < IMAGE_BUFFER_SIZE; i+= 3u)
         {
         }
     }
@@ -740,11 +753,11 @@ static void Show_Image(void)
 static void Toggle_Leds(void)
 {
     static uint32_t i;
-    if (i++ == 0x10000)
+    if (i++ == 0x10000u)
     {
         LED0_TOGGLE();
         LED1_TOGGLE();
-        i = 0;
+        i = 0u;
     }
 }
 

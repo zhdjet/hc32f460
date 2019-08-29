@@ -62,31 +62,31 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* MPU */
-#define MPU_TYPE                        SMPU2Region
-#define MPU_RIGION_NUM                  MpuRegionNum3
-#define MPU_RIGION_SIZE                 MpuRegionSize2KByte
+#define MPU_TYPE                        (SMPU2Region)
+#define MPU_RIGION_NUM                  (MpuRegionNum3)
+#define MPU_RIGION_SIZE                 (MpuRegionSize2KByte)
 
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED0 & LED1 */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /* DMAC */
-#define DMA_UNIT                        M4_DMA2
-#define DMA_CH                          DmaCh0
-#define DMA_TRG_SEL                     EVT_AOS_STRG
+#define DMA_UNIT                        (M4_DMA2)
+#define DMA_CH                          (DmaCh0)
+#define DMA_TRG_SEL                     (EVT_AOS_STRG)
 #define DMA_TRNCNT                      (2u)
 #define DMA_BLKSIZE                     (1024u)
-#define DMA_RPTSIZE                     DMA_BLKSIZE
+#define DMA_RPTSIZE                     (DMA_BLKSIZE)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -165,12 +165,21 @@ static void DmaInit(void)
 
     /* Initialize DMA. */
     MEM_ZERO_STRUCT(stcDmaInit);
-    stcDmaInit.u16BlockSize = (DMA_BLKSIZE == 1024) ? 0: DMA_BLKSIZE;// 0 == 1024Byte
+#if (DMA_BLKSIZE == 1024u)
+    stcDmaInit.u16BlockSize = 0u; /* 0 == 1024Byte */
+#else
+    stcDmaInit.u16BlockSize = DMA_BLKSIZE;
+#endif
     stcDmaInit.u16TransferCnt = DMA_TRNCNT;   /* Set transfer count. */
     stcDmaInit.u32SrcAddr = (uint32_t)(&m_au8SrcBuf[0]);  /* Set source address. */
     stcDmaInit.u32DesAddr = (uint32_t)(&m_au8DstBuf[0]);  /* Set destination address. */
-    stcDmaInit.u16SrcRptSize = (DMA_RPTSIZE == 1024) ? 0: DMA_RPTSIZE;  /* Set repeat size. */
-    stcDmaInit.u16DesRptSize = (DMA_RPTSIZE == 1024) ? 0: DMA_RPTSIZE;  /* Set repeat size. */
+#if (DMA_RPTSIZE == 1024u)
+    stcDmaInit.u16SrcRptSize = 0u; /* 0 == 1024Byte */
+    stcDmaInit.u16DesRptSize = 0u; /* 0 == 1024Byte */
+#else
+    stcDmaInit.u16SrcRptSize = DMA_BLKSIZE;
+    stcDmaInit.u16DesRptSize = DMA_BLKSIZE;
+#endif
     stcDmaInit.stcDmaChCfg.enSrcRptEn = Enable;  /* Enable repeat. */
     stcDmaInit.stcDmaChCfg.enDesRptEn = Enable;  /* Enable repeat. */
     stcDmaInit.stcDmaChCfg.enSrcInc = AddressIncrease;  /* Set source address mode. */
@@ -204,10 +213,10 @@ static void DmaInit(void)
 static void DmaBufferInit(void)
 {
     /* Initialize source buffer */
-    for (uint16_t i = 0; i < DMA_BLKSIZE; i++)
+    for (uint16_t i = 0u; i < DMA_BLKSIZE; i++)
     {
-        m_au8SrcBuf[i] = i;
-        m_au8DstBuf[i] = 0;
+        m_au8SrcBuf[i] = (uint8_t)(i % 256u);
+        m_au8DstBuf[i] = 0u;
     }
 }
 
@@ -224,6 +233,8 @@ int32_t main(void)
 {
     en_result_t enTestResult = Ok;
     stc_mpu_prot_region_init_t stcProtRegionInit;
+    en_flag_status_t enTrnCpltFlag = Reset;
+    en_flag_status_t enBlkTrnCpltFlag = Reset;
 
     /* Disable SMPU region */
     MPU_WriteProtCmd(Disable);
@@ -276,9 +287,10 @@ int32_t main(void)
     AOS_SW_Trigger();
 
     /* Wait DMA transfer complete */
-    while ((Set != DMA_GetIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq)) ||
-           (Set != DMA_GetIrqFlag(DMA_UNIT, DMA_CH, BlkTrnCpltIrq)))
+    while ((Set != enTrnCpltFlag) || (Set != enBlkTrnCpltFlag))
     {
+        enTrnCpltFlag = DMA_GetIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq);
+        enBlkTrnCpltFlag = DMA_GetIrqFlag(DMA_UNIT, DMA_CH, BlkTrnCpltIrq);
     }
 
     /* DMA destination buffer is protected(forbid write) by MPU, so DMA can't write destination buffer*/

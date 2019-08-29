@@ -113,10 +113,10 @@ typedef struct stc_trng_init
 
 en_result_t TRNG_Init(const stc_trng_init_t *pstcInit);
 void TRNG_DeInit(void);
-en_result_t TRNG_Generate(uint32_t *pu32Random, uint32_t u32Timeout);
+en_result_t TRNG_Generate(uint32_t *pu32Random, uint8_t u8Length, uint32_t u32Timeout);
 
 void TRNG_StartIT(void);
-void TRNG_GetRandomNum(uint32_t *pu32Random);
+void TRNG_GetRandomNum(uint32_t *pu32Random, uint8_t u8Length);
 
 //@} // TrngGroup
 

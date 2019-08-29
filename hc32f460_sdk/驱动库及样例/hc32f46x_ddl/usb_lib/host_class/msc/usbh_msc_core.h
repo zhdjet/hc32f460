@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file contains all the prototypes for the usbh_msc_core.c
-	@endlink
+    This file contains all the prototypes for the usbh_msc_core.c
+  @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -94,8 +94,8 @@ typedef struct _MSC_Process
  ** \brief USBH_MSC_CORE_Exported_Defines
  **
  ******************************************************************************/
-#define USB_REQ_BOT_RESET                0xFF
-#define USB_REQ_GET_MAX_LUN              0xFE
+#define USB_REQ_BOT_RESET                (0xFFu)
+#define USB_REQ_GET_MAX_LUN              (0xFEu)
 
 
 

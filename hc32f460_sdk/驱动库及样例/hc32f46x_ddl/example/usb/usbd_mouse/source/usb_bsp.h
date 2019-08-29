@@ -64,11 +64,11 @@
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define KEY_PORT    PortD
-#define KEY_UP      Pin04
-#define KEY_DOWN    Pin06
-#define KEY_LEFT    Pin05
-#define KEY_RIGHT   Pin03
+#define KEY_PORT    (PortD)
+#define KEY_UP      (Pin04)
+#define KEY_DOWN    (Pin06)
+#define KEY_LEFT    (Pin05)
+#define KEY_RIGHT   (Pin03)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

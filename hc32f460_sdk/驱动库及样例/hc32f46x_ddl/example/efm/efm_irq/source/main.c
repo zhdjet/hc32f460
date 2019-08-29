@@ -61,19 +61,19 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define EFM_IRQn                        Int129_IRQn
+#define EFM_IRQn                        (Int129_IRQn)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT                      PortE
-#define  LED0_PIN                       Pin06
+#define  LED0_PORT                      (PortE)
+#define  LED0_PIN                       (Pin06)
 /* LED0~1 definition */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define FLASH_SECTOR62_ADRR             0x0007C000
+#define FLASH_SECTOR62_ADRR             (0x0007C000u)
 
-#define FLASH_WIN_START_ADDR            0x0007D000
-#define FLASH_WIN_END_ADDR              0x0007E000
+#define FLASH_WIN_START_ADDR            (0x0007D000u)
+#define FLASH_WIN_END_ADDR              (0x0007E000u)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -90,7 +90,7 @@
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-void EfmPageEraseErr_IrqHandler(void)
+void EfmPgmEraseErr_IrqHandler(void)
 {
     LED0_ON();
 
@@ -107,7 +107,7 @@ void EfmPageEraseErr_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -136,7 +136,7 @@ int32_t main(void)
 {
     uint32_t u32Addr;
     stc_efm_win_protect_addr_t stcWinAddr;
-    const uint32_t u32TestData = 0x5A5A5A5A;
+    const uint32_t u32TestData = 0x5A5A5A5Au;
 
     /* Init Led. */
     Led_Init();
@@ -147,7 +147,10 @@ int32_t main(void)
     /* Enable flash. */
     EFM_FlashCmd(Enable);
     /* Wait flash ready. */
-    while(Set != EFM_GetFlagStatus(EFM_FLAG_RDY));
+    while(Set != EFM_GetFlagStatus(EFM_FLAG_RDY))
+    {
+        ;
+    }
 
     /* Erase sector 62. */
     EFM_SectorErase(FLASH_SECTOR62_ADRR);
@@ -169,14 +172,18 @@ int32_t main(void)
     NVIC_EnableIRQ(EFM_IRQn);
 
     /* program between windows address. */
-    u32Addr = FLASH_WIN_START_ADDR + 4;
+    u32Addr = FLASH_WIN_START_ADDR + 4ul;
     EFM_SingleProgram(u32Addr,u32TestData);
 
     /* SW2 */
-    while(0 != PORT_GetBit(PortD, Pin03));
+    while(0 != PORT_GetBit(PortD, Pin03))
+    {
+        ;
+    }
+
 
     /* program out of windows address. */
-    u32Addr = FLASH_WIN_START_ADDR - 4;
+    u32Addr = FLASH_WIN_START_ADDR - 4ul;
     EFM_SingleProgram(u32Addr,u32TestData);
 
     EFM_ClearFlag(EFM_FLAG_PEPRTERR);
@@ -184,7 +191,10 @@ int32_t main(void)
     /* Lock EFM. */
     EFM_Lock();
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

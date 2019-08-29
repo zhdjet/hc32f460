@@ -61,39 +61,39 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEYOUT port, pin definition */
-#define  KEYOUT_PORT        PortA
-#define  KEYOUT0_PIN        Pin04
-#define  KEYOUT1_PIN        Pin05
-#define  KEYOUT2_PIN        Pin06
+#define  KEYOUT_PORT        (PortA)
+#define  KEYOUT0_PIN        (Pin04)
+#define  KEYOUT1_PIN        (Pin05)
+#define  KEYOUT2_PIN        (Pin06)
 
 /* KEYIN port, pin definition */
-#define  KEYIN_PORT         PortD
-#define  KEYIN0_PIN         Pin12
-#define  KEYIN1_PIN         Pin13
-#define  KEYIN2_PIN         Pin14
+#define  KEYIN_PORT         (PortD)
+#define  KEYIN0_PIN         (Pin12)
+#define  KEYIN1_PIN         (Pin13)
+#define  KEYIN2_PIN         (Pin14)
 
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT          PortE
-#define  LED0_PIN           Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT          PortA
-#define  LED1_PIN           Pin07
+#define  LED1_PORT          (PortA)
+#define  LED1_PIN           (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT          PortB
-#define  LED2_PIN           Pin05
+#define  LED2_PORT          (PortB)
+#define  LED2_PIN           (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT          PortB
-#define  LED3_PIN           Pin09
+#define  LED3_PORT          (PortB)
+#define  LED3_PIN           (Pin09)
 
 /* LED0~3 toggle definition */
-#define  LED0_TOGGLE()      PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()      PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()      PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()      PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()      (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()      (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 /* uncomment this line if wants to print information to Terminal I/O window */
 //#define  __PRINT_TO_TERMINAL
@@ -258,7 +258,7 @@ void KeyRow0_Init(void)
     stcIrqRegiConf.enIRQn = Int000_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = KeyRow0_Callback;
+    stcIrqRegiConf.pfnCallback = &KeyRow0_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -317,7 +317,7 @@ void KeyRow1_Init(void)
     stcIrqRegiConf.enIRQn = Int001_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = KeyRow1_Callback;
+    stcIrqRegiConf.pfnCallback = &KeyRow1_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -376,7 +376,7 @@ void KeyRow2_Init(void)
     stcIrqRegiConf.enIRQn = Int002_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = KeyRow2_Callback;
+    stcIrqRegiConf.pfnCallback = &KeyRow2_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -450,6 +450,11 @@ int32_t main(void)
     /* LED init */
     Led_Init();
 
+#ifdef __PRINT_TO_TERMINAL
+    /* Uart printf port initialize */
+    Ddl_UartInit();
+#endif
+
     /* Key row 0~2 init */
     KeyRow0_Init();
     KeyRow1_Init();
@@ -461,7 +466,10 @@ int32_t main(void)
     /* Start KEYSCAN function*/
     KEYSCAN_Start();
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

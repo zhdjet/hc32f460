@@ -62,42 +62,42 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Define I2C unit used for the example */
-#define I2C_CH                          M4_I2C1
+#define I2C_CH                          (M4_I2C1)
 /* Define slave device address for example */
-#define SLAVE_ADDRESS                   0x06
+#define SLAVE_ADDRESS                   0x06u
 /* Define port and pin for SDA and SCL */
-#define I2C1_SCL_PORT                   PortC
-#define I2C1_SCL_PIN                    Pin04
-#define I2C1_SDA_PORT                   PortC
-#define I2C1_SDA_PIN                    Pin05
+#define I2C1_SCL_PORT                   (PortC)
+#define I2C1_SCL_PIN                    (Pin04)
+#define I2C1_SDA_PORT                   (PortC)
+#define I2C1_SDA_PIN                    (Pin05)
 
 #define TIMEOUT                         ((uint32_t)0x10000)
 
-#define I2C_RET_OK                      0
-#define I2C_RET_ERROR                   1
+#define I2C_RET_OK                      0u
+#define I2C_RET_ERROR                   1u
 
-#define GENERATE_START                  0x00
-#define GENERATE_RESTART                0x01
+#define GENERATE_START                  0x00u
+#define GENERATE_RESTART                0x01u
 
-#define ADDRESS_W                       0x00
-#define ADDRESS_R                       0x01
+#define ADDRESS_W                       0x00u
+#define ADDRESS_R                       0x01u
 
 /* Define Write and read data length for the example */
-#define TEST_DATA_LEN                   256
+#define TEST_DATA_LEN                   256u
 /* Define i2c baudrate */
-#define I2C_BAUDRATE                    400000
+#define I2C_BAUDRATE                    400000ul
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT        (PortE)
+#define  LED0_PIN         (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortA
-#define  LED1_PIN         Pin07
+#define  LED1_PORT        (PortA)
+#define  LED1_PIN         (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -110,10 +110,10 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-uint8_t u8RxBuf[TEST_DATA_LEN] = {1,2,3,4,5};
-uint32_t u32DataInOffset = 0;
-uint32_t u32DataOutOffset = 0;
-uint8_t u8FinishFlag = 0;
+uint8_t u8RxBuf[TEST_DATA_LEN];
+uint32_t u32DataInOffset = 0ul;
+uint32_t u32DataOutOffset = 0ul;
+uint8_t u8FinishFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -133,7 +133,10 @@ static void BufWrite(uint8_t u8Data)
     if(u32DataInOffset >= TEST_DATA_LEN)
     {
         //error
-        while(1);
+        while(1)
+        {
+
+        }
     }
     u8RxBuf[u32DataInOffset] = u8Data;
     u32DataInOffset++;
@@ -154,7 +157,10 @@ static uint8_t BufRead(void)
     if(u32DataOutOffset >= TEST_DATA_LEN)
     {
         //error
-        while(1);
+        while(1)
+        {
+            ;
+        }
     }
     temp = u8RxBuf[u32DataOutOffset];
     u32DataOutOffset++;
@@ -248,7 +254,7 @@ void I2C_TEI_Callback(void)
         }
         else
         {
-            u8FinishFlag = 1;
+            u8FinishFlag = 1u;
         }
     }
 }
@@ -285,11 +291,16 @@ uint8_t Slave_Initialize(void)
 {
     stc_i2c_init_t stcI2cInit;
     stc_irq_regi_conf_t stcIrqRegiConf;
+    stc_clk_freq_t stcClkFreq;
 
     I2C_DeInit(I2C_CH);
 
+    /* Get system clock frequency */
+    CLK_GetClockFreq(&stcClkFreq);
+
     MEM_ZERO_STRUCT(stcI2cInit);
     stcI2cInit.enI2cMode = I2cSlave;
+    stcI2cInit.u32Pclk3 = stcClkFreq.pclk3Freq;
     stcI2cInit.u32Baudrate = I2C_BAUDRATE;
     I2C_Init(I2C_CH, &stcI2cInit);
 
@@ -306,7 +317,7 @@ uint8_t Slave_Initialize(void)
     /* Select I2C Error or Event interrupt function */
     stcIrqRegiConf.enIntSrc = INT_I2C1_EE1;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = I2C_EEI_Callback;
+    stcIrqRegiConf.pfnCallback = &I2C_EEI_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -321,7 +332,7 @@ uint8_t Slave_Initialize(void)
     /* Select I2C receive full interrupt function */
     stcIrqRegiConf.enIntSrc = INT_I2C1_RXI;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = I2C_RXI_Callback;
+    stcIrqRegiConf.pfnCallback = &I2C_RXI_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -336,7 +347,7 @@ uint8_t Slave_Initialize(void)
     /* Select I2C TX buffer empty interrupt function */
     stcIrqRegiConf.enIntSrc = INT_I2C1_TEI;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = I2C_TEI_Callback;
+    stcIrqRegiConf.pfnCallback = &I2C_TEI_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -391,11 +402,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =50u;
+    stcMpllCfg.PllpDiv = 4u;
+    stcMpllCfg.PllqDiv = 4u;
+    stcMpllCfg.PllrDiv = 4u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -408,7 +419,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -454,13 +468,16 @@ int32_t  main(void)
     Slave_Initialize();
 
     /* Wait communicaiton finished*/
-    while(0 == u8FinishFlag);
+    while(0u == u8FinishFlag)
+    {
+        ;
+    }
 
     /* Slave send data complete*/
     while(1)
     {
         LED1_TOGGLE();
-        Ddl_Delay1ms(500);
+        Ddl_Delay1ms(500ul);
     }
 }
 

@@ -66,7 +66,7 @@
 #define OTS_CLK_SEL_HRC             (1u)
 
 /* Select XTAL as OTS clock. */
-#define OTS_CLK_SEL                 OTS_CLK_SEL_HRC
+#define OTS_CLK_SEL                 (OTS_CLK_SEL_HRC)
 
 #define SYS_CLOCK_FREQ_MHZ          (SystemCoreClock / 1000000ul)
 
@@ -113,7 +113,10 @@ int32_t main(void)
     OTS_StartIT();
 
     /* Check OTS. */
-    while (false == m_bOtsIrqFlag);
+    while (false == m_bOtsIrqFlag)
+    {
+        ;
+    }
     m_bOtsIrqFlag = false;
     (void)m_f32Temperature;
 
@@ -162,7 +165,7 @@ static void OtsInitConfig(void)
 #else
     stcOtsInit.enClkSel = OtsClkSel_Xtal;
 #endif
-    stcOtsInit.u8ClkFreq = SYS_CLOCK_FREQ_MHZ;
+    stcOtsInit.u8ClkFreq = (uint8_t)SYS_CLOCK_FREQ_MHZ;
 
     /* 1. Enable OTS. */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_OTS, Enable);
@@ -215,7 +218,7 @@ static void OtsIrqConfig(void)
     stcOtsIrqCfg.enIntSrc    = INT_OTS;
     /* stcOtsIrqCfg.enIRQn: [Int000_IRQn, Int031_IRQn] [Int110_IRQn, Int115_IRQn] */
     stcOtsIrqCfg.enIRQn      = Int113_IRQn;
-    stcOtsIrqCfg.pfnCallback = OtsIrqCallback;
+    stcOtsIrqCfg.pfnCallback = &OtsIrqCallback;
     enIrqRegResult           = enIrqRegistration(&stcOtsIrqCfg);
 
     if (Ok == enIrqRegResult)

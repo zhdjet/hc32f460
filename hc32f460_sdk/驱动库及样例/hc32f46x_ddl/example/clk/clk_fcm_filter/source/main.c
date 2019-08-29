@@ -61,32 +61,32 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define FCM_IRQn                Int141_IRQn
+#define FCM_IRQn                (Int141_IRQn)
 
 /* FCM refer Port/Pin definition */
-#define FCM_REF_PORT            PortH
-#define FCM_REF_PIN             Pin02
+#define FCM_REF_PORT            (PortH)
+#define FCM_REF_PIN             (Pin02)
 
 /* FCM windows lower/upper limitition */
-#define FCM_WINDOWS_LOWER       0x0
-#define FCM_WINDOWS_UPPER       0x80
+#define FCM_WINDOWS_LOWER       (0x0u)
+#define FCM_WINDOWS_UPPER       (0x80u)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
-#define  DLY_MS                 1000
+#define  DLY_MS                 (1000u)
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -127,7 +127,7 @@ void FcmErr_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -158,7 +158,7 @@ void Led_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Fcm_RefPortInit(void)
+static void Fcm_RefPortInit(void)
 {
     PORT_Unlock();
 
@@ -235,7 +235,10 @@ int32_t main(void)
     CLK_FcmCmd(Enable);
 
     LED1_ON();
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

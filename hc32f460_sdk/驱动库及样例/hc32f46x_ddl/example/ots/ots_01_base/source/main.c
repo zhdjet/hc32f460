@@ -66,7 +66,7 @@
 #define OTS_CLK_SEL_HRC             (1u)
 
 /* Select XTAL as OTS clock. */
-#define OTS_CLK_SEL                 OTS_CLK_SEL_XTAL
+#define OTS_CLK_SEL                 (OTS_CLK_SEL_XTAL)
 
 #define SYS_CLOCK_FREQ_MHZ          (SystemCoreClock / 1000000ul)
 
@@ -167,7 +167,7 @@ static void OtsInitConfig(void)
 #else
     stcOtsInit.enClkSel = OtsClkSel_Xtal;
 #endif
-    stcOtsInit.u8ClkFreq = SYS_CLOCK_FREQ_MHZ;
+    stcOtsInit.u8ClkFreq = (uint8_t)SYS_CLOCK_FREQ_MHZ;
 
     /* 1. Enable OTS. */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_OTS, Enable);

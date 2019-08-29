@@ -61,18 +61,18 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define EFM_SWITCH_ADDRESS              0x0007FFDC
-#define EFM_SWITCH_DATA                 0xFFFF4321
+#define EFM_SWITCH_ADDRESS              (0x0007FFDCu)
+#define EFM_SWITCH_DATA                 (0xFFFF4321u)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT                      PortE
-#define  LED0_PIN                       Pin06
+#define  LED0_PORT                      (PortE)
+#define  LED0_PIN                       (Pin06)
 
 /* LED0 definition */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define  DLY_MS                         1000
+#define  DLY_MS                         1000u
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -98,7 +98,7 @@
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -132,7 +132,10 @@ int32_t main(void)
     /* Enable flash. */
     EFM_FlashCmd(Enable);
     /* Wait flash ready. */
-    while(Set != EFM_GetFlagStatus(EFM_FLAG_RDY));
+    while(Set != EFM_GetFlagStatus(EFM_FLAG_RDY))
+    {
+        ;
+    }
 
     EFM_SingleProgram(EFM_SWITCH_ADDRESS, EFM_SWITCH_DATA);
 

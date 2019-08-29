@@ -62,41 +62,41 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Define I2C unit used for the example */
-#define I2C_CH                          M4_I2C1
+#define I2C_CH                          (M4_I2C1)
 /* Define E2PROM device address */
-#define E2_ADDRESS                      0x50
+#define E2_ADDRESS                      0x50u
 /* AT24C02 page length is 8byte*/
-#define PAGE_LEN                        8
+#define PAGE_LEN                        8u
 /* Define test address for read and write */
-#define DATA_TEST_ADDR                  0x00
+#define DATA_TEST_ADDR                  0x00u
 /* Define port and pin for SDA and SCL */
-#define I2C1_SCL_PORT                   PortC
-#define I2C1_SCL_PIN                    Pin04
-#define I2C1_SDA_PORT                   PortC
-#define I2C1_SDA_PIN                    Pin05
+#define I2C1_SCL_PORT                   (PortC)
+#define I2C1_SCL_PIN                    (Pin04)
+#define I2C1_SDA_PORT                   (PortC)
+#define I2C1_SDA_PIN                    (Pin05)
 
-#define TIMEOUT                         ((uint32_t)0x10000)
+#define TIMEOUT                         0x10000ul
 
-#define I2C_RET_OK                      0
-#define I2C_RET_ERROR                   1
+#define I2C_RET_OK                      0u
+#define I2C_RET_ERROR                   1u
 
-#define GENERATE_START                  0x00
-#define GENERATE_RESTART                0x01
+#define GENERATE_START                  0x00u
+#define GENERATE_RESTART                0x01u
 
-#define E2_ADDRESS_W                    0x00
-#define E2_ADDRESS_R                    0x01
+#define E2_ADDRESS_W                    0x00u
+#define E2_ADDRESS_R                    0x01u
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT        (PortE)
+#define  LED0_PIN         (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortA
-#define  LED1_PIN         Pin07
+#define  LED1_PORT        (PortA)
+#define  LED1_PIN         (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -127,6 +127,8 @@
 static uint8_t E2_StartOrRestart(uint8_t u8Start)
 {
     uint32_t u32TimeOut = TIMEOUT;
+    en_flag_status_t enFlagBusy = Reset;
+    en_flag_status_t enFlagStartf = Reset;
 
     /* generate start or restart signal */
     if(GENERATE_START == u8Start)
@@ -134,7 +136,10 @@ static uint8_t E2_StartOrRestart(uint8_t u8Start)
         /* Wait I2C bus idle */
         while(Set == I2C_GetStatus(I2C_CH, I2C_SR_BUSY))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         I2C_GenerateStart(I2C_CH , Enable);
@@ -149,10 +154,18 @@ static uint8_t E2_StartOrRestart(uint8_t u8Start)
 
     /* Judge if start success*/
     u32TimeOut = TIMEOUT;
-    while((Reset == I2C_GetStatus(I2C_CH, I2C_SR_BUSY)) ||
-            (Reset == I2C_GetStatus(I2C_CH, I2C_SR_STARTF)))
+    while(1)
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        enFlagBusy = I2C_GetStatus(I2C_CH, I2C_SR_BUSY);
+        enFlagStartf = I2C_GetStatus(I2C_CH, I2C_SR_STARTF);
+        if(enFlagBusy && enFlagStartf)
+        {
+            break;
+        }
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     return I2C_RET_OK;
@@ -175,26 +188,35 @@ static uint8_t E2_SendAdr(uint8_t u8Adr)
     /* Wait tx buffer empty */
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     /* Send I2C address */
     I2C_SendData(I2C_CH, u8Adr);
 
-    if(E2_ADDRESS_W == (u8Adr & 0x01))
+    if(E2_ADDRESS_W == (u8Adr & 0x01u))
     {
         /* If in master transfer process, Need wait transfer end*/
         uint32_t u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
+    }
 
-        /* Check ACK */
-        u32TimeOut = TIMEOUT;
-        while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    /* Check ACK */
+    u32TimeOut = TIMEOUT;
+    while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    {
+        if(0ul == (u32TimeOut--))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            return I2C_RET_ERROR;
         }
     }
 
@@ -219,7 +241,10 @@ static uint8_t E2_SendDataAdr(uint8_t u8DataAdr)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     /* Send one byte data */
@@ -229,14 +254,20 @@ static uint8_t E2_SendDataAdr(uint8_t u8DataAdr)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     /* Check ACK */
     u32TimeOut = TIMEOUT;
     while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     return I2C_RET_OK;
@@ -263,7 +294,10 @@ static uint8_t E2_WriteData(uint8_t *pTxData, uint32_t u32Size)
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* Send one byte data */
@@ -273,14 +307,20 @@ static uint8_t E2_WriteData(uint8_t *pTxData, uint32_t u32Size)
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* Check ACK */
         u32TimeOut = TIMEOUT;
         while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
     }
 
@@ -289,9 +329,8 @@ static uint8_t E2_WriteData(uint8_t *pTxData, uint32_t u32Size)
 
 /**
  ******************************************************************************
- ** \brief  Write address and receive data from e2prom
+ ** \brief  Receive data from e2prom
  **
- ** \param  u8Adr    Device address and R/W bit
  ** \param  pTxData  Pointer to the data buffer
  ** \param  u32Size  Data size
  **
@@ -299,40 +338,30 @@ static uint8_t E2_WriteData(uint8_t *pTxData, uint32_t u32Size)
  **         - I2C_RET_ERROR  Send failed
  **         - I2C_RET_OK     Send success
  ******************************************************************************/
-static uint8_t E2_SendAdrRevData(uint8_t u8Adr, uint8_t *pRxData, uint32_t u32Size)
+static uint8_t E2_RevData(uint8_t *pRxData, uint32_t u32Size)
 {
     uint32_t u32TimeOut = TIMEOUT;
 
-    /* Wait tx buffer empty */
-    while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
-    {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
-    }
-
-    for(uint32_t i=0; i<u32Size; i++)
+    for(uint32_t i=0ul; i<u32Size; i++)
     {
         /* if the last byte receive, need config NACK*/
-        if(i == (u32Size - 1))
+        if(i == (u32Size - 1ul))
         {
             I2C_NackConfig(I2C_CH, Enable);
-        }
-
-        /* if first byte receive, need send adr*/
-        if(0 == i)
-        {
-            I2C_SendData(I2C_CH, u8Adr);
         }
 
         /* Wait receive full flag*/
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_RFULLF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* read data from register*/
         *pRxData++ = I2C_ReadData(I2C_CH);
-
     }
 
     return I2C_RET_OK;
@@ -356,7 +385,10 @@ uint8_t E2_Stop(void)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_BUSY))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     I2C_GenerateStop(I2C_CH, Enable);
@@ -365,7 +397,10 @@ uint8_t E2_Stop(void)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_STOPF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     return I2C_RET_OK;
@@ -384,13 +419,18 @@ uint8_t E2_Stop(void)
 uint8_t E2_Initialize(void)
 {
     stc_i2c_init_t stcI2cInit;
+    stc_clk_freq_t stcClkFreq;
 
     I2C_DeInit(I2C_CH);
 
+    /* Get system clock frequency */
+    CLK_GetClockFreq(&stcClkFreq);
+
     MEM_ZERO_STRUCT(stcI2cInit);
+    stcI2cInit.u32Pclk3 = stcClkFreq.pclk3Freq;
     stcI2cInit.enI2cMode = I2cMaster;
-    stcI2cInit.u32Baudrate = 100000;
-    stcI2cInit.u32SclTime = 0;
+    stcI2cInit.u32Baudrate = 100000ul;
+    stcI2cInit.u32SclTime = 0ul;
     I2C_Init(I2C_CH, &stcI2cInit);
 
     I2C_Cmd(I2C_CH, Enable);
@@ -437,11 +477,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -454,7 +494,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+      ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -475,7 +518,7 @@ static void JudgeResult(uint8_t u8Result)
         while(1)
         {
             LED0_TOGGLE();
-            Ddl_Delay1ms(500);
+            Ddl_Delay1ms(500ul);
         }
     }
 }
@@ -497,9 +540,9 @@ int32_t main(void)
     uint8_t u8Ret = I2C_RET_OK;
     stc_port_init_t stcPortInit;
 
-    for(i=0; i<PAGE_LEN; i++)
+    for(i=0ul; i<PAGE_LEN; i++)
     {
-        u8TxBuf[i] = i+1;
+        u8TxBuf[i] = (uint8_t)i+1u;
     }
     memset(u8RxBuf, 0x00, PAGE_LEN);
 
@@ -530,50 +573,53 @@ int32_t main(void)
 
     /* E2prom byte write*/
     u8Ret = E2_StartOrRestart(GENERATE_START);
-    u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
+    JudgeResult(u8Ret);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
     u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
-    u8Ret = E2_WriteData(u8TxBuf, 1);
+    u8Ret = E2_WriteData(u8TxBuf, 1u);
     JudgeResult(u8Ret);
     u8Ret = E2_Stop();
     JudgeResult(u8Ret);
 
     /* 5mS delay for e2prom*/
-    Ddl_Delay1ms(5);
+    Ddl_Delay1ms(5ul);
 
     /* E2prom ramdom read*/
     u8Ret = E2_StartOrRestart(GENERATE_START);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
     u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
 
     u8Ret = E2_StartOrRestart(GENERATE_RESTART);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdrRevData((E2_ADDRESS<<1)|E2_ADDRESS_R, u8RxBuf, 1);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_R);
+    JudgeResult(u8Ret);
+    u8Ret = E2_RevData(u8RxBuf, 1u);
     JudgeResult(u8Ret);
     u8Ret = E2_Stop();
     JudgeResult(u8Ret);
 
     /* Compare the data */
-    if(0x01 != u8RxBuf[0])
+    if(0x01u != u8RxBuf[0])
     {
         /* e2prom byte write error*/
         while(1)
         {
             LED0_TOGGLE();
-            Ddl_Delay1ms(500);
+            Ddl_Delay1ms(500ul);
         }
     }
 
     /* 5mS delay for e2prom*/
-    Ddl_Delay1ms(5);
+    Ddl_Delay1ms(5ul);
     /* E2prom page write*/
     u8Ret = E2_StartOrRestart(GENERATE_START);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
     u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
@@ -583,25 +629,27 @@ int32_t main(void)
     JudgeResult(u8Ret);
 
     /* 5mS delay for e2prom*/
-    Ddl_Delay1ms(5);
+    Ddl_Delay1ms(5ul);
 
     /* E2prom sequential read*/
     u8Ret = E2_StartOrRestart(GENERATE_START);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdr((E2_ADDRESS<<1)|E2_ADDRESS_W);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_W);
     JudgeResult(u8Ret);
     u8Ret = E2_SendDataAdr(DATA_TEST_ADDR);
     JudgeResult(u8Ret);
 
     u8Ret = E2_StartOrRestart(GENERATE_RESTART);
     JudgeResult(u8Ret);
-    u8Ret = E2_SendAdrRevData((E2_ADDRESS<<1)|E2_ADDRESS_R, u8RxBuf, PAGE_LEN);
+    u8Ret = E2_SendAdr((uint8_t)(E2_ADDRESS<<1u)|E2_ADDRESS_R);
+    JudgeResult(u8Ret);
+    u8Ret = E2_RevData(u8RxBuf, PAGE_LEN);
     JudgeResult(u8Ret);
     u8Ret = E2_Stop();
     JudgeResult(u8Ret);
 
     /* Compare the data */
-    for(i=0; i<PAGE_LEN; i++)
+    for(i=0ul; i<PAGE_LEN; i++)
     {
         if(u8TxBuf[i] != u8RxBuf[i])
         {
@@ -609,7 +657,7 @@ int32_t main(void)
             while(1)
             {
                 LED0_TOGGLE();
-                Ddl_Delay1ms(500);
+                Ddl_Delay1ms(500ul);
             }
         }
     }
@@ -618,7 +666,7 @@ int32_t main(void)
     while(1)
     {
         LED1_TOGGLE();
-        Ddl_Delay1ms(500);
+        Ddl_Delay1ms(500ul);
     }
 }
 

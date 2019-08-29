@@ -69,12 +69,12 @@
  ** \brief USBH_HCS_Exported_Defines
  **
  ******************************************************************************/
-#define HC_MAX           16
+#define HC_MAX           (16u)
 
-#define HC_OK            0x0000
-#define HC_USED          0x8000
-#define HC_ERROR         0xFFFF
-#define HC_USED_MASK     0x7FFF
+#define HC_OK            (0x0000u)
+#define HC_USED          (0x8000u)
+#define HC_ERROR         (0xFFFFu)
+#define HC_USED_MASK     (0x7FFFu)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

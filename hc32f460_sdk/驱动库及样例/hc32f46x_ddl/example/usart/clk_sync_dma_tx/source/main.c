@@ -64,51 +64,48 @@
 typedef struct stc_buf_handle
 {
     uint8_t u8Size;
-    uint8_t *pu8Buf;
+    uint8_t au8Buf[200];
 } stc_buf_handle_t;
 
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* DMAC */
-#define DMA_UNIT                        M4_DMA1
-#define DMA_CH                          DmaCh0
-#define DMA_TRG_SEL                     EVT_USART2_TI
+#define DMA_UNIT                        (M4_DMA1)
+#define DMA_CH                          (DmaCh0)
+#define DMA_TRG_SEL                     (EVT_USART2_TI)
 
 /* USART channel definition */
-#define USART_CH                        M4_USART2
+#define USART_CH                        (M4_USART2)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (3000000)
+#define USART_BAUDRATE                  (3000000ul)
 
 /* USART TX Port/Pin definition */
-#define USART_TX_PORT                   PortA
-#define USART_TX_PIN                    Pin02
-#define USART_TX_FUNC                   Func_Usart2_Tx
+#define USART_TX_PORT                   (PortA)
+#define USART_TX_PIN                    (Pin02)
+#define USART_TX_FUNC                   (Func_Usart2_Tx)
 
 /* USART CK Port/Pin definition */
-#define USART_CK_PORT                   PortD
-#define USART_CK_PIN                    Pin07
-#define USART_CK_FUNC                   Func_Usart_Ck
+#define USART_CK_PORT                   (PortD)
+#define USART_CK_PIN                    (Pin07)
+#define USART_CK_FUNC                   (Func_Usart_Ck)
 
 /* DMA block transfer complete interrupt */
-#define DMA_BTC_INT_NUM                 INT_DMA1_BTC0
-#define DMA_BTC_INT_IRQn                Int002_IRQn
-
-/* USART send times */
-#define USART_TX_TIMES                  (200u)
+#define DMA_BTC_INT_NUM                 (INT_DMA1_BTC0)
+#define DMA_BTC_INT_IRQn                (Int002_IRQn)
 
 /* LED(D26: green color) Port/Pin definition */
-#define LED_PORT                        PortA
-#define LED_PIN                         Pin07
+#define LED_PORT                        (PortA)
+#define LED_PIN                         (Pin07)
 
 /* LED operation */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /* User key:SW2 Port/Pin definition */
-#define KEY_PORT                        PortD
-#define KEY_PIN                         Pin03
+#define KEY_PORT                        (PortD)
+#define KEY_PIN                         (Pin03)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -125,16 +122,7 @@ static void DmaBtcIrqCallback(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t m_au8TxBuf[USART_TX_TIMES];
-
-static stc_buf_handle_t m_stcTxBufHanlde = {sizeof(m_au8TxBuf), m_au8TxBuf};
-
-static const stc_usart_clksync_init_t m_stcInitCfg = {
-    UsartIntClkCkOutput,
-    UsartClkDiv_1,
-    UsartDataLsbFirst,
-    UsartRtsEnable,
-};
+static stc_buf_handle_t m_stcTxBufHanlde;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -179,11 +167,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -250,8 +238,8 @@ static void DmaInit(void)
     /* Initialize DMA. */
     MEM_ZERO_STRUCT(stcDmaInit);
     stcDmaInit.u16BlockSize = 1u; /* 1 block */
-    stcDmaInit.u16TransferCnt = m_stcTxBufHanlde.u8Size;          /* Transfer count */
-    stcDmaInit.u32SrcAddr = (uint32_t)(m_stcTxBufHanlde.pu8Buf);  /* Set source address. */
+    stcDmaInit.u16TransferCnt = (uint16_t)m_stcTxBufHanlde.u8Size;/* Transfer count */
+    stcDmaInit.u32SrcAddr = (uint32_t)(m_stcTxBufHanlde.au8Buf);  /* Set source address. */
     stcDmaInit.u32DesAddr = (uint32_t)(&USART_CH->DR);   /* Set destination address. */
     stcDmaInit.stcDmaChCfg.enSrcInc = AddressIncrease;   /* Set source address mode. */
     stcDmaInit.stcDmaChCfg.enDesInc = AddressFix;        /* Set destination address mode. */
@@ -273,7 +261,7 @@ static void DmaInit(void)
 
     /* Set DMA block transfer complete IRQ */
     stcIrqRegiCfg.enIRQn = DMA_BTC_INT_IRQn;
-    stcIrqRegiCfg.pfnCallback = DmaBtcIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &DmaBtcIrqCallback;
     stcIrqRegiCfg.enIntSrc = DMA_BTC_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -308,11 +296,20 @@ int32_t main(void)
 {
     uint8_t i;
     en_result_t enRet = Ok;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_clksync_init_t stcInitCfg = {
+        UsartIntClkCkOutput,
+        UsartClkDiv_1,
+        UsartDataLsbFirst,
+        UsartRtsEnable,
+    };
 
-    for (i = 0; i < m_stcTxBufHanlde.u8Size; i++)
+    /* Initialize buffer */
+    m_stcTxBufHanlde.u8Size = (uint8_t)sizeof(m_stcTxBufHanlde.au8Buf);
+    for (i = 0u; i < m_stcTxBufHanlde.u8Size; i++)
     {
-        m_stcTxBufHanlde.pu8Buf[i] = i;
+        m_stcTxBufHanlde.au8Buf[i] = i;
     }
 
     /* Initialize Clock */
@@ -332,15 +329,12 @@ int32_t main(void)
     PORT_SetFunc(USART_TX_PORT, USART_TX_PIN, USART_TX_FUNC, Disable);
 
     /* Initialize Clock sync */
-    enRet = USART_CLKSYNC_Init(USART_CH, &m_stcInitCfg);
+    enRet = USART_CLKSYNC_Init(USART_CH, &stcInitCfg);
     if (enRet != Ok)
     {
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /* Set baudrate */
@@ -350,9 +344,6 @@ int32_t main(void)
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /* User key : SW2 */

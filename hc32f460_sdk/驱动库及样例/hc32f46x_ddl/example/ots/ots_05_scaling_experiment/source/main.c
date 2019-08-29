@@ -62,14 +62,15 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Experimental trigger pin definition. */
-#define TRIGGER_PORT                PortC
-#define TRIGGER_PIN                 Pin01
+#define TRIGGER_PORT                (PortC)
+#define TRIGGER_PIN                 (Pin01)
 
 /* Trigger pin state definition. */
-#define TRIGGER_PIN_PRESSED         Reset
+#define TRIGGER_PIN_PRESSED         (Reset)
 
 #define OTS_EXP_AVG_CNT             ((uint8_t)50)
 
+/* System clock frequency in MHz. */
 #define SYS_CLOCK_FREQ_MHZ          (SystemCoreClock / 1000000ul)
 
 /*******************************************************************************
@@ -105,8 +106,8 @@ static en_flag_status_t TriggerPinGetState(void);
 int32_t main(void)
 {
     uint8_t u8ExpCount = 0u;
-    uint8_t i = 0;
-    uint8_t j = 0;
+    uint8_t i = 0u;
+    uint8_t j = 0u;
     float32_t f32Sum;
     stc_ots_init_t stcOtsInit;
 
@@ -131,8 +132,14 @@ int32_t main(void)
         printf("\nOTS Scaling Experiment.");
 
         printf("\nPress the key (PC1) to trigger the test.");
-        while (TRIGGER_PIN_PRESSED != TriggerPinGetState()) Ddl_Delay1ms(1u);
-        while (TRIGGER_PIN_PRESSED == TriggerPinGetState()) Ddl_Delay1ms(1u);
+        while (TRIGGER_PIN_PRESSED != TriggerPinGetState())
+        {
+            Ddl_Delay1ms(1u);
+        }
+        while (TRIGGER_PIN_PRESSED == TriggerPinGetState())
+        {
+            Ddl_Delay1ms(1u);
+        }
         u8ExpCount++;
         printf("\nOTS experiment T%d start.", u8ExpCount);
         printf("\nOTS Clock: HRC");
@@ -171,7 +178,9 @@ int32_t main(void)
         }
 
         if (u8ExpCount >= 2u)
-          u8ExpCount = 0u;
+        {
+            u8ExpCount = 0u;
+        }
     }
 }
 
@@ -209,7 +218,7 @@ static void OtsInitConfig(void)
 
     stcOtsInit.enAutoOff = OtsAutoOff_Disable;
     stcOtsInit.enClkSel  = OtsClkSel_Hrc;
-    stcOtsInit.u8ClkFreq = SYS_CLOCK_FREQ_MHZ;
+    stcOtsInit.u8ClkFreq = (uint8_t)SYS_CLOCK_FREQ_MHZ;
 
     /* 1. Enable OTS. */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_OTS, Enable);
@@ -283,7 +292,7 @@ static en_flag_status_t TriggerPinGetState(void)
     enPinSt = PORT_GetBit(TRIGGER_PORT, TRIGGER_PIN);
     if (TRIGGER_PIN_PRESSED == enPinSt)
     {
-        Ddl_Delay1ms(10);
+        Ddl_Delay1ms(10u);
         enPinSt = PORT_GetBit(TRIGGER_PORT, TRIGGER_PIN);
     }
 

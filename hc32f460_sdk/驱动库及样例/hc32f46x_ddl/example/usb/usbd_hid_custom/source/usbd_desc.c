@@ -86,13 +86,13 @@
  ******************************************************************************/
 USBD_DEVICE USR_desc =
 {
-    USBD_USR_DeviceDescriptor,
-    USBD_USR_LangIDStrDescriptor,
-    USBD_USR_ManufacturerStrDescriptor,
-    USBD_USR_ProductStrDescriptor,
-    USBD_USR_SerialStrDescriptor,
-    USBD_USR_ConfigStrDescriptor,
-    USBD_USR_InterfaceStrDescriptor,
+    &USBD_USR_DeviceDescriptor,
+    &USBD_USR_LangIDStrDescriptor,
+    &USBD_USR_ManufacturerStrDescriptor,
+    &USBD_USR_ProductStrDescriptor,
+    &USBD_USR_SerialStrDescriptor,
+    &USBD_USR_ConfigStrDescriptor,
+    &USBD_USR_InterfaceStrDescriptor,
 
 };
 
@@ -171,7 +171,7 @@ __USB_ALIGN_BEGIN uint8_t USBD_LangIDDesc[USB_SIZ_STRING_LANGID] __USB_ALIGN_END
 */
 uint8_t *  USBD_USR_DeviceDescriptor( uint8_t speed , uint16_t *length)
 {
-    *length = sizeof(USBD_DeviceDesc);
+    *length = (uint16_t)sizeof(USBD_DeviceDesc);
     return USBD_DeviceDesc;
 }
 
@@ -184,7 +184,7 @@ uint8_t *  USBD_USR_DeviceDescriptor( uint8_t speed , uint16_t *length)
 */
 uint8_t *  USBD_USR_LangIDStrDescriptor( uint8_t speed , uint16_t *length)
 {
-    *length =  sizeof(USBD_LangIDDesc);
+    *length = (uint16_t)sizeof(USBD_LangIDDesc);
     return USBD_LangIDDesc;
 }
 
@@ -198,7 +198,7 @@ uint8_t *  USBD_USR_LangIDStrDescriptor( uint8_t speed , uint16_t *length)
 */
 uint8_t *  USBD_USR_ProductStrDescriptor( uint8_t speed , uint16_t *length)
 {
-    if(speed == 0)
+    if(speed == 0u)
     {
         USBD_GetString (USBD_PRODUCT_HS_STRING, USBD_StrDesc, length);
     }
@@ -272,7 +272,7 @@ uint8_t *  USBD_USR_ConfigStrDescriptor( uint8_t speed , uint16_t *length)
 */
 uint8_t *  USBD_USR_InterfaceStrDescriptor( uint8_t speed , uint16_t *length)
 {
-    if(speed == 0)
+    if(speed == 0u)
     {
         USBD_GetString (USBD_INTERFACE_HS_STRING, USBD_StrDesc, length);
     }

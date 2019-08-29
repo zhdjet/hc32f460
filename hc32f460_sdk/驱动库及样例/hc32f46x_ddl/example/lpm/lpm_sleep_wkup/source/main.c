@@ -60,22 +60,22 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define PORT_IRQn               Int003_IRQn
+#define PORT_IRQn               (Int003_IRQn)
 
-#define KEY1_PORT               PortD
-#define KEY1_PIN                Pin04
+#define KEY1_PORT               (PortD)
+#define KEY1_PIN                (Pin04)
 
 /* LED0 Port/Pin definition */
-#define LED0_PORT               PortE
-#define LED0_PIN                Pin06
+#define LED0_PORT               (PortE)
+#define LED0_PIN                (Pin06)
 
 /* LED0 off definition */
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
 /* LED0 toggle definition */
-#define LED0_TOGGLE()           PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_TOGGLE()           (PORT_Toggle(LED0_PORT, LED0_PIN))
 
-#define DLY_MS                  1000
+#define DLY_MS                  (1000u)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -88,7 +88,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-uint8_t u8IntCnt = 0;
+uint8_t u8IntCnt = 0u;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -101,7 +101,7 @@ uint8_t u8IntCnt = 0;
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -144,7 +144,7 @@ void ExtInt04_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void SW4_Init(void)
+static void SW4_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -174,7 +174,7 @@ void SW4_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt04_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt04_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -200,7 +200,10 @@ int32_t main(void)
     SW4_Init();
 
     /* SW2 */
-    while(0 != PORT_GetBit(PortD, Pin03));
+    while(0u != PORT_GetBit(PortD, Pin03))
+    {
+        ;
+    }
 
     LED0_TOGGLE();
     Ddl_Delay1ms(DLY_MS);
@@ -215,7 +218,7 @@ int32_t main(void)
 
     while(1)
     {
-        if(u8IntCnt % 2)
+        if(u8IntCnt % 2u)
         {
             LED0_TOGGLE();
             Ddl_Delay1ms(DLY_MS);

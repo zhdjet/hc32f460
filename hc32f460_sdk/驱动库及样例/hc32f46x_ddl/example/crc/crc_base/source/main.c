@@ -96,7 +96,7 @@ int32_t main(void)
 
     uint32_t u32InitVal;
     uint32_t u32Checksum;
-    uint32_t au32Data[2u] = {0x12345678, 0x87654321};
+    uint32_t au32Data[2u] = {0x12345678u, 0x87654321u};
 
     /* Config CRC. */
     CrcConfig();

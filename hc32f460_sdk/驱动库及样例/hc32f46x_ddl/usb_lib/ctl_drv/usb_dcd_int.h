@@ -78,6 +78,22 @@ typedef struct _USBD_DCD_INT
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
+/* C-STAT */
+#if 1
+#define CLEAR_IN_EP_INTR(epnum,intr) \
+    {    \
+        *(uint32_t*)&diepint.b = (intr);\
+        USB_OTG_WRITE_REG32(&pdev->regs.INEP_REGS[(epnum)]->DIEPINT,*(uint32_t*)&diepint.b); \
+    }
+
+/* C-STAT */
+#define CLEAR_OUT_EP_INTR(epnum,intr) \
+    {   \
+        *(uint32_t*)&doepint.b = (intr);\
+        USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[(epnum)]->DOEPINT,*(uint32_t*)&doepint.b); \
+    }
+#endif
+#if 0
 #define CLEAR_IN_EP_INTR(epnum,intr) \
     diepint.d32=0; \
     diepint.b.intr = 1; \
@@ -87,7 +103,7 @@ typedef struct _USBD_DCD_INT
     doepint.d32=0; \
     doepint.b.intr = 1; \
     USB_OTG_WRITE_REG32(&pdev->regs.OUTEP_REGS[epnum]->DOEPINT,doepint.d32);
-
+#endif
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/

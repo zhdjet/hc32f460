@@ -62,6 +62,9 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* DMAC */
+/* DMA_UNIT_NUM = 1 means M4_DMA1, DMA_UNIT_NUM = 2 means  M4_DMA2. */
+#define DMA_UNIT_INDEX          (2u)
+
 #define DMA_UNIT                (M4_DMA2)
 #define DMA_CH                  (DmaCh0)
 #define DMA_TRNCNT              (5u)
@@ -70,24 +73,24 @@
 #define DMA_DRPT_SIZE           (15u)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
-uint8_t u8CmpRet = 1;
+int32_t CmpRet = 1;
 /*******************************************************************************
  * Local function prototypes ('static')
  ******************************************************************************/
@@ -101,7 +104,8 @@ static const uint32_t u32SrcBuf[22] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 static uint32_t u32DstBuf[22] = {0};
 static uint32_t u32ExpectDstBufData[22] = {16, 17, 18, 19, 20,
                                             6,  7,  8,  9, 10,
-                                           11, 12, 13, 14, 15};
+                                           11, 12, 13, 14, 15,
+                                            0,0,0,0,0,0,0};
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -179,14 +183,12 @@ int32_t main(void)
     stcDmaCfg.stcDmaChCfg.enTrnWidth = Dma32Bit;
 
     /* Enable DMA clock. */
-    if(DMA_UNIT == M4_DMA1)
-    {
+#if (DMA_UNIT_INDEX == 1u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA1,Enable);
-    }
-    else if(DMA_UNIT == M4_DMA2)
-    {
+#endif
+#if (DMA_UNIT_INDEX == 2u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA2,Enable);
-    }
+#endif
 
     /* Enable DMA1. */
     DMA_Cmd(DMA_UNIT,Enable);
@@ -209,8 +211,8 @@ int32_t main(void)
         AOS_SW_Trigger();
     }
 
-    u8CmpRet = memcmp(u32DstBuf, u32ExpectDstBufData, sizeof(u32DstBuf));
-    if(0 == u8CmpRet)
+    CmpRet = memcmp(u32DstBuf, u32ExpectDstBufData, sizeof(u32DstBuf));
+    if(0 == CmpRet)
     {
         LED1_ON();    /* Meet the expected */
     }
@@ -219,7 +221,10 @@ int32_t main(void)
         LED0_ON();    /* Don't meet the expected */
     }
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file handles the issuing of the USB transactions
-	@endlink
+        This file handles the issuing of the USB transactions
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -130,6 +130,10 @@ USBH_Status USBH_CtlReq     (USB_OTG_CORE_HANDLE *pdev,
                 phost->RequestState = CMD_SEND;
                 status = USBH_NOT_SUPPORTED;
             }
+            else
+            {
+                //
+            }
             break;
         default:
             break;
@@ -150,7 +154,7 @@ USBH_Status USBH_CtlSendSetup ( USB_OTG_CORE_HANDLE *pdev,
                                 uint8_t *buff,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 0;
+    pdev->host.hc[hc_num].ep_is_in = 0u;
     pdev->host.hc[hc_num].data_pid = HC_PID_SETUP;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = USBH_SETUP_PKT_SIZE;
@@ -174,17 +178,17 @@ USBH_Status USBH_CtlSendData ( USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 0;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)0;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
 
-    if ( length == 0 )
+    if ( length == 0u )
     { /* For Status OUT stage, Length==0, Status Out PID = 1 */
-        pdev->host.hc[hc_num].toggle_out = 1;
+        pdev->host.hc[hc_num].toggle_out = (uint8_t)1;
     }
 
     /* Set the Data Toggle bit as per the Flag */
-    if ( pdev->host.hc[hc_num].toggle_out == 0)
+    if ( pdev->host.hc[hc_num].toggle_out == (uint8_t)0)
     { /* Put the PID 0 */
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
     }
@@ -214,7 +218,7 @@ USBH_Status USBH_CtlReceiveData(USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 1;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)1;
     pdev->host.hc[hc_num].data_pid = HC_PID_DATA1;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
@@ -239,12 +243,12 @@ USBH_Status USBH_BulkSendData ( USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 0;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)0;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
 
     /* Set the Data Toggle bit as per the Flag */
-    if ( pdev->host.hc[hc_num].toggle_out == 0)
+    if ( pdev->host.hc[hc_num].toggle_out == (uint8_t)0)
     { /* Put the PID 0 */
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
     }
@@ -273,12 +277,12 @@ USBH_Status USBH_BulkReceiveData( USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 1;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)1;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
 
 
-    if( pdev->host.hc[hc_num].toggle_in == 0)
+    if( pdev->host.hc[hc_num].toggle_in == (uint8_t)0)
     {
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
     }
@@ -306,11 +310,11 @@ USBH_Status USBH_InterruptReceiveData( USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 1;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)1;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
 
-    if(pdev->host.hc[hc_num].toggle_in == 0)
+    if(pdev->host.hc[hc_num].toggle_in == (uint8_t)0)
     {
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
     }
@@ -320,7 +324,7 @@ USBH_Status USBH_InterruptReceiveData( USB_OTG_CORE_HANDLE *pdev,
     }
 
     /* toggle DATA PID */
-    pdev->host.hc[hc_num].toggle_in ^= 1;
+    pdev->host.hc[hc_num].toggle_in ^= (uint8_t)1;
 
     HCD_SubmitRequest (pdev , hc_num);
     return USBH_OK;
@@ -341,11 +345,11 @@ USBH_Status USBH_InterruptSendData( USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 0;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)0;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
 
-    if(pdev->host.hc[hc_num].toggle_in == 0)
+    if(pdev->host.hc[hc_num].toggle_in == (uint8_t)0)
     {
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
     }
@@ -354,7 +358,7 @@ USBH_Status USBH_InterruptSendData( USB_OTG_CORE_HANDLE *pdev,
         pdev->host.hc[hc_num].data_pid = HC_PID_DATA1;
     }
 
-    pdev->host.hc[hc_num].toggle_in ^= 1;
+    pdev->host.hc[hc_num].toggle_in ^= (uint8_t)1;
     HCD_SubmitRequest (pdev , hc_num);
     return USBH_OK;
 }
@@ -403,7 +407,7 @@ USBH_Status USBH_IsocReceiveData( USB_OTG_CORE_HANDLE *pdev,
                                 uint32_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 1;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)1;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
     pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;
@@ -428,7 +432,7 @@ USBH_Status USBH_IsocSendData( USB_OTG_CORE_HANDLE *pdev,
                                 uint32_t length,
                                 uint8_t hc_num)
 {
-    pdev->host.hc[hc_num].ep_is_in = 0;
+    pdev->host.hc[hc_num].ep_is_in = (uint8_t)0;
     pdev->host.hc[hc_num].xfer_buff = buff;
     pdev->host.hc[hc_num].xfer_len = length;
     pdev->host.hc[hc_num].data_pid = HC_PID_DATA0;

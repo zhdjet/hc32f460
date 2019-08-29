@@ -39915,57 +39915,57 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCEHU</name>
-                            <description>desc OCEHU</description>
+                            <name>OCEH</name>
+                            <description>desc OCEH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCELU</name>
-                            <description>desc OCELU</description>
+                            <name>OCEL</name>
+                            <description>desc OCEL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPHU</name>
-                            <description>desc OCPHU</description>
+                            <name>OCPH</name>
+                            <description>desc OCPH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPLU</name>
-                            <description>desc OCPLU</description>
+                            <name>OCPL</name>
+                            <description>desc OCPL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIEHU</name>
-                            <description>desc OCIEHU</description>
+                            <name>OCIEH</name>
+                            <description>desc OCIEH</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIELU</name>
-                            <description>desc OCIELU</description>
+                            <name>OCIEL</name>
+                            <description>desc OCIEL</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFHU</name>
-                            <description>desc OCFHU</description>
+                            <name>OCFH</name>
+                            <description>desc OCFH</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFLU</name>
-                            <description>desc OCFLU</description>
+                            <name>OCFL</name>
+                            <description>desc OCFL</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -39982,71 +39982,71 @@
                     <resetMask>0x3FFF</resetMask>
                     <fields>
                         <field>
-                            <name>CHBUFENU</name>
-                            <description>desc CHBUFENU</description>
+                            <name>CHBUFEN</name>
+                            <description>desc CHBUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>CLBUFENU</name>
-                            <description>desc CLBUFENU</description>
+                            <name>CLBUFEN</name>
+                            <description>desc CLBUFEN</description>
                             <msb>3</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MHBUFENU</name>
-                            <description>desc MHBUFENU</description>
+                            <name>MHBUFEN</name>
+                            <description>desc MHBUFEN</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MLBUFENU</name>
-                            <description>desc MLBUFENU</description>
+                            <name>MLBUFEN</name>
+                            <description>desc MLBUFEN</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCHU</name>
-                            <description>desc LMCHU</description>
+                            <name>LMCH</name>
+                            <description>desc LMCH</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCLU</name>
-                            <description>desc LMCLU</description>
+                            <name>LMCL</name>
+                            <description>desc LMCL</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMHU</name>
-                            <description>desc LMMHU</description>
+                            <name>LMMH</name>
+                            <description>desc LMMH</description>
                             <msb>10</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMLU</name>
-                            <description>desc LMMLU</description>
+                            <name>LMML</name>
+                            <description>desc LMML</description>
                             <msb>11</msb>
                             <lsb>11</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECHU</name>
-                            <description>desc MCECHU</description>
+                            <name>MCECH</name>
+                            <description>desc MCECH</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECLU</name>
-                            <description>desc MCECLU</description>
+                            <name>MCECL</name>
+                            <description>desc MCECL</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
@@ -40063,57 +40063,57 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCEHV</name>
-                            <description>desc OCEHV</description>
+                            <name>OCEH</name>
+                            <description>desc OCEH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCELV</name>
-                            <description>desc OCELV</description>
+                            <name>OCEL</name>
+                            <description>desc OCEL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPHV</name>
-                            <description>desc OCPHV</description>
+                            <name>OCPH</name>
+                            <description>desc OCPH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPLV</name>
-                            <description>desc OCPLV</description>
+                            <name>OCPL</name>
+                            <description>desc OCPL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIEHV</name>
-                            <description>desc OCIEHV</description>
+                            <name>OCIEH</name>
+                            <description>desc OCIEH</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIELV</name>
-                            <description>desc OCIELV</description>
+                            <name>OCIEL</name>
+                            <description>desc OCIEL</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFHV</name>
-                            <description>desc OCFHV</description>
+                            <name>OCFH</name>
+                            <description>desc OCFH</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFLV</name>
-                            <description>desc OCFLV</description>
+                            <name>OCFL</name>
+                            <description>desc OCFL</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -40130,71 +40130,71 @@
                     <resetMask>0x3FFF</resetMask>
                     <fields>
                         <field>
-                            <name>CHBUFENV</name>
-                            <description>desc CHBUFENV</description>
+                            <name>CHBUFEN</name>
+                            <description>desc CHBUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>CLBUFENV</name>
-                            <description>desc CLBUFENV</description>
+                            <name>CLBUFEN</name>
+                            <description>desc CLBUFEN</description>
                             <msb>3</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MHBUFENV</name>
-                            <description>desc MHBUFENV</description>
+                            <name>MHBUFEN</name>
+                            <description>desc MHBUFEN</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MLBUFENV</name>
-                            <description>desc MLBUFENV</description>
+                            <name>MLBUFEN</name>
+                            <description>desc MLBUFEN</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCHV</name>
-                            <description>desc LMCHV</description>
+                            <name>LMCH</name>
+                            <description>desc LMCH</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCLV</name>
-                            <description>desc LMCLV</description>
+                            <name>LMCL</name>
+                            <description>desc LMCL</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMHV</name>
-                            <description>desc LMMHV</description>
+                            <name>LMMH</name>
+                            <description>desc LMMH</description>
                             <msb>10</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMLV</name>
-                            <description>desc LMMLV</description>
+                            <name>LMML</name>
+                            <description>desc LMML</description>
                             <msb>11</msb>
                             <lsb>11</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECHV</name>
-                            <description>desc MCECHV</description>
+                            <name>MCECH</name>
+                            <description>desc MCECH</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECLV</name>
-                            <description>desc MCECLV</description>
+                            <name>MCECL</name>
+                            <description>desc MCECL</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
@@ -40211,57 +40211,57 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCEHW</name>
-                            <description>desc OCEHW</description>
+                            <name>OCEH</name>
+                            <description>desc OCEH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCELW</name>
-                            <description>desc OCELW</description>
+                            <name>OCEL</name>
+                            <description>desc OCEL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPHW</name>
-                            <description>desc OCPHW</description>
+                            <name>OCPH</name>
+                            <description>desc OCPH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCPLW</name>
-                            <description>desc OCPLW</description>
+                            <name>OCPL</name>
+                            <description>desc OCPL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIEHW</name>
-                            <description>desc OCIEHW</description>
+                            <name>OCIEH</name>
+                            <description>desc OCIEH</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCIELW</name>
-                            <description>desc OCIELW</description>
+                            <name>OCIEL</name>
+                            <description>desc OCIEL</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFHW</name>
-                            <description>desc OCFHW</description>
+                            <name>OCFH</name>
+                            <description>desc OCFH</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFLW</name>
-                            <description>desc OCFLW</description>
+                            <name>OCFL</name>
+                            <description>desc OCFL</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -40278,71 +40278,71 @@
                     <resetMask>0x3FFF</resetMask>
                     <fields>
                         <field>
-                            <name>CHBUFENW</name>
-                            <description>desc CHBUFENW</description>
+                            <name>CHBUFEN</name>
+                            <description>desc CHBUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>CLBUFENW</name>
-                            <description>desc CLBUFENW</description>
+                            <name>CLBUFEN</name>
+                            <description>desc CLBUFEN</description>
                             <msb>3</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MHBUFENW</name>
-                            <description>desc MHBUFENW</description>
+                            <name>MHBUFEN</name>
+                            <description>desc MHBUFEN</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MLBUFENW</name>
-                            <description>desc MLBUFENW</description>
+                            <name>MLBUFEN</name>
+                            <description>desc MLBUFEN</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCHW</name>
-                            <description>desc LMCHW</description>
+                            <name>LMCH</name>
+                            <description>desc LMCH</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCLW</name>
-                            <description>desc LMCLW</description>
+                            <name>LMCL</name>
+                            <description>desc LMCL</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMHW</name>
-                            <description>desc LMMHW</description>
+                            <name>LMMH</name>
+                            <description>desc LMMH</description>
                             <msb>10</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMMLW</name>
-                            <description>desc LMMLW</description>
+                            <name>LMML</name>
+                            <description>desc LMML</description>
                             <msb>11</msb>
                             <lsb>11</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECHW</name>
-                            <description>desc MCECHW</description>
+                            <name>MCECH</name>
+                            <description>desc MCECH</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MCECLW</name>
-                            <description>desc MCECLW</description>
+                            <name>MCECL</name>
+                            <description>desc MCECL</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
@@ -40350,8 +40350,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRUH</name>
-                    <description>desc OCMRUH</description>
+                    <name>OCMRHUH</name>
+                    <description>desc OCMRHUH</description>
                     <addressOffset>0x24</addressOffset>
                     <size>16</size>
                     <access>read-write</access>
@@ -40359,71 +40359,71 @@
                     <resetMask>0xFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCHUH</name>
-                            <description>desc OCFDCHUH</description>
+                            <name>OCFDCH</name>
+                            <description>desc OCFDCH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKHUH</name>
-                            <description>desc OCFPKHUH</description>
+                            <name>OCFPKH</name>
+                            <description>desc OCFPKH</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCHUH</name>
-                            <description>desc OCFUCHUH</description>
+                            <name>OCFUCH</name>
+                            <description>desc OCFUCH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRHUH</name>
-                            <description>desc OCFZRHUH</description>
+                            <name>OCFZRH</name>
+                            <description>desc OCFZRH</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCHUH</name>
-                            <description>desc OPDCHUH</description>
+                            <name>OPDCH</name>
+                            <description>desc OPDCH</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKHUH</name>
-                            <description>desc OPPKHUH</description>
+                            <name>OPPKH</name>
+                            <description>desc OPPKH</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCHUH</name>
-                            <description>desc OPUCHUH</description>
+                            <name>OPUCH</name>
+                            <description>desc OPUCH</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRHUH</name>
-                            <description>desc OPZRHUH</description>
+                            <name>OPZRH</name>
+                            <description>desc OPZRH</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKHUH</name>
-                            <description>desc OPNPKHUH</description>
+                            <name>OPNPKH</name>
+                            <description>desc OPNPKH</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRHUH</name>
-                            <description>desc OPNZRHUH</description>
+                            <name>OPNZRH</name>
+                            <description>desc OPNZRH</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
@@ -40431,8 +40431,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRUL</name>
-                    <description>desc OCMRUL</description>
+                    <name>OCMRLUL</name>
+                    <description>desc OCMRLUL</description>
                     <addressOffset>0x28</addressOffset>
                     <size>32</size>
                     <access>read-write</access>
@@ -40440,127 +40440,127 @@
                     <resetMask>0xFFFFFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCLUL</name>
-                            <description>desc OCFDCLUL</description>
+                            <name>OCFDCL</name>
+                            <description>desc OCFDCL</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKLUL</name>
-                            <description>desc OCFPKLUL</description>
+                            <name>OCFPKL</name>
+                            <description>desc OCFPKL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCLUL</name>
-                            <description>desc OCFUCLUL</description>
+                            <name>OCFUCL</name>
+                            <description>desc OCFUCL</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRLUL</name>
-                            <description>desc OCFZRLUL</description>
+                            <name>OCFZRL</name>
+                            <description>desc OCFZRL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCLUL</name>
-                            <description>desc OPDCLUL</description>
+                            <name>OPDCL</name>
+                            <description>desc OPDCL</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKLUL</name>
-                            <description>desc OPPKLUL</description>
+                            <name>OPPKL</name>
+                            <description>desc OPPKL</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCLUL</name>
-                            <description>desc OPUCLUL</description>
+                            <name>OPUCL</name>
+                            <description>desc OPUCL</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRLUL</name>
-                            <description>desc OPZRLUL</description>
+                            <name>OPZRL</name>
+                            <description>desc OPZRL</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKLUL</name>
-                            <description>desc OPNPKLUL</description>
+                            <name>OPNPKL</name>
+                            <description>desc OPNPKL</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRLUL</name>
-                            <description>desc OPNZRLUL</description>
+                            <name>OPNZRL</name>
+                            <description>desc OPNZRL</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNDCLUL</name>
-                            <description>desc EOPNDCLUL</description>
+                            <name>EOPNDCL</name>
+                            <description>desc EOPNDCL</description>
                             <msb>17</msb>
                             <lsb>16</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNUCLUL</name>
-                            <description>desc EOPNUCLUL</description>
+                            <name>EOPNUCL</name>
+                            <description>desc EOPNUCL</description>
                             <msb>19</msb>
                             <lsb>18</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPDCLUL</name>
-                            <description>desc EOPDCLUL</description>
+                            <name>EOPDCL</name>
+                            <description>desc EOPDCL</description>
                             <msb>21</msb>
                             <lsb>20</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPPKLUL</name>
-                            <description>desc EOPPKLUL</description>
+                            <name>EOPPKL</name>
+                            <description>desc EOPPKL</description>
                             <msb>23</msb>
                             <lsb>22</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPUCLUL</name>
-                            <description>desc EOPUCLUL</description>
+                            <name>EOPUCL</name>
+                            <description>desc EOPUCL</description>
                             <msb>25</msb>
                             <lsb>24</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPZRLUL</name>
-                            <description>desc EOPZRLUL</description>
+                            <name>EOPZRL</name>
+                            <description>desc EOPZRL</description>
                             <msb>27</msb>
                             <lsb>26</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNPKLUL</name>
-                            <description>desc EOPNPKLUL</description>
+                            <name>EOPNPKL</name>
+                            <description>desc EOPNPKL</description>
                             <msb>29</msb>
                             <lsb>28</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNZRLUL</name>
-                            <description>desc EOPNZRLUL</description>
+                            <name>EOPNZRL</name>
+                            <description>desc EOPNZRL</description>
                             <msb>31</msb>
                             <lsb>30</lsb>
                             <access>read-write</access>
@@ -40568,8 +40568,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRVH</name>
-                    <description>desc OCMRVH</description>
+                    <name>OCMRHVH</name>
+                    <description>desc OCMRHVH</description>
                     <addressOffset>0x2C</addressOffset>
                     <size>16</size>
                     <access>read-write</access>
@@ -40577,71 +40577,71 @@
                     <resetMask>0xFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCHVH</name>
-                            <description>desc OCFDCHVH</description>
+                            <name>OCFDCH</name>
+                            <description>desc OCFDCH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKHVH</name>
-                            <description>desc OCFPKHVH</description>
+                            <name>OCFPKH</name>
+                            <description>desc OCFPKH</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCHVH</name>
-                            <description>desc OCFUCHVH</description>
+                            <name>OCFUCH</name>
+                            <description>desc OCFUCH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRHVH</name>
-                            <description>desc OCFZRHVH</description>
+                            <name>OCFZRH</name>
+                            <description>desc OCFZRH</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCHVH</name>
-                            <description>desc OPDCHVH</description>
+                            <name>OPDCH</name>
+                            <description>desc OPDCH</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKHVH</name>
-                            <description>desc OPPKHVH</description>
+                            <name>OPPKH</name>
+                            <description>desc OPPKH</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCHVH</name>
-                            <description>desc OPUCHVH</description>
+                            <name>OPUCH</name>
+                            <description>desc OPUCH</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRHVH</name>
-                            <description>desc OPZRHVH</description>
+                            <name>OPZRH</name>
+                            <description>desc OPZRH</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKHVH</name>
-                            <description>desc OPNPKHVH</description>
+                            <name>OPNPKH</name>
+                            <description>desc OPNPKH</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRHVH</name>
-                            <description>desc OPNZRHVH</description>
+                            <name>OPNZRH</name>
+                            <description>desc OPNZRH</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
@@ -40649,8 +40649,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRVL</name>
-                    <description>desc OCMRVL</description>
+                    <name>OCMRLVL</name>
+                    <description>desc OCMRLVL</description>
                     <addressOffset>0x30</addressOffset>
                     <size>32</size>
                     <access>read-write</access>
@@ -40658,127 +40658,127 @@
                     <resetMask>0xFFFFFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCLVL</name>
-                            <description>desc OCFDCLVL</description>
+                            <name>OCFDCL</name>
+                            <description>desc OCFDCL</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKLVL</name>
-                            <description>desc OCFPKLVL</description>
+                            <name>OCFPKL</name>
+                            <description>desc OCFPKL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCLVL</name>
-                            <description>desc OCFUCLVL</description>
+                            <name>OCFUCL</name>
+                            <description>desc OCFUCL</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRLVL</name>
-                            <description>desc OCFZRLVL</description>
+                            <name>OCFZRL</name>
+                            <description>desc OCFZRL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCLVL</name>
-                            <description>desc OPDCLVL</description>
+                            <name>OPDCL</name>
+                            <description>desc OPDCL</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKLVL</name>
-                            <description>desc OPPKLVL</description>
+                            <name>OPPKL</name>
+                            <description>desc OPPKL</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCLVL</name>
-                            <description>desc OPUCLVL</description>
+                            <name>OPUCL</name>
+                            <description>desc OPUCL</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRLVL</name>
-                            <description>desc OPZRLVL</description>
+                            <name>OPZRL</name>
+                            <description>desc OPZRL</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKLVL</name>
-                            <description>desc OPNPKLVL</description>
+                            <name>OPNPKL</name>
+                            <description>desc OPNPKL</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRLVL</name>
-                            <description>desc OPNZRLVL</description>
+                            <name>OPNZRL</name>
+                            <description>desc OPNZRL</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNDCLVL</name>
-                            <description>desc EOPNDCLVL</description>
+                            <name>EOPNDCL</name>
+                            <description>desc EOPNDCL</description>
                             <msb>17</msb>
                             <lsb>16</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNUCLVL</name>
-                            <description>desc EOPNUCLVL</description>
+                            <name>EOPNUCL</name>
+                            <description>desc EOPNUCL</description>
                             <msb>19</msb>
                             <lsb>18</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPDCLVL</name>
-                            <description>desc EOPDCLVL</description>
+                            <name>EOPDCL</name>
+                            <description>desc EOPDCL</description>
                             <msb>21</msb>
                             <lsb>20</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPPKLVL</name>
-                            <description>desc EOPPKLVL</description>
+                            <name>EOPPKL</name>
+                            <description>desc EOPPKL</description>
                             <msb>23</msb>
                             <lsb>22</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPUCLVL</name>
-                            <description>desc EOPUCLVL</description>
+                            <name>EOPUCL</name>
+                            <description>desc EOPUCL</description>
                             <msb>25</msb>
                             <lsb>24</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPZRLVL</name>
-                            <description>desc EOPZRLVL</description>
+                            <name>EOPZRL</name>
+                            <description>desc EOPZRL</description>
                             <msb>27</msb>
                             <lsb>26</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNPKLVL</name>
-                            <description>desc EOPNPKLVL</description>
+                            <name>EOPNPKL</name>
+                            <description>desc EOPNPKL</description>
                             <msb>29</msb>
                             <lsb>28</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNZRLVL</name>
-                            <description>desc EOPNZRLVL</description>
+                            <name>EOPNZRL</name>
+                            <description>desc EOPNZRL</description>
                             <msb>31</msb>
                             <lsb>30</lsb>
                             <access>read-write</access>
@@ -40786,8 +40786,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRWH</name>
-                    <description>desc OCMRWH</description>
+                    <name>OCMRHWH</name>
+                    <description>desc OCMRHWH</description>
                     <addressOffset>0x34</addressOffset>
                     <size>16</size>
                     <access>read-write</access>
@@ -40795,71 +40795,71 @@
                     <resetMask>0xFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCHWH</name>
-                            <description>desc OCFDCHWH</description>
+                            <name>OCFDCH</name>
+                            <description>desc OCFDCH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKHWH</name>
-                            <description>desc OCFPKHWH</description>
+                            <name>OCFPKH</name>
+                            <description>desc OCFPKH</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCHWH</name>
-                            <description>desc OCFUCHWH</description>
+                            <name>OCFUCH</name>
+                            <description>desc OCFUCH</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRHWH</name>
-                            <description>desc OCFZRHWH</description>
+                            <name>OCFZRH</name>
+                            <description>desc OCFZRH</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCHWH</name>
-                            <description>desc OPDCHWH</description>
+                            <name>OPDCH</name>
+                            <description>desc OPDCH</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKHWH</name>
-                            <description>desc OPPKHWH</description>
+                            <name>OPPKH</name>
+                            <description>desc OPPKH</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCHWH</name>
-                            <description>desc OPUCHWH</description>
+                            <name>OPUCH</name>
+                            <description>desc OPUCH</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRHWH</name>
-                            <description>desc OPZRHWH</description>
+                            <name>OPZRH</name>
+                            <description>desc OPZRH</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKHWH</name>
-                            <description>desc OPNPKHWH</description>
+                            <name>OPNPKH</name>
+                            <description>desc OPNPKH</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRHWH</name>
-                            <description>desc OPNZRHWH</description>
+                            <name>OPNZRH</name>
+                            <description>desc OPNZRH</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
@@ -40867,8 +40867,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>OCMRWL</name>
-                    <description>desc OCMRWL</description>
+                    <name>OCMRLWL</name>
+                    <description>desc OCMRLWL</description>
                     <addressOffset>0x38</addressOffset>
                     <size>32</size>
                     <access>read-write</access>
@@ -40876,127 +40876,127 @@
                     <resetMask>0xFFFFFFFF</resetMask>
                     <fields>
                         <field>
-                            <name>OCFDCLWL</name>
-                            <description>desc OCFDCLWL</description>
+                            <name>OCFDCL</name>
+                            <description>desc OCFDCL</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFPKLWL</name>
-                            <description>desc OCFPKLWL</description>
+                            <name>OCFPKL</name>
+                            <description>desc OCFPKL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFUCLWL</name>
-                            <description>desc OCFUCLWL</description>
+                            <name>OCFUCL</name>
+                            <description>desc OCFUCL</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OCFZRLWL</name>
-                            <description>desc OCFZRLWL</description>
+                            <name>OCFZRL</name>
+                            <description>desc OCFZRL</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPDCLWL</name>
-                            <description>desc OPDCLWL</description>
+                            <name>OPDCL</name>
+                            <description>desc OPDCL</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPPKLWL</name>
-                            <description>desc OPPKLWL</description>
+                            <name>OPPKL</name>
+                            <description>desc OPPKL</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPUCLWL</name>
-                            <description>desc OPUCLWL</description>
+                            <name>OPUCL</name>
+                            <description>desc OPUCL</description>
                             <msb>9</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPZRLWL</name>
-                            <description>desc OPZRLWL</description>
+                            <name>OPZRL</name>
+                            <description>desc OPZRL</description>
                             <msb>11</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNPKLWL</name>
-                            <description>desc OPNPKLWL</description>
+                            <name>OPNPKL</name>
+                            <description>desc OPNPKL</description>
                             <msb>13</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>OPNZRLWL</name>
-                            <description>desc OPNZRLWL</description>
+                            <name>OPNZRL</name>
+                            <description>desc OPNZRL</description>
                             <msb>15</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNDCLWL</name>
-                            <description>desc EOPNDCLWL</description>
+                            <name>EOPNDCL</name>
+                            <description>desc EOPNDCL</description>
                             <msb>17</msb>
                             <lsb>16</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNUCLWL</name>
-                            <description>desc EOPNUCLWL</description>
+                            <name>EOPNUCL</name>
+                            <description>desc EOPNUCL</description>
                             <msb>19</msb>
                             <lsb>18</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPDCLWL</name>
-                            <description>desc EOPDCLWL</description>
+                            <name>EOPDCL</name>
+                            <description>desc EOPDCL</description>
                             <msb>21</msb>
                             <lsb>20</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPPKLWL</name>
-                            <description>desc EOPPKLWL</description>
+                            <name>EOPPKL</name>
+                            <description>desc EOPPKL</description>
                             <msb>23</msb>
                             <lsb>22</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPUCLWL</name>
-                            <description>desc EOPUCLWL</description>
+                            <name>EOPUCL</name>
+                            <description>desc EOPUCL</description>
                             <msb>25</msb>
                             <lsb>24</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPZRLWL</name>
-                            <description>desc EOPZRLWL</description>
+                            <name>EOPZRL</name>
+                            <description>desc EOPZRL</description>
                             <msb>27</msb>
                             <lsb>26</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNPKLWL</name>
-                            <description>desc EOPNPKLWL</description>
+                            <name>EOPNPKL</name>
+                            <description>desc EOPNPKL</description>
                             <msb>29</msb>
                             <lsb>28</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EOPNZRLWL</name>
-                            <description>desc EOPNZRLWL</description>
+                            <name>EOPNZRL</name>
+                            <description>desc EOPNZRL</description>
                             <msb>31</msb>
                             <lsb>30</lsb>
                             <access>read-write</access>
@@ -41232,22 +41232,22 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>DIVCKU</name>
-                            <description>desc DIVCKU</description>
+                            <name>DIVCK</name>
+                            <description>desc DIVCK</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PWMMDU</name>
-                            <description>desc PWMMDU</description>
+                            <name>PWMMD</name>
+                            <description>desc PWMMD</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LVLSU</name>
-                            <description>desc LVLSU</description>
+                            <name>LVLS</name>
+                            <description>desc LVLS</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -41264,22 +41264,22 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>DIVCKV</name>
-                            <description>desc DIVCKV</description>
+                            <name>DIVCK</name>
+                            <description>desc DIVCK</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PWMMDV</name>
-                            <description>desc PWMMDV</description>
+                            <name>PWMMD</name>
+                            <description>desc PWMMD</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LVLSV</name>
-                            <description>desc LVLSV</description>
+                            <name>LVLS</name>
+                            <description>desc LVLS</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -41296,22 +41296,22 @@
                     <resetMask>0xFF</resetMask>
                     <fields>
                         <field>
-                            <name>DIVCKW</name>
-                            <description>desc DIVCKW</description>
+                            <name>DIVCK</name>
+                            <description>desc DIVCK</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PWMMDW</name>
-                            <description>desc PWMMDW</description>
+                            <name>PWMMD</name>
+                            <description>desc PWMMD</description>
                             <msb>5</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LVLSW</name>
-                            <description>desc LVLSW</description>
+                            <name>LVLS</name>
+                            <description>desc LVLS</description>
                             <msb>7</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -41498,64 +41498,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENUH</name>
-                            <description>desc BUFENUH</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSUH</name>
-                            <description>desc EVTOSUH</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCUH</name>
-                            <description>desc LMCUH</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSUH</name>
-                            <description>desc EVTMSUH</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSUH</name>
-                            <description>desc EVTDSUH</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENUH</name>
-                            <description>desc DENUH</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENUH</name>
-                            <description>desc PENUH</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENUH</name>
-                            <description>desc UENUH</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENUH</name>
-                            <description>desc ZENUH</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -41572,22 +41572,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCUH</name>
-                            <description>desc AMCUH</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEUH</name>
-                            <description>desc MZCEUH</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEUH</name>
-                            <description>desc MPCEUH</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -41604,64 +41604,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENUL</name>
-                            <description>desc BUFENUL</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSUL</name>
-                            <description>desc EVTOSUL</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCUL</name>
-                            <description>desc LMCUL</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSUL</name>
-                            <description>desc EVTMSUL</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSUL</name>
-                            <description>desc EVTDSUL</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENUL</name>
-                            <description>desc DENUL</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENUL</name>
-                            <description>desc PENUL</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENUL</name>
-                            <description>desc UENUL</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENUL</name>
-                            <description>desc ZENUL</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -41678,22 +41678,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCUL</name>
-                            <description>desc AMCUL</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEUL</name>
-                            <description>desc MZCEUL</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEUL</name>
-                            <description>desc MPCEUL</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -41710,64 +41710,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENVH</name>
-                            <description>desc BUFENVH</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSVH</name>
-                            <description>desc EVTOSVH</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCVH</name>
-                            <description>desc LMCVH</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSVH</name>
-                            <description>desc EVTMSVH</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSVH</name>
-                            <description>desc EVTDSVH</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENVH</name>
-                            <description>desc DENVH</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENVH</name>
-                            <description>desc PENVH</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENVH</name>
-                            <description>desc UENVH</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENVH</name>
-                            <description>desc ZENVH</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -41784,22 +41784,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCVH</name>
-                            <description>desc AMCVH</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEVH</name>
-                            <description>desc MZCEVH</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEVH</name>
-                            <description>desc MPCEVH</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -41816,64 +41816,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENVL</name>
-                            <description>desc BUFENVL</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSVL</name>
-                            <description>desc EVTOSVL</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCVL</name>
-                            <description>desc LMCVL</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSVL</name>
-                            <description>desc EVTMSVL</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSVL</name>
-                            <description>desc EVTDSVL</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENVL</name>
-                            <description>desc DENVL</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENVL</name>
-                            <description>desc PENVL</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENVL</name>
-                            <description>desc UENVL</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENVL</name>
-                            <description>desc ZENVL</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -41890,22 +41890,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCVL</name>
-                            <description>desc AMCVL</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEVL</name>
-                            <description>desc MZCEVL</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEVL</name>
-                            <description>desc MPCEVL</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -41922,64 +41922,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENWH</name>
-                            <description>desc BUFENWH</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSWH</name>
-                            <description>desc EVTOSWH</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCWH</name>
-                            <description>desc LMCWH</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSWH</name>
-                            <description>desc EVTMSWH</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSWH</name>
-                            <description>desc EVTDSWH</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENWH</name>
-                            <description>desc DENWH</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENWH</name>
-                            <description>desc PENWH</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENWH</name>
-                            <description>desc UENWH</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENWH</name>
-                            <description>desc ZENWH</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -41996,22 +41996,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCWH</name>
-                            <description>desc AMCWH</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEWH</name>
-                            <description>desc MZCEWH</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEWH</name>
-                            <description>desc MPCEWH</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -42028,64 +42028,64 @@
                     <resetMask>0xF33F</resetMask>
                     <fields>
                         <field>
-                            <name>BUFENWL</name>
-                            <description>desc BUFENWL</description>
+                            <name>BUFEN</name>
+                            <description>desc BUFEN</description>
                             <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTOSWL</name>
-                            <description>desc EVTOSWL</description>
+                            <name>EVTOS</name>
+                            <description>desc EVTOS</description>
                             <msb>4</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>LMCWL</name>
-                            <description>desc LMCWL</description>
+                            <name>LMC</name>
+                            <description>desc LMC</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTMSWL</name>
-                            <description>desc EVTMSWL</description>
+                            <name>EVTMS</name>
+                            <description>desc EVTMS</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>EVTDSWL</name>
-                            <description>desc EVTDSWL</description>
+                            <name>EVTDS</name>
+                            <description>desc EVTDS</description>
                             <msb>9</msb>
                             <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>DENWL</name>
-                            <description>desc DENWL</description>
+                            <name>DEN</name>
+                            <description>desc DEN</description>
                             <msb>12</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PENWL</name>
-                            <description>desc PENWL</description>
+                            <name>PEN</name>
+                            <description>desc PEN</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>UENWL</name>
-                            <description>desc UENWL</description>
+                            <name>UEN</name>
+                            <description>desc UEN</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ZENWL</name>
-                            <description>desc ZENWL</description>
+                            <name>ZEN</name>
+                            <description>desc ZEN</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -42102,22 +42102,22 @@
                     <resetMask>0xCF</resetMask>
                     <fields>
                         <field>
-                            <name>AMCWL</name>
-                            <description>desc AMCWL</description>
+                            <name>AMC</name>
+                            <description>desc AMC</description>
                             <msb>3</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MZCEWL</name>
-                            <description>desc MZCEWL</description>
+                            <name>MZCE</name>
+                            <description>desc MZCE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>MPCEWL</name>
-                            <description>desc MPCEWL</description>
+                            <name>MPCE</name>
+                            <description>desc MPCE</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>

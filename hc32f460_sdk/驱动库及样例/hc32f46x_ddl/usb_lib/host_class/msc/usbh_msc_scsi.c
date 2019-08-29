@@ -116,16 +116,20 @@ uint8_t USBH_MSC_TestUnitReady (USB_OTG_CORE_HANDLE *pdev)
         {
             case CMD_SEND_STATE:
                 /*Prepare the CBW and relevent field*/
-                USBH_MSC_CBWData.field.CBWTransferLength = 0;       /* No Data Transfer */
+                USBH_MSC_CBWData.field.CBWTransferLength = 0u;       /* No Data Transfer */
                 USBH_MSC_CBWData.field.CBWFlags = USB_EP_DIR_OUT;
                 USBH_MSC_CBWData.field.CBWLength = CBW_LENGTH_TEST_UNIT_READY;
                 USBH_MSC_BOTXferParam.pRxTxBuff = USBH_MSC_CSWData.CSWArray;
                 USBH_MSC_BOTXferParam.DataLength = USBH_MSC_CSW_MAX_LENGTH;
                 USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_TEST_UNIT_READY;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
                     USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
 
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_TEST_UNIT_READY;
@@ -158,6 +162,10 @@ uint8_t USBH_MSC_TestUnitReady (USB_OTG_CORE_HANDLE *pdev)
                     /* Failure Mode */
                     USBH_MSC_BOTXferParam.CmdStateMachine = CMD_SEND_STATE;
                     status = USBH_MSC_PHASE_ERROR;
+                }
+                else
+                {
+                    //
                 }
                 break;
 
@@ -195,9 +203,13 @@ uint8_t USBH_MSC_ReadCapacity10(USB_OTG_CORE_HANDLE *pdev)
                 USBH_MSC_BOTXferParam.pRxTxBuff = USBH_DataInBuffer;
                 USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_READ_CAPACITY10;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
                     USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
 
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_READ_CAPACITY10;
@@ -282,9 +294,13 @@ uint8_t USBH_MSC_ModeSense6(USB_OTG_CORE_HANDLE *pdev)
                 USBH_MSC_BOTXferParam.pRxTxBuff = USBH_DataInBuffer;
                 USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_MODE_SENSE6;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
                     USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
 
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_MODE_SENSE6;
@@ -316,7 +332,7 @@ uint8_t USBH_MSC_ModeSense6(USB_OTG_CORE_HANDLE *pdev)
                     }
                     else
                     {
-                        USBH_MSC_Param.MSWriteProtect   = 0;
+                        USBH_MSC_Param.MSWriteProtect   = 0u;
                     }
 
                     /* Commands successfully sent and Response Received  */
@@ -377,10 +393,15 @@ uint8_t USBH_MSC_RequestSense(USB_OTG_CORE_HANDLE *pdev)
                 USBH_MSC_BOTXferParam.MSCStateBkp = USBH_MSC_BOTXferParam.MSCStateCurrent;
                 USBH_MSC_BOTXferParam.MSCStateCurrent = USBH_MSC_REQUEST_SENSE;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
-                USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
+
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_REQUEST_SENSE;
                 USBH_MSC_CBWData.field.CBWCB[1]  = DESC_REQUEST_SENSE;
                 USBH_MSC_CBWData.field.CBWCB[4]  = ALLOCATION_LENGTH_REQUEST_SENSE;
@@ -462,10 +483,15 @@ uint8_t USBH_MSC_Write10(USB_OTG_CORE_HANDLE *pdev,
                 USBH_MSC_CBWData.field.CBWLength = CBW_LENGTH;
                 USBH_MSC_BOTXferParam.pRxTxBuff = dataBuffer;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
                     USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
+
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_WRITE10;
                 /*logical block address*/
                 USBH_MSC_CBWData.field.CBWCB[2]  = (((uint8_t*)&address)[3]) ;
@@ -474,7 +500,7 @@ uint8_t USBH_MSC_Write10(USB_OTG_CORE_HANDLE *pdev,
                 USBH_MSC_CBWData.field.CBWCB[5]  = (((uint8_t*)&address)[0]);
 
                 /*USBH_MSC_PAGE_LENGTH = 512*/
-                nbOfPages = nbOfbytes/ USBH_MSC_PAGE_LENGTH;
+                nbOfPages = (uint16_t)(nbOfbytes/ USBH_MSC_PAGE_LENGTH);
 
                 /*Tranfer length */
                 USBH_MSC_CBWData.field.CBWCB[7]  = (((uint8_t *)&nbOfPages)[1]) ;
@@ -508,6 +534,10 @@ uint8_t USBH_MSC_Write10(USB_OTG_CORE_HANDLE *pdev,
                     /* Failure Mode */
                     USBH_MSC_BOTXferParam.CmdStateMachine = CMD_SEND_STATE;
                     status = USBH_MSC_PHASE_ERROR;
+                }
+                else
+                {
+                    //
                 }
                 break;
 
@@ -550,10 +580,15 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
 
                 USBH_MSC_BOTXferParam.pRxTxBuff = dataBuffer;
 
-                for(index = CBW_CB_LENGTH; index != 0; index--)
+                /*for(index = CBW_CB_LENGTH; index != 0; index--)
                 {
                     USBH_MSC_CBWData.field.CBWCB[index] = 0x00;
+                }*/  /* C-STAT */
+                for(index=0u; index<CBW_CB_LENGTH; index++)
+                {
+                    USBH_MSC_CBWData.field.CBWCB[index] = 0x00u;
                 }
+
                 USBH_MSC_CBWData.field.CBWCB[0]  = OPCODE_READ10;
 
                 /*logical block address*/
@@ -562,7 +597,7 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
                 USBH_MSC_CBWData.field.CBWCB[4]  = (((uint8_t*)&address)[1]);
                 USBH_MSC_CBWData.field.CBWCB[5]  = (((uint8_t*)&address)[0]);
                 /*USBH_MSC_PAGE_LENGTH = 512*/
-                nbOfPages = nbOfbytes/ USBH_MSC_PAGE_LENGTH;
+                nbOfPages = (uint16_t)(nbOfbytes/ USBH_MSC_PAGE_LENGTH);
                 /*Tranfer length */
                 USBH_MSC_CBWData.field.CBWCB[7]  = (((uint8_t *)&nbOfPages)[1]) ;
                 USBH_MSC_CBWData.field.CBWCB[8]  = (((uint8_t *)&nbOfPages)[0]) ;
@@ -576,13 +611,13 @@ uint8_t USBH_MSC_Read10(USB_OTG_CORE_HANDLE *pdev,
                 break;
 
             case CMD_WAIT_STATUS:
-                if((USBH_MSC_BOTXferParam.BOTXferStatus == USBH_MSC_OK) && (HCD_IsDeviceConnected(pdev)))
+                if((HCD_IsDeviceConnected(pdev)) && (USBH_MSC_BOTXferParam.BOTXferStatus == USBH_MSC_OK))
                 {
                     /* Commands successfully sent and Response Received  */
                     USBH_MSC_BOTXferParam.CmdStateMachine = CMD_SEND_STATE;
                     status = USBH_MSC_OK;
                 }
-                else if (( USBH_MSC_BOTXferParam.BOTXferStatus == USBH_MSC_FAIL ) && (HCD_IsDeviceConnected(pdev)))
+                else if ((HCD_IsDeviceConnected(pdev)) && (USBH_MSC_BOTXferParam.BOTXferStatus == USBH_MSC_FAIL))
                 {
                     /* Failure Mode */
                     USBH_MSC_BOTXferParam.CmdStateMachine = CMD_SEND_STATE;

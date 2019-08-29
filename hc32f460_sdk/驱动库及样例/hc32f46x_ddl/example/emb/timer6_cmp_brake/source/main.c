@@ -62,41 +62,41 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 (SW2)*/
-#define  SW2_PORT   PortD
-#define  SW2_PIN    Pin03
+#define  SW2_PORT               (PortD)
+#define  SW2_PIN                (Pin03)
 /* KEY1 (SW4)*/
-#define  SW4_PORT   PortD
-#define  SW4_PIN    Pin04
+#define  SW4_PORT               (PortD)
+#define  SW4_PIN                (Pin04)
 /* KEY2 (SW3)*/
-#define  SW3_PORT   PortD
-#define  SW3_PIN    Pin05
+#define  SW3_PORT               (PortD)
+#define  SW3_PIN                (Pin05)
 /* KEY3 (SW5)*/
-#define  SW5_PORT   PortD
-#define  SW5_PIN    Pin06
+#define  SW5_PORT               (PortD)
+#define  SW5_PIN                (Pin06)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortD
-#define  LED1_PIN         Pin07
+#define  LED1_PORT              (PortD)
+#define  LED1_PIN               (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT              (PortB)
+#define  LED2_PIN               (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT        PortB
-#define  LED3_PIN         Pin09
+#define  LED3_PORT              (PortB)
+#define  LED3_PIN               (Pin09)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    M4_PORT->POTRE_f.POT06 = 1
-#define  LED1_TOGGLE()    M4_PORT->POTRD_f.POT07 = 1
-#define  LED2_TOGGLE()    M4_PORT->POTRB_f.POT05 = 1
-#define  LED3_TOGGLE()    M4_PORT->POTRB_f.POT09 = 1
+#define  LED0_TOGGLE()          (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()          (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()          (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()          (PORT_Toggle(LED3_PORT, LED3_PIN))
 
-#define  Timer6x   M4_TMR61
+#define  Timer6x                (M4_TMR61)
 
 //#define DAC_Enable
 
@@ -108,6 +108,11 @@ uint16_t u16Flag_EMB1_Braking;
 /*******************************************************************************
  * Local function prototypes ('static')
  ******************************************************************************/
+static void Timer6_UnderFlow_CallBack(void);
+static void EMB1_CallBack(void);
+static void SysClkIni(void);
+static void Timer6_Config(void);
+static void M4_CMP_Init(void);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -119,45 +124,52 @@ uint16_t u16Flag_EMB1_Braking;
  ******************************************************************************/
 /**
  *******************************************************************************
- ** \brief Callback function of external interrupt ch.0
+ ** \brief  Timer6 underflow interrupt callback function
  **
+ ** \param  None
+ **
+ ** \return None
  ******************************************************************************/
-
-void Timer6_UnderFlow_CallBack(void)
+static void Timer6_UnderFlow_CallBack(void)
 {
-    static uint8_t i;
+    static uint8_t i = 0u;
 
-    if( 0 == i)
+    if( 0u == i)
     {
-        Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareC, 0x3000);
-        i = 1;
+        Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareC, 0x3000u);
+        i = 1u;
     }
     else
     {
-        Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareC, 0x6000);
-        i = 0;
+        Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareC, 0x6000u);
+        i = 0u;
     }
 }
 
-
-
-void EMB1_CallBack(void)
+/**
+ *******************************************************************************
+ ** \brief  EMB1 callback function
+ **
+ ** \param  None
+ **
+ ** \return None
+ ******************************************************************************/
+static void EMB1_CallBack(void)
 {
     if(true == EMB_GetStatus(M4_EMB1, EMBFlagCmp))
     {
-        M4_PORT->PODRE_f.POUT06 = 1;
+        PORT_SetPortData(PortE, Pin06);
 
-         EMB_SwBrake(M4_EMB1, true);  //Software brake Enable, still shunt down PWM after Clear Port In Brake
+        EMB_SwBrake(M4_EMB1, true);  //Software brake Enable, still shunt down PWM after Clear Port In Brake
 
         EMB_ClrStatus(M4_EMB1, EMBCmpFlagClr);  //Clear Port In Brake
 
-        u16Flag_EMB1_Braking = 1;
+        u16Flag_EMB1_Braking = 1u;
     }
 }
 
-
 /**
- ******************************************************************************
+ *******************************************************************************
  ** \brief  Initialize the system clock for the sample
  **
  ** \param  None
@@ -188,11 +200,11 @@ static void SysClkIni(void)
     CLK_HrcCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2;   //HRC 16M / 2
-    stcMpllCfg.plln =42;      //8M*42 = 336M
-    stcMpllCfg.PllpDiv = 2;   //MLLP = 168M
-    stcMpllCfg.PllqDiv = 2;   //MLLQ = 168M
-    stcMpllCfg.PllrDiv = 2;   //MLLR = 168M
+    stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
+    stcMpllCfg.plln = 42ul;     //8M*42 = 336M
+    stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
+    stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
+    stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -205,13 +217,23 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
 }
 
-void Timer6_Config(void)
+/**
+ *******************************************************************************
+ ** \brief  Timer6 configure function
+ **
+ ** \param  None
+ **
+ ** \return None
+ ******************************************************************************/
+static void Timer6_Config(void)
 {
     uint16_t                         u16Period;
     uint16_t                         u16Compare;
@@ -238,10 +260,10 @@ void Timer6_Config(void)
     stcTIM6BaseCntCfg.enCntClkDiv = Timer6PclkDiv1;                     //Count clock: pclk
     Timer6_Init(Timer6x, &stcTIM6BaseCntCfg);                           //timer6 PWM frequency, count mode and clk config
 
-    u16Period = 0x8340;
+    u16Period = 0x8340u;
     Timer6_SetPeriod(Timer6x, Timer6PeriodA, u16Period);                //period set
 
-    u16Compare = 0x3000;
+    u16Compare = 0x3000u;
     Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareA, u16Compare);  //Set General Compare RegisterA Value
     Timer6_SetGeneralCmpValue(Timer6x, Timer6GenCompareC, u16Compare);  //Set General Compare RegisterC Value as buffer register of GCMAR
 
@@ -273,8 +295,8 @@ void Timer6_Config(void)
     stcTIM6PWMxCfg.enDisVal   = Timer6PWMxDisValLow;
     Timer6_PortOutputConfig(Timer6x, Timer6PWMB, &stcTIM6PWMxCfg);
 
-    Timer6_SetDeadTimeValue(Timer6x, Timer6DeadTimUpAR, 3360);     // Set dead time value (up count)
-    //Timer6_SetDeadTimeValue(Timer6x, Timer6DeadTimDwnAR, 3360);  // Set dead time value (down count)
+    Timer6_SetDeadTimeValue(Timer6x, Timer6DeadTimUpAR, 3360u);     // Set dead time value (up count)
+    //Timer6_SetDeadTimeValue(Timer6x, Timer6DeadTimDwnAR, 3360u);  // Set dead time value (down count)
 
     stcDeadTimeCfg.bEnDeadtime     = true;  //Enable Hardware DeadTime
     stcDeadTimeCfg.bEnDtBufUp      = false; //Disable buffer transfer
@@ -288,7 +310,7 @@ void Timer6_Config(void)
 
     stcIrqRegiConf.enIRQn = Int002_IRQn;                    //Register INT_TMR61_GUDF Int to Vect.No.002
     stcIrqRegiConf.enIntSrc = INT_TMR61_GUDF;               //Select Event interrupt function
-    stcIrqRegiConf.pfnCallback = Timer6_UnderFlow_CallBack; //Callback function
+    stcIrqRegiConf.pfnCallback = &Timer6_UnderFlow_CallBack;//Callback function
     enIrqRegistration(&stcIrqRegiConf);                     //Registration IRQ
 
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            //Clear Pending
@@ -296,7 +318,7 @@ void Timer6_Config(void)
     NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);                   //Enable NVIC
 }
 
- /*******************************************************************************
+/*******************************************************************************
  ** \brief CMP init function
  **
  ** \param [in]  None
@@ -304,7 +326,7 @@ void Timer6_Config(void)
  ** \retval None
  **
  ******************************************************************************/
-void M4_CMP_Init(void)
+static void M4_CMP_Init(void)
 {
     stc_cmp_init_t         stcCmpConfig;
     stc_irq_regi_conf_t    stcIrqRegiConf;
@@ -322,11 +344,10 @@ void M4_CMP_Init(void)
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_CMP, Enable);
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_DAC, Enable);
 
-
 #ifdef DAC_Enable
     /* Set DAC */
     //DAC1 for CMP1(INM3); DAC2 for CMP2(INM3); DAC1 for CMP3(INM3) / DAC2 for CMP3(INM4)
-    stcDacInitCfg.u8DacData = 0x80;
+    stcDacInitCfg.u8DacData = 0x80u;
     stcDacInitCfg.enCmpDacEN = Enable;
     CMP_DAC_Init(CmpDac1, &stcDacInitCfg);
     CMP_DAC_Init(CmpDac2, &stcDacInitCfg);
@@ -364,7 +385,7 @@ void M4_CMP_Init(void)
   #if 0
     stcIrqRegiConf.enIntSrc = INT_ACMP1;          //Select CMP
     stcIrqRegiConf.enIRQn = Int112_IRQn;          //Register CMP
-    stcIrqRegiConf.pfnCallback = ACMP1_Callback;  //Callback function
+    stcIrqRegiConf.pfnCallback = &ACMP1_Callback; //Callback function
     enIrqRegistration(&stcIrqRegiConf);           //Registration IRQ
 
 
@@ -484,7 +505,7 @@ int32_t main(void)
 
     M4_CMP_Init();
 
-    Ddl_Delay1ms(10);
+    Ddl_Delay1ms(10ul);
 
     //EMB_ClrStatus(M4_EMB1, EMBCmpFlagClr);  //Clear Port In Brake
 
@@ -496,7 +517,7 @@ int32_t main(void)
 
     stcIrqRegiConf.enIRQn = Int005_IRQn;                    //Register INT_TMR61_GUDF Int to Vect.No.002
     stcIrqRegiConf.enIntSrc = INT_EMB_GR0;                  //Select Event interrupt function
-    stcIrqRegiConf.pfnCallback = EMB1_CallBack;             //Callback function
+    stcIrqRegiConf.pfnCallback = &EMB1_CallBack;            //Callback function
     enIrqRegistration(&stcIrqRegiConf);                     //Registration IRQ
 
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            //Clear Pending
@@ -509,16 +530,16 @@ int32_t main(void)
 
     while(1)
     {
-        if(1 == u16Flag_EMB1_Braking)
+        if(1u == u16Flag_EMB1_Braking)
         {
             //Add brake process code
 
-            Ddl_Delay1ms(3000);  //only for demo using
+            Ddl_Delay1ms(3000ul);  //only for demo using
 
             EMB_SwBrake(M4_EMB1, false); //Disable software brake, Enable PWM output
 
-            M4_PORT->PODRE_f.POUT06 = 0;
-            u16Flag_EMB1_Braking = 0;
+            PORT_ResetPortData(PortE, Pin06);
+            u16Flag_EMB1_Braking = 0u;
         }
     }
 }

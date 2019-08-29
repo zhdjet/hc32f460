@@ -72,17 +72,17 @@ typedef struct
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define USB_OTG_EP_CONTROL                       0
-#define USB_OTG_EP_ISOC                          1
-#define USB_OTG_EP_BULK                          2
-#define USB_OTG_EP_INT                           3
-#define USB_OTG_EP_MASK                          3
+#define USB_OTG_EP_CONTROL                       (0u)
+#define USB_OTG_EP_ISOC                          (1u)
+#define USB_OTG_EP_BULK                          (2u)
+#define USB_OTG_EP_INT                           (3u)
+#define USB_OTG_EP_MASK                          (3u)
 
 /*  Device Status */
-#define USB_OTG_DEFAULT                          1
-#define USB_OTG_ADDRESSED                        2
-#define USB_OTG_CONFIGURED                       3
-#define USB_OTG_SUSPENDED                        4
+#define USB_OTG_DEFAULT                          (1u)
+#define USB_OTG_ADDRESSED                        (2u)
+#define USB_OTG_CONFIGURED                       (3u)
+#define USB_OTG_SUSPENDED                        (4u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

@@ -92,7 +92,8 @@ extern "C"
 en_result_t Ddl_UartInit(void);
 
 /* A approximate delay */
-en_result_t Ddl_Delay1ms(uint32_t u32Cnt);
+void Ddl_Delay1ms(uint32_t u32Cnt);
+void Ddl_Delay1us(uint32_t u32Cnt);
 
 /*! Ddl assert, you can add your own assert functions by implement the function
 Ddl_AssertHook definition follow the function Ddl_AssertHook declaration */
@@ -102,7 +103,7 @@ do{                                                                            \
     ((x) ? (void)0 : Ddl_AssertHandler((uint8_t *)__FILE__, __LINE__));        \
 }while(0)
 /* Exported function */
-void Ddl_AssertHandler(uint8_t *file, uint32_t line);
+void Ddl_AssertHandler(uint8_t *file, int16_t line);
 #else
 #define DDL_ASSERT(x)                               (void)(x)
 #endif /* __DEBUG */

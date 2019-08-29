@@ -61,35 +61,33 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* DMAC */
-#define DMA_UNIT                        M4_DMA1
-#define DMA_CH                          DmaCh0
-#define DMA_TRG_SEL                     EVT_USART3_RI
+#define DMA_UNIT                        (M4_DMA1)
+#define DMA_CH                          (DmaCh0)
+#define DMA_TRG_SEL                     (EVT_USART3_RI)
 
 /* USART channel definition */
-#define USART_CH                        M4_USART3
+#define USART_CH                        (M4_USART3)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (115200)
+#define USART_BAUDRATE                  (115200ul)
 
 /* USART RX Port/Pin definition */
-#define USART_RX_PORT                   PortE
-#define USART_RX_PIN                    Pin04
-#define USART_RX_FUNC                   Func_Usart3_Rx
+#define USART_RX_PORT                   (PortE)
+#define USART_RX_PIN                    (Pin04)
+#define USART_RX_FUNC                   (Func_Usart3_Rx)
 
 /* USART TX Port/Pin definition */
-#define USART_TX_PORT                   PortE
-#define USART_TX_PIN                    Pin05
-#define USART_TX_FUNC                   Func_Usart3_Tx
+#define USART_TX_PORT                   (PortE)
+#define USART_TX_PIN                    (Pin05)
+#define USART_TX_FUNC                   (Func_Usart3_Tx)
 
 /* USART interrupt  */
-#define USART_RI_NUM                    INT_USART3_RI
-#define USART_RI_IRQn                   Int000_IRQn
-#define USART_EI_NUM                    INT_USART3_EI
-#define USART_EI_IRQn                   Int001_IRQn
+#define USART_EI_NUM                    (INT_USART3_EI)
+#define USART_EI_IRQn                   (Int001_IRQn)
 
 /* DMA block transfer complete interrupt */
-#define DMA_BTC_INT_NUM                 INT_DMA1_BTC0
-#define DMA_BTC_INT_IRQn                Int002_IRQn
+#define DMA_BTC_INT_NUM                 (INT_DMA1_BTC0)
+#define DMA_BTC_INT_IRQn                (Int002_IRQn)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -106,16 +104,6 @@ static void UsartErrIrqCallback(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static const stc_usart_uart_init_t m_stcInitCfg = {
-    UsartIntClkCkNoOutput,
-    UsartClkDiv_1,
-    UsartDataBits8,
-    UsartDataLsbFirst,
-    UsartOneStopBit,
-    UsartParityNone,
-    UsartSamleBit8,
-    UsartStartBitFallEdge,
-};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -160,11 +148,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -208,7 +196,7 @@ static void DmaInit(void)
     /* Initialize DMA. */
     MEM_ZERO_STRUCT(stcDmaInit);
     stcDmaInit.u16BlockSize = 1u; /* 1 block */
-    stcDmaInit.u32SrcAddr = ((uint32_t)(&USART_CH->DR)+2); /* Set source address. */
+    stcDmaInit.u32SrcAddr = ((uint32_t)(&USART_CH->DR)+2ul); /* Set source address. */
     stcDmaInit.u32DesAddr = (uint32_t)(&USART_CH->DR);     /* Set destination address. */
     stcDmaInit.stcDmaChCfg.enSrcInc = AddressFix;  /* Set source address mode. */
     stcDmaInit.stcDmaChCfg.enDesInc = AddressFix;  /* Set destination address mode. */
@@ -230,7 +218,7 @@ static void DmaInit(void)
 
     /* Set DMA block transfer complete IRQ */
     stcIrqRegiCfg.enIRQn = DMA_BTC_INT_IRQn;
-    stcIrqRegiCfg.pfnCallback = DmaBtcIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &DmaBtcIrqCallback;
     stcIrqRegiCfg.enIntSrc = DMA_BTC_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -267,24 +255,15 @@ static void UsartErrIrqCallback(void)
     {
         USART_ClearStatus(USART_CH, UsartFrameErr);
     }
-    else
-    {
-    }
 
     if (Set == USART_GetStatus(USART_CH, UsartParityErr))
     {
         USART_ClearStatus(USART_CH, UsartParityErr);
     }
-    else
-    {
-    }
 
     if (Set == USART_GetStatus(USART_CH, UsartOverrunErr))
     {
         USART_ClearStatus(USART_CH, UsartOverrunErr);
-    }
-    else
-    {
     }
 }
 
@@ -301,7 +280,19 @@ int32_t main(void)
 {
     en_result_t enRet = Ok;
     stc_irq_regi_conf_t stcIrqRegiCfg;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_uart_init_t stcInitCfg = {
+        UsartIntClkCkNoOutput,
+        UsartClkDiv_1,
+        UsartDataBits8,
+        UsartDataLsbFirst,
+        UsartOneStopBit,
+        UsartParityNone,
+        UsartSamleBit8,
+        UsartStartBitFallEdge,
+        UsartRtsEnable,
+    };
 
     /* Initialize Clock */
     ClkInit();
@@ -317,7 +308,7 @@ int32_t main(void)
     PORT_SetFunc(USART_TX_PORT, USART_TX_PIN, USART_TX_FUNC, Disable);
 
     /* Initialize USART */
-    enRet = USART_UART_Init(USART_CH, &m_stcInitCfg);
+    enRet = USART_UART_Init(USART_CH, &stcInitCfg);
     if (enRet != Ok)
     {
         while (1)
@@ -342,16 +333,17 @@ int32_t main(void)
 
     /* Set USART RX error IRQ */
     stcIrqRegiCfg.enIRQn = USART_EI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartErrIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartErrIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_EI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);
     NVIC_EnableIRQ(stcIrqRegiCfg.enIRQn);
 
-    /*Enable RX && TX function*/
+    /*Enable TX && RX && RX interrupt function*/
     USART_FuncCmd(USART_CH, UsartTx, Enable);
     USART_FuncCmd(USART_CH, UsartRx, Enable);
+    USART_FuncCmd(USART_CH, UsartRxInt, Enable);
 
     while (1)
     {

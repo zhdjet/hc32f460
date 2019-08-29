@@ -61,42 +61,34 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-/* Enable ADC1. */
-#define ENABLE_ADC1()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable)
-
-/* Enable ADC2. */
-#define ENABLE_ADC2()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Enable)
-
-/* Disable ADC1. */
-#define DISABLE_ADC1()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Disable)
-
-/* Disable ADC2. */
-#define DISABLE_ADC2()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Disable)
-
 /* ADC clock selection definition. */
 #define ADC_CLK_PCLK                (1u)
 #define ADC_CLK_MPLLQ               (2u)
 #define ADC_CLK_UPLLR               (3u)
 
 /* Select MPLLQ as ADC clock. */
-#define ADC_CLK                     ADC_CLK_PCLK
+#define ADC_CLK                     (ADC_CLK_PCLK)
 
 /* ADC1 channel definition for this example. */
-#define ADC1_SA_NORMAL_CHANNEL      ADC1_CH_INTERNAL
-#define ADC1_SA_CHANNEL             ADC1_SA_NORMAL_CHANNEL
+#define ADC1_SA_NORMAL_CHANNEL      (ADC1_CH_INTERNAL)
+#define ADC1_SA_CHANNEL             (ADC1_SA_NORMAL_CHANNEL)
 #define ADC1_SA_CHANNEL_COUNT       (1u)
 
-#define ADC1_CHANNEL                ADC1_SA_CHANNEL
+#define ADC1_CHANNEL                (ADC1_SA_CHANNEL)
+
+#define ADC1_INTERNAL_INDEX         (ADC_CH_IDX16)
 
 /* ADC1 channel sampling time.      ADC1_CH_INTERNAL */
 #define ADC1_SA_CHANNEL_SAMPLE_TIME { 0x30 }
 
 /* ADC2 channel definition for this example. */
-#define ADC2_SA_NORMAL_CHANNEL      ADC2_CH_INTERNAL
-#define ADC2_SA_CHANNEL             ADC2_SA_NORMAL_CHANNEL
+#define ADC2_SA_NORMAL_CHANNEL      (ADC2_CH_INTERNAL)
+#define ADC2_SA_CHANNEL             (ADC2_SA_NORMAL_CHANNEL)
 #define ADC2_SA_CHANNEL_COUNT       (1u)
 
-#define ADC2_CHANNEL                ADC2_SA_CHANNEL
+#define ADC2_CHANNEL                (ADC2_SA_CHANNEL)
+
+#define ADC2_INTERNAL_INDEX         (ADC_CH_IDX8)
 
 /* ADC2 channel sampling time.     ADC2_CH_INTERNAL */
 #define ADC2_SA_CHANNEL_SAMPLE_TIME { 0x30 }
@@ -106,18 +98,18 @@
 #define USE_ADC2_INTERNAL           (2u)
 
 /* Select ADC1 internal channel. */
-#define USE_INTERNAL_CH             USE_ADC1_INTERNAL
+#define USE_INTERNAL_CH             (USE_ADC1_INTERNAL)
 
 #if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
 #define DAC1_TO_ADC1                (1u)
 #define DAC2_TO_ADC1                (2u)
 #define VREF_TO_ADC1                (3u)
-#define ADC1_INTERNAL_SRC           VREF_TO_ADC1
+#define ADC1_INTERNAL_SRC           (VREF_TO_ADC1)
 #else
 #define DAC1_TO_ADC2                (1u)
 #define DAC2_TO_ADC2                (2u)
 #define VREF_TO_ADC2                (3u)
-#define ADC2_INTERNAL_SRC           DAC2_TO_ADC2
+#define ADC2_INTERNAL_SRC           (DAC2_TO_ADC2)
 #endif
 
 #define TIMEOUT_MS                  (10u)
@@ -137,11 +129,7 @@ static void AdcChannelConfig(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-#if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
-static uint16_t m_au16Adc1Value[ADC1_CH_COUNT];
-#else
-static uint16_t m_au16Adc2Value[ADC2_CH_COUNT];
-#endif
+static uint16_t m_u16AdcValue;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -164,20 +152,26 @@ int32_t main(void)
 
     /***************** Configuration end, application start **************/
 
-#if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
-    ADC_StartAndCheckSa(M4_ADC1, m_au16Adc1Value, TIMEOUT_MS);
-#else
-    ADC_StartAndCheckSa(M4_ADC2, m_au16Adc2Value, TIMEOUT_MS);
-#endif
-
     while (1u)
     {
-        #if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
-            ADC_StartAndCheckSa(M4_ADC1, m_au16Adc1Value, TIMEOUT_MS);
-        #else
-            ADC_StartAndCheckSa(M4_ADC2, m_au16Adc2Value, TIMEOUT_MS);
-        #endif
-        //: YOUR CODE
+#if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
+        ADC_StartConvert(M4_ADC1);
+        while (Reset == ADC_GetEocFlag(M4_ADC1, ADC_SEQ_A))
+        {
+            ;
+        }
+        m_u16AdcValue = ADC_GetValue(M4_ADC1, ADC1_INTERNAL_INDEX);
+        ADC_ClrEocFlag(M4_ADC1, ADC_SEQ_A);
+#else
+        ADC_StartConvert(M4_ADC2);
+        while (Reset == ADC_GetEocFlag(M4_ADC2, ADC_SEQ_A))
+        {
+            ;
+        }
+        m_u16AdcValue = ADC_GetValue(M4_ADC2, ADC2_INTERNAL_INDEX);
+        ADC_ClrEocFlag(M4_ADC2, ADC_SEQ_A);
+#endif
+        (void)m_u16AdcValue;
     }
 }
 
@@ -307,12 +301,12 @@ static void AdcInitConfig(void)
 
 #if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
     /* 1. Enable ADC1. */
-    ENABLE_ADC1();
+    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable);
     /* 2. Initialize ADC1. */
     ADC_Init(M4_ADC1, &stcAdcInit);
 #else
     /* 1. Enable ADC2. */
-    ENABLE_ADC2();
+    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Enable);
     /* 2. Initialize ADC2. */
     ADC_Init(M4_ADC2, &stcAdcInit);
 #endif
@@ -336,7 +330,7 @@ static void AdcChannelConfig(void)
 
 #if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
     stcChCfg.u32Channel  = ADC1_SA_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_A;
+    stcChCfg.u8Sequence  = ADC_SEQ_A;
     stcChCfg.pu8SampTime = au8AdcSampTime;
     ADC_AddAdcChannel(M4_ADC1, &stcChCfg);
 
@@ -364,7 +358,7 @@ static void AdcChannelConfig(void)
 
 #else // #if (USE_INTERNAL_CH == USE_ADC1_INTERNAL)
     stcChCfg.u32Channel  = ADC2_SA_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_A;
+    stcChCfg.u8Sequence  = ADC_SEQ_A;
     stcChCfg.pu8SampTime = au8AdcSampTime;
     ADC_AddAdcChannel(M4_ADC2, &stcChCfg);
 

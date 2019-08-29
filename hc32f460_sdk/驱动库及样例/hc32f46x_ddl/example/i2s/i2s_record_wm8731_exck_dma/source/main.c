@@ -62,57 +62,57 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Define if need play by speaker*/
-#define SPEAKER_ON      1
+#define SPEAKER_ON                  (true)
 /* Define if use exclk */
-#define EXCK_ON         1
+#define EXCK_ON                     (true)
 /* Select Record source */
-#define RECORD_MIC      1
+#define RECORD_MIC                  (true)
 /* Define I2C unit used for the example */
-#define I2C_CH                          M4_I2C2
+#define I2C_CH                      (M4_I2C2)
 /* Define port and pin for SDA and SCL */
-#define I2C2_SCL_PORT                   PortD
-#define I2C2_SCL_PIN                    Pin00
-#define I2C2_SDA_PORT                   PortD
-#define I2C2_SDA_PIN                    Pin01
+#define I2C2_SCL_PORT               (PortD)
+#define I2C2_SCL_PIN                (Pin00)
+#define I2C2_SDA_PORT               (PortD)
+#define I2C2_SDA_PIN                (Pin01)
 /* Define I2S unit used for the example */
-#define I2S_CH                          M4_I2S3
+#define I2S_CH                      (M4_I2S3)
 /* Define port and pin for i2s1 function */
-#ifdef EXCK_ON
+#if(EXCK_ON)
 /* if exck enable*/
-#define I2S3_PORT                       PortB
-#define I2S3_WS_PIN                     Pin13
-#define I2S3_SD_PIN                     Pin14
-#define I2S3_SD_IN_PIN                  Pin15
-#define I2S3_CK_PIN                     Pin12
-#define I2S3_EXCK_PORT                  PortB
-#define I2S3_EXCK_PIN                   Pin10
+#define I2S3_PORT                   (PortB)
+#define I2S3_WS_PIN                 (Pin13)
+#define I2S3_SD_PIN                 (Pin14)
+#define I2S3_SD_IN_PIN              (Pin15)
+#define I2S3_CK_PIN                 (Pin12)
+#define I2S3_EXCK_PORT              (PortB)
+#define I2S3_EXCK_PIN               (Pin10)
 #else
 /* if exck disable */
-#define I2S3_PORT                       PortB
-#define I2S3_WS_PIN                     Pin13
-#define I2S3_SD_PIN                     Pin14
-#define I2S3_SD_IN_PIN                  Pin15
-#define I2S3_CK_PIN                     Pin10
-#define I2S3_MCK_PORT                   PortB
-#define I2S3_MCK_PIN                    Pin12
+#define I2S3_PORT                   (PortB)
+#define I2S3_WS_PIN                 (Pin13)
+#define I2S3_SD_PIN                 (Pin14)
+#define I2S3_SD_IN_PIN              (Pin15)
+#define I2S3_CK_PIN                 (Pin10)
+#define I2S3_MCK_PORT               (PortB)
+#define I2S3_MCK_PIN                (Pin12)
 #endif
 
-#define SPK_EN_PORT                     PortB
-#define SPK_EN_PIN                      Pin00
+#define SPK_EN_PORT                 (PortB)
+#define SPK_EN_PIN                  (Pin00)
 
-#define SPEAKER_EN()                    PORT_SetBits(SPK_EN_PORT, SPK_EN_PIN)
-#define SPEAKER_DISEN()                 PORT_ResetBits(SPK_EN_PORT, SPK_EN_PIN)
+#define SPEAKER_EN()                (PORT_SetBits(SPK_EN_PORT, SPK_EN_PIN))
+#define SPEAKER_DISEN()             (PORT_ResetBits(SPK_EN_PORT, SPK_EN_PIN))
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT                      PortE
-#define  LED0_PIN                       Pin06
+#define  LED0_PORT                  (PortE)
+#define  LED0_PIN                   (Pin06)
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()                  PORT_Toggle(LED0_PORT, LED0_PIN)
+#define  LED0_TOGGLE()              (PORT_Toggle(LED0_PORT, LED0_PIN))
 
-#define RECORDER_WAVFILELEN             15*1024ul
+#define RECORDER_WAVFILELEN         (15u*1024u)
 
-#define DMA_UNIT                (M4_DMA2)
-#define DMA_CH                  (DmaCh0)
+#define DMA_UNIT                    (M4_DMA2)
+#define DMA_CH                      (DmaCh0)
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -126,8 +126,8 @@
  ******************************************************************************/
 uint16_t *pu16SoundData=NULL;
 uint16_t au16RecorderSoundI2s[RECORDER_WAVFILELEN];
-uint8_t u8RecordEndFlag = 0;
-uint32_t u32Count = 0;
+uint8_t u8RecordEndFlag = 0u;
+uint32_t u32Count = 0ul;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -135,7 +135,10 @@ uint32_t u32Count = 0;
 
 void delay(uint32_t u32Tmp)
 {
-    while(u32Tmp--);
+    while(u32Tmp--)
+    {
+        ;
+    }
 }
 
 /**
@@ -177,11 +180,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln    =42ul;
+    stcMpllCfg.PllpDiv = 2ul;
+    stcMpllCfg.PllqDiv = 2ul;
+    stcMpllCfg.PllrDiv = 2ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -193,7 +196,10 @@ static void SysClkIni(void)
     /* Enable MPLL. */
     CLK_MpllCmd(Enable);
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -223,14 +229,14 @@ static void WM8731_CodecConfigRecord(void)
     stcWm8731Reg.RLIN_f.RINMUTE     = 0u;       // Enable right channel line input mute
     stcWm8731Reg.RLIN_f.RINBOTH     = 0u;       // Disable simultaneous input volume and mute load from right to left
     /* Left & right headphone output */
-    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5F;     // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5Fu;    // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.LHOUT_f.LZCEN      = 0u;       // Disable left channel zero cross detect
     stcWm8731Reg.LHOUT_f.LRHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from left to right
-    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5F;     // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5Fu;    // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.RHOUT_f.RZCEN      = 0u;       // Enable right channel zero cross detect
     stcWm8731Reg.RHOUT_f.RLHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from right to left
     /* Analog audio path control */
-#ifdef RECORD_MIC
+#if(RECORD_MIC)
     stcWm8731Reg.AAPC_f.MICBOOST    = 1u;       // Disable boost, 0: disable 1: enable
     stcWm8731Reg.AAPC_f.MUTEMIC     = 0u;       // Enable mute to ADC
     stcWm8731Reg.AAPC_f.INSEL       = 1u;       // Line input select to ADC, 0: linein  1: mic
@@ -278,11 +284,9 @@ static void WM8731_CodecConfigRecord(void)
     // Active control
     stcWm8731Reg.AC_f.ACTIVE        = 1u;       // 0: inactive, 1: active
 
-    if(Ok != WM8731_Init(I2C_CH, &stcWm8731Reg))
-    {
-        while(1);
-    }
-    WM8731_SetHpVolume(I2C_CH, 0x6F,0x6F);  //0x2F-MUTE ~ 0x7F Maximum
+    WM8731_Init(I2C_CH, &stcWm8731Reg);
+
+    WM8731_SetHpVolume(I2C_CH, 0x6Fu,0x6Fu);    //0x2F-MUTE ~ 0x7F Maximum
 }
 
 /**
@@ -309,10 +313,10 @@ static void WM8731_CodecConfigPlay(void)
     stcWm8731Reg.RLIN_f.RINMUTE     = 1u;       // Enable right channel line input mute
     stcWm8731Reg.RLIN_f.RINBOTH     = 0u;       // Disable simultaneous input volume and mute load from right to left
     /* Left & right headphone output */
-    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5F;     // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5Fu;    // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.LHOUT_f.LZCEN      = 0u;       // Disable left channel zero cross detect
     stcWm8731Reg.LHOUT_f.LRHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from left to right
-    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5F;     // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5Fu;    // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.RHOUT_f.RZCEN      = 0u;       // Enable right channel zero cross detect
     stcWm8731Reg.RHOUT_f.RLHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from right to left
     /* Analog audio path control */
@@ -354,11 +358,9 @@ static void WM8731_CodecConfigPlay(void)
     // Active control
     stcWm8731Reg.AC_f.ACTIVE        = 1u;       // 0: inactive, 1: active
 
-    if(Ok != WM8731_Init(I2C_CH, &stcWm8731Reg))
-    {
-        while(1);
-    }
-    WM8731_SetHpVolume(I2C_CH, 0x7F,0x7F);  //0x2F-MUTE ~ 0x7F Maximum
+    WM8731_Init(I2C_CH, &stcWm8731Reg);
+
+    WM8731_SetHpVolume(I2C_CH, 0x7Fu,0x7Fu);    //0x2F-MUTE ~ 0x7F Maximum
 }
 
 /**
@@ -399,7 +401,7 @@ static void Record_DmaConfig(void)
     MEM_ZERO_STRUCT(stcDmaCfg);
 
     /* Set data block size. */
-    stcDmaCfg.u16BlockSize = 1;  //uint16
+    stcDmaCfg.u16BlockSize = 1u;  //uint16
     /* Set transfer count. */
     stcDmaCfg.u16TransferCnt = RECORDER_WAVFILELEN;
     /* Set source & destination address. */
@@ -454,7 +456,7 @@ static void Play_DmaConfig(void)
     DMA_ClearIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq);
 
     /* Set data block size. */
-    stcDmaCfg.u16BlockSize = 1;  //uint16
+    stcDmaCfg.u16BlockSize = 1u;  //uint16
     /* Set transfer count. */
     stcDmaCfg.u16TransferCnt = RECORDER_WAVFILELEN;
     /* Set source & destination address. */
@@ -487,6 +489,64 @@ static void Play_DmaConfig(void)
     /* Enable PTDIS(AOS) clock*/
     PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_I2S3_TXIRQOUT);
+}
+
+/**
+ *******************************************************************************
+ ** \brief  Get I2S clock frequency.
+ **
+ ** \param  [in] pstcI2sReg             Pointer to I2S register
+ ** \arg    M4_I2S1                     I2s channel 1
+ ** \arg    M4_I2S2                     I2s channel 2
+ ** \arg    M4_I2S3                     I2s channel 3
+ ** \arg    M4_I2S4                     I2s channel 4
+ **
+ ** \retval uint32_t                    The  I2S clock frequency.
+ **
+ ** \note   None
+ **
+ ******************************************************************************/
+uint32_t GetI2SClkFreq(M4_I2S_TypeDef* pstcI2sReg)
+{
+    en_clk_peri_source_t enSrc = ClkPeriSrcPclk;
+    uint32_t u32Freq = 0ul;
+    stc_clk_freq_t stcClkFreq;
+    stc_pll_clk_freq_t stcPllClkFreq;
+
+    /* Check parameters */
+    if(NULL != pstcI2sReg)
+    {
+        enSrc = CLK_GetI2sClkSource(pstcI2sReg);
+        CLK_GetClockFreq(&stcClkFreq);
+        CLK_GetPllClockFreq(&stcPllClkFreq);
+        switch(enSrc)
+        {
+            case ClkPeriSrcPclk:
+                u32Freq = stcClkFreq.pclk3Freq;
+                break;
+            case ClkPeriSrcMpllp:
+                u32Freq = stcPllClkFreq.mpllp;
+                break;
+            case ClkPeriSrcMpllq:
+                u32Freq = stcPllClkFreq.mpllq;
+                break;
+            case ClkPeriSrcMpllr:
+                u32Freq = stcPllClkFreq.mpllr;
+                break;
+            case ClkPeriSrcUpllp:
+                u32Freq = stcPllClkFreq.upllp;
+                break;
+            case ClkPeriSrcUpllq:
+                u32Freq = stcPllClkFreq.upllq;
+                break;
+            case ClkPeriSrcUpllr:
+                u32Freq = stcPllClkFreq.upllr;
+                break;
+            default:
+                break;
+        }
+    }
+    return u32Freq;
 }
 
 /**
@@ -528,7 +588,7 @@ int32_t main(void)
     PORT_SetFunc(I2S3_PORT, I2S3_CK_PIN, Func_I2s3_Ck, Disable);
     PORT_SetFunc(I2S3_PORT, I2S3_WS_PIN, Func_I2s3_Ws, Disable);
     PORT_SetFunc(I2S3_PORT, I2S3_SD_IN_PIN, Func_I2s3_Sd, Disable);
-#ifdef EXCK_ON
+#if(EXCK_ON)
     PORT_Init(I2S3_EXCK_PORT, I2S3_EXCK_PIN, &stcPortIni);
     PORT_SetFunc(I2S3_EXCK_PORT, I2S3_EXCK_PIN, Func_I2s, Disable);
 #else
@@ -546,12 +606,13 @@ int32_t main(void)
 #if 1
     /* Config i2s peripheral */
     I2s_DeInit(I2S_CH);
+    stcI2sCfg.u32I2sInterClkFreq = GetI2SClkFreq(I2S_CH);
     stcI2sCfg.enStandrad = Std_Philips;
     stcI2sCfg.enMode = I2sMaster;
     stcI2sCfg.enChanelLen = I2s_ChLen_32Bit;
     stcI2sCfg.enDataBits = I2s_DataLen_16Bit;
     stcI2sCfg.u32AudioFreq = I2S_AudioFreq_8k;
-#ifdef EXCK_ON
+#if(EXCK_ON)
     stcI2sCfg.enMcoOutEn = Disable;
     stcI2sCfg.enExckEn = Enable;
 #else
@@ -563,7 +624,7 @@ int32_t main(void)
     /* Config DMAC for recorder*/
     Record_DmaConfig();
 
-#ifdef SPEAKER_ON
+#if(SPEAKER_ON)
     /* Initialize SPK_EN port for speaker */
     MEM_ZERO_STRUCT(stcPortIni);
     stcPortIni.enPinMode = Pin_Mode_Out;
@@ -574,7 +635,10 @@ int32_t main(void)
     pu16SoundData = &au16RecorderSoundI2s[0];
 
     /* Wait for press key SW2 to kick start record */
-    while(0 != PORT_GetBit(PortD, Pin03));   //SW2
+    while(Reset != PORT_GetBit(PortD, Pin03))
+    {
+        ;   //SW2
+    }
     /* Indicate recording */
     LED0_TOGGLE();
 
@@ -584,18 +648,24 @@ int32_t main(void)
     I2S_FuncCmd(I2S_CH, RxEn, Enable);
 
     /* Wait for recorder buffer full */
-    while(Set != DMA_GetIrqFlag(DMA_UNIT,DMA_CH, TrnCpltIrq));
+    while(Set != DMA_GetIrqFlag(DMA_UNIT,DMA_CH, TrnCpltIrq))
+    {
+        ;
+    }
     I2s_DeInit(I2S_CH);
     /* Indicate record finished */
     LED0_TOGGLE();
 
     /* Wait for press key SW2 to play recoder wav */
-    while(0 != PORT_GetBit(PortD, Pin03));   //SW2
+    while(Reset != PORT_GetBit(PortD, Pin03))
+    {
+        ;   //SW2
+    }
 
 #endif
     /* Buffer prepare for play */
     pu16SoundData = (uint16_t *)&au16RecorderSoundI2s[0];
-    u32Count = 0;
+    u32Count = 0ul;
     /* Config I2S_SD IO for play */
     PORT_SetFunc(I2S3_PORT, I2S3_SD_IN_PIN, Func_Gpio, Disable);
     PORT_SetFunc(I2S3_PORT, I2S3_SD_PIN, Func_I2s3_Sd, Disable);
@@ -607,12 +677,13 @@ int32_t main(void)
 
     /* Config i2s peripheral */
     I2s_DeInit(I2S_CH);
+    stcI2sCfg.u32I2sInterClkFreq = GetI2SClkFreq(I2S_CH);
     stcI2sCfg.enStandrad = Std_Philips;
     stcI2sCfg.enMode = I2sMaster;
     stcI2sCfg.enChanelLen = I2s_ChLen_32Bit;
     stcI2sCfg.enDataBits = I2s_DataLen_16Bit;
     stcI2sCfg.u32AudioFreq = I2S_AudioFreq_8k;
-#ifdef EXCK_ON
+#if(EXCK_ON)
     stcI2sCfg.enMcoOutEn = Disable;
     stcI2sCfg.enExckEn = Enable;
 #else
@@ -626,10 +697,14 @@ int32_t main(void)
     /* Enable I2S TXI function to kick start conmmunication */
     I2S_FuncCmd(I2S_CH, TxIntEn, Enable);
     /* Wait for DMA finished */
-    while(Set != DMA_GetIrqFlag(DMA_UNIT,DMA_CH, TrnCpltIrq));
+    while(Set != DMA_GetIrqFlag(DMA_UNIT,DMA_CH, TrnCpltIrq))
+    {
+        ;
+    }
 
     while(1)
     {
+        ;
     }
 
 }

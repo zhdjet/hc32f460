@@ -81,16 +81,16 @@ static uint8_t m_au8HashMsgDigest1[HASH_MSG_DIGEST_SIZE];
 static uint8_t m_au8HashMsgDigest2[HASH_MSG_DIGEST_SIZE];
 static uint8_t m_au8HashMsgDigest3[HASH_MSG_DIGEST_SIZE];
 
-static uint8_t *m_su8SrcData1 = "abcde";
+static char *m_su8SrcData1 = "abcde";
 
-static uint8_t *m_su8SrcData2 = \
+static char *m_su8SrcData2 = \
 "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
 abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
 abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
 abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
 abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-static uint8_t *m_su8SrcData3 = \
+static char *m_su8SrcData3 = \
 "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
 !@#$%^&*( ()(*()*&&*^*& &^%^%^%dsf@#^%$#(*&^_)#<>?>?><>. ~;/':dd////ghe/\
 abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\
@@ -123,7 +123,7 @@ int32_t main(void)
     while (1u)
     {
         /* Use HASH. */
-        HASH_Start(m_su8SrcData1, strlen((char *)m_su8SrcData1), \
+        HASH_Start((uint8_t *)m_su8SrcData1, strlen((char *)m_su8SrcData1), \
                     m_au8HashMsgDigest1, TIMEOUT_10MS);
         printf("\nString \"abcde\" message digest:\n");
         for (uint8_t i = 0u; i < sizeof(m_au8HashMsgDigest1); i++)
@@ -131,10 +131,10 @@ int32_t main(void)
             printf("%.2x ", m_au8HashMsgDigest1[i]);
         }
 
-        HASH_Start(m_su8SrcData2, strlen((char *)m_su8SrcData2), \
+        HASH_Start((uint8_t *)m_su8SrcData2, strlen((char *)m_su8SrcData2), \
                     m_au8HashMsgDigest2, TIMEOUT_10MS);
 
-        HASH_Start(m_su8SrcData3, strlen((char *)m_su8SrcData3), \
+        HASH_Start((uint8_t *)m_su8SrcData3, strlen((char *)m_su8SrcData3), \
                     m_au8HashMsgDigest3, TIMEOUT_10MS);
 
         /* Main loop cycle is 500ms. */

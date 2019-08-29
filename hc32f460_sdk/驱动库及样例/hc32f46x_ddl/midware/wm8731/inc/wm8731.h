@@ -75,19 +75,19 @@ extern "C"
 /*****************************************************************************/
 /* Global pre-processor symbols/macros ('define')                            */
 /*****************************************************************************/
-#define WM8731_ADDRESS             (0x1A)       // WM8731 chip address on I2C bus
+#define WM8731_ADDRESS             (0x1Au)      // WM8731 chip address on I2C bus
 
-#define WM8731_REG_LLINE_IN        (0x00)       // Left Channel Line Input Volume Control
-#define WM8731_REG_RLINE_IN        (0x01)       // Right Channel Line Input Volume Control
-#define WM8731_REG_LHPHONE_OUT     (0x02)       // Left Channel Headphone Output Volume Control
-#define WM8731_REG_RHPHONE_OUT     (0x03)       // Right Channel Headphone Output Volume Control
-#define WM8731_REG_ANALOG_PATH     (0x04)       // Analog Audio Path Control
-#define WM8731_REG_DIGITAL_PATH    (0x05)       // Digital Audio Path Control
-#define WM8731_REG_PDOWN_CTRL      (0x06)       // Power Down Control Register
-#define WM8731_REG_DIGITAL_IF      (0x07)       // Digital Audio Interface Format
-#define WM8731_REG_SAMPLING_CTRL   (0x08)       // Sampling Control Register
-#define WM8731_REG_ACTIVE_CTRL     (0x09)       // Active Control
-#define WM8731_REG_RESET           (0x0F)       // Reset register
+#define WM8731_REG_LLINE_IN        (0x00u)      // Left Channel Line Input Volume Control
+#define WM8731_REG_RLINE_IN        (0x01u)      // Right Channel Line Input Volume Control
+#define WM8731_REG_LHPHONE_OUT     (0x02u)      // Left Channel Headphone Output Volume Control
+#define WM8731_REG_RHPHONE_OUT     (0x03u)      // Right Channel Headphone Output Volume Control
+#define WM8731_REG_ANALOG_PATH     (0x04u)      // Analog Audio Path Control
+#define WM8731_REG_DIGITAL_PATH    (0x05u)      // Digital Audio Path Control
+#define WM8731_REG_PDOWN_CTRL      (0x06u)      // Power Down Control Register
+#define WM8731_REG_DIGITAL_IF      (0x07u)      // Digital Audio Interface Format
+#define WM8731_REG_SAMPLING_CTRL   (0x08u)      // Sampling Control Register
+#define WM8731_REG_ACTIVE_CTRL     (0x09u)      // Active Control
+#define WM8731_REG_RESET           (0x0Fu)      // Reset register
 
 /******************************************************************************
  * WM8731 registers bit field

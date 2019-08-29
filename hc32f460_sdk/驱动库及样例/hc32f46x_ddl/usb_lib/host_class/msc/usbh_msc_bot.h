@@ -43,9 +43,9 @@
 /** \file usbh_msc_bot.h
  **
  ** A detailed description is available at
- ** @link 
-		Header file for usbh_msc_bot.c 
-	@endlink
+ ** @link
+    Header file for usbh_msc_bot.c
+  @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -70,16 +70,16 @@
 /** @addtogroup USBH_MSC_CLASS
   * @{
   */
-  
+
 /** @defgroup USBH_MSC_BOT
   * \brief This file is the Header file for usbh_msc_core.c
   * @{
-  */ 
+  */
 
 
 /** @defgroup USBH_MSC_BOT_Exported_Types
   * @{
-  */ 
+  */
 
 typedef union _USBH_CBW_Block
 {
@@ -89,7 +89,7 @@ typedef union _USBH_CBW_Block
     uint32_t CBWTag;
     uint32_t CBWTransferLength;
     uint8_t CBWFlags;
-    uint8_t CBWLUN; 
+    uint8_t CBWLUN;
     uint8_t CBWLength;
     uint8_t CBWCB[16];
 }field;
@@ -98,7 +98,7 @@ typedef union _USBH_CBW_Block
 
 typedef enum
 {
-    USBH_MSC_BOT_INIT_STATE = 0,
+    USBH_MSC_BOT_INIT_STATE = 0u,
     USBH_MSC_BOT_RESET,
     USBH_MSC_GET_MAX_LUN,
     USBH_MSC_TEST_UNIT_READY,
@@ -140,94 +140,91 @@ typedef union _USBH_CSW_Block
 
 /**
   * @}
-  */ 
+  */
 
 
 
 /** @defgroup USBH_MSC_BOT_Exported_Defines
   * @{
-  */ 
-#define USBH_MSC_SEND_CBW                 1
-#define USBH_MSC_SENT_CBW                 2
-#define USBH_MSC_BOT_DATAIN_STATE         3
-#define USBH_MSC_BOT_DATAOUT_STATE        4
-#define USBH_MSC_RECEIVE_CSW_STATE        5
-#define USBH_MSC_DECODE_CSW               6
-#define USBH_MSC_BOT_ERROR_IN             7
-#define USBH_MSC_BOT_ERROR_OUT            8
+  */
+#define USBH_MSC_SEND_CBW                 (1u)
+#define USBH_MSC_SENT_CBW                 (2u)
+#define USBH_MSC_BOT_DATAIN_STATE         (3u)
+#define USBH_MSC_BOT_DATAOUT_STATE        (4u)
+#define USBH_MSC_RECEIVE_CSW_STATE        (5u)
+#define USBH_MSC_DECODE_CSW               (6u)
+#define USBH_MSC_BOT_ERROR_IN             (7u)
+#define USBH_MSC_BOT_ERROR_OUT            (8u)
 
 
-#define USBH_MSC_BOT_CBW_SIGNATURE        0x43425355
-#define USBH_MSC_BOT_CBW_TAG              0x20304050             
-#define USBH_MSC_BOT_CSW_SIGNATURE        0x53425355           
-#define USBH_MSC_CSW_DATA_LENGTH          0x000D
-#define USBH_MSC_BOT_CBW_PACKET_LENGTH    31
-#define USBH_MSC_CSW_LENGTH               13  
-#define USBH_MSC_CSW_MAX_LENGTH           63     
+#define USBH_MSC_BOT_CBW_SIGNATURE        (0x43425355ul)
+#define USBH_MSC_BOT_CBW_TAG              (0x20304050ul)
+#define USBH_MSC_BOT_CSW_SIGNATURE        (0x53425355ul)
+#define USBH_MSC_CSW_DATA_LENGTH          (0x000Du)
+#define USBH_MSC_BOT_CBW_PACKET_LENGTH    (31u)
+#define USBH_MSC_CSW_LENGTH               (13u)
+#define USBH_MSC_CSW_MAX_LENGTH           (63u)
 
 /* CSW Status Definitions */
-#define USBH_MSC_CSW_CMD_PASSED           0x00
-#define USBH_MSC_CSW_CMD_FAILED           0x01
-#define USBH_MSC_CSW_PHASE_ERROR          0x02
+#define USBH_MSC_CSW_CMD_PASSED           (0x00u)
+#define USBH_MSC_CSW_CMD_FAILED           (0x01u)
+#define USBH_MSC_CSW_PHASE_ERROR          (0x02u)
 
-#define USBH_MSC_SEND_CSW_DISABLE         0
-#define USBH_MSC_SEND_CSW_ENABLE          1
+#define USBH_MSC_SEND_CSW_DISABLE         (0u)
+#define USBH_MSC_SEND_CSW_ENABLE          (1u)
 
-#define USBH_MSC_DIR_IN                   0
-#define USBH_MSC_DIR_OUT                  1
-#define USBH_MSC_BOTH_DIR                 2
+#define USBH_MSC_DIR_IN                   (0u)
+#define USBH_MSC_DIR_OUT                  (1u)
+#define USBH_MSC_BOTH_DIR                 (2u)
 
-//#define USBH_MSC_PAGE_LENGTH                 0x40
-#define USBH_MSC_PAGE_LENGTH              512
+//#define USBH_MSC_PAGE_LENGTH                 (0x40u)
+#define USBH_MSC_PAGE_LENGTH              (512u)
 
 
-#define CBW_CB_LENGTH                     16
-#define CBW_LENGTH                        10
-#define CBW_LENGTH_TEST_UNIT_READY         6
+#define CBW_CB_LENGTH                     (16u)
+#define CBW_LENGTH                        (10u)
+#define CBW_LENGTH_TEST_UNIT_READY        (6u)
 
-#define USB_REQ_BOT_RESET                0xFF
-#define USB_REQ_GET_MAX_LUN              0xFE
-
-#define MAX_BULK_STALL_COUNT_LIMIT       0x04   /* If STALL is seen on Bulk 
-                                         Endpoint continously, this means 
+#define MAX_BULK_STALL_COUNT_LIMIT       (0x04u)   /* If STALL is seen on Bulk
+                                         Endpoint continously, this means
                                          that device and Host has phase error
                                          Hence a Reset is needed */
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBH_MSC_BOT_Exported_Macros
   * @{
-  */ 
+  */
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBH_MSC_BOT_Exported_Variables
   * @{
-  */ 
+  */
 extern USBH_BOTXfer_TypeDef USBH_MSC_BOTXferParam;
 extern HostCBWPkt_TypeDef USBH_MSC_CBWData;
 extern HostCSWPkt_TypeDef USBH_MSC_CSWData;
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup USBH_MSC_BOT_Exported_FunctionsPrototype
   * @{
-  */ 
+  */
 void USBH_MSC_HandleBOTXfer(USB_OTG_CORE_HANDLE *pdev,
                             USBH_HOST *phost);
 uint8_t USBH_MSC_DecodeCSW(USB_OTG_CORE_HANDLE *pdev,
                            USBH_HOST *phost);
 void USBH_MSC_Init(USB_OTG_CORE_HANDLE *pdev);
-USBH_Status USBH_MSC_BOT_Abort(USB_OTG_CORE_HANDLE *pdev, 
+USBH_Status USBH_MSC_BOT_Abort(USB_OTG_CORE_HANDLE *pdev,
                                USBH_HOST *phost,
                                uint8_t direction);
 /**
   * @}
-  */ 
+  */
 
 #endif  //__USBH_MSC_BOT_H__
 

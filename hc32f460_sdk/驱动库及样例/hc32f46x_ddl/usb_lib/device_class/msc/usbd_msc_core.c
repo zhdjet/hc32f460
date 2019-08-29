@@ -62,19 +62,19 @@
 /* USB MSC Core callback functions */
 USBD_Class_cb_TypeDef USBD_MSC_cb =
 {
-    USBD_MSC_Init,
-    USBD_MSC_DeInit,
-    USBD_MSC_Setup,
+    &USBD_MSC_Init,
+    &USBD_MSC_DeInit,
+    &USBD_MSC_Setup,
     NULL,                        /*EP0_TxSent*/
     NULL,                        /*EP0_RxReady*/
-    USBD_MSC_DataIn,
-    USBD_MSC_DataOut,
+    &USBD_MSC_DataIn,
+    &USBD_MSC_DataOut,
     NULL,                        /*SOF */
     NULL,
     NULL,
-    USBD_MSC_GetCfgDesc,
+    &USBD_MSC_GetCfgDesc,
 #ifdef USB_OTG_HS_CORE
-    USBD_MSC_GetOtherCfgDesc,
+    &USBD_MSC_GetOtherCfgDesc,
 #endif
 };
 
@@ -188,14 +188,14 @@ __USB_ALIGN_BEGIN uint8_t USBD_MSC_OtherCfgDesc[USB_MSC_CONFIG_DESC_SIZ] __USB_A
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint8_t USBD_MSC_MaxLun __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint8_t USBD_MSC_MaxLun __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined (__ICCARM__)       /*!< IAR Compiler */
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint8_t USBD_MSC_AltSet __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint8_t USBD_MSC_AltSet __USB_ALIGN_END = 0u;
 
 /*******************************************************************************
  * Local function prototypes ('static')
@@ -266,54 +266,53 @@ uint8_t  USBD_MSC_DeInit(void  *pdev,
  ******************************************************************************/
 uint8_t  USBD_MSC_Setup(void  *pdev, USB_SETUP_REQ *req)
 {
+    uint8_t u8Res = USBD_OK;
     switch (req->bmRequest & USB_REQ_TYPE_MASK)
     {
-
         /* Class request */
         case USB_REQ_TYPE_CLASS:
             switch (req->bRequest)
             {
                 case BOT_GET_MAX_LUN:
-
-                    if ((req->wValue == 0) &&
-                        (req->wLength == 1) &&
-                        ((req->bmRequest & 0x80) == 0x80))
+                    if ((req->wValue == (uint16_t)0) &&
+                        (req->wLength == (uint16_t)1) &&
+                        ((req->bmRequest & 0x80u) == (uint8_t)0x80))
                     {
                         USBD_MSC_MaxLun = USBD_STORAGE_fops->GetMaxLun();
-                        if (USBD_MSC_MaxLun > 0)
+                        if (USBD_MSC_MaxLun > 0u)
                         {
                             USBD_CtlSendData(pdev,
                                              &USBD_MSC_MaxLun,
-                                             1);
+                                             1u);
                         }else
                         {
-                            USBD_CtlError(pdev, req);
-                            return USBD_FAIL;
-
+                            USBD_CtlError(pdev);
+                            u8Res = USBD_FAIL;
                         }
                     }else
                     {
-                        USBD_CtlError(pdev, req);
-                        return USBD_FAIL;
+                        USBD_CtlError(pdev);
+                        u8Res = USBD_FAIL;
                     }
                     break;
 
                 case BOT_RESET:
-                    if ((req->wValue == 0) &&
-                        (req->wLength == 0) &&
-                        ((req->bmRequest & 0x80) != 0x80))
+                    if ((req->wValue == (uint16_t)0) &&
+                        (req->wLength == (uint16_t)0) &&
+                        ((req->bmRequest & 0x80u) != (uint8_t)0x80))
                     {
                         MSC_BOT_Reset(pdev);
                     }else
                     {
-                        USBD_CtlError(pdev, req);
-                        return USBD_FAIL;
+                        USBD_CtlError(pdev);
+                        u8Res = USBD_FAIL;
                     }
                     break;
 
                 default:
-                    USBD_CtlError(pdev, req);
-                    return USBD_FAIL;
+                    USBD_CtlError(pdev);
+                    u8Res = USBD_FAIL;
+                    break;
             }
             break;
         /* Interface & Endpoint request */
@@ -323,7 +322,7 @@ uint8_t  USBD_MSC_Setup(void  *pdev, USB_SETUP_REQ *req)
                 case USB_REQ_GET_INTERFACE:
                     USBD_CtlSendData(pdev,
                                      &USBD_MSC_AltSet,
-                                     1);
+                                     1u);
                     break;
 
                 case USB_REQ_SET_INTERFACE:
@@ -337,7 +336,7 @@ uint8_t  USBD_MSC_Setup(void  *pdev, USB_SETUP_REQ *req)
 
                     /* Re-activate the EP */
                     DCD_EP_Close(pdev, (uint8_t)req->wIndex);
-                    if ((((uint8_t)req->wIndex) & 0x80) == 0x80)
+                    if ((((uint8_t)req->wIndex) & (uint16_t)0x80u) == (uint16_t)0x80)
                     {
                         DCD_EP_Open(pdev,
                                     ((uint8_t)req->wIndex),
@@ -354,14 +353,15 @@ uint8_t  USBD_MSC_Setup(void  *pdev, USB_SETUP_REQ *req)
                     /* Handle BOT error */
                     MSC_BOT_CplClrFeature(pdev, (uint8_t)req->wIndex);
                     break;
-
+                default:
+                    break;
             }
             break;
 
         default:
             break;
     }
-    return USBD_OK;
+    return u8Res;
 }
 
 /**
@@ -401,7 +401,7 @@ uint8_t  USBD_MSC_DataOut(void  *pdev,
  ******************************************************************************/
 uint8_t  *USBD_MSC_GetCfgDesc(uint8_t speed, uint16_t *length)
 {
-    *length = sizeof(USBD_MSC_CfgDesc);
+    *length = (uint16_t)sizeof(USBD_MSC_CfgDesc);
     return USBD_MSC_CfgDesc;
 }
 

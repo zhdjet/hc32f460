@@ -414,38 +414,37 @@ typedef enum {
 
 /*--------------------------------------------------------------*/
 /* FatFs module application interface                           */
-
-FRESULT f_mount (BYTE, FATFS*);						/* Mount/Unmount a logical drive */
-FRESULT f_open (FIL*, const XCHAR*, BYTE);			/* Open or create a file */
-FRESULT f_read (FIL*, void*, UINT, UINT*);			/* Read data from a file */
-FRESULT f_write (FIL*, const void*, UINT, UINT*);	/* Write data to a file */
-FRESULT f_lseek (FIL*, DWORD);						/* Move file pointer of a file object */
-FRESULT f_close (FIL*);								/* Close an open file object */
-FRESULT f_opendir (DIR*, const XCHAR*);				/* Open an existing directory */
-FRESULT f_readdir (DIR*, FILINFO*);					/* Read a directory item */
-FRESULT f_stat (const XCHAR*, FILINFO*);			/* Get file status */
-FRESULT f_getfree (const XCHAR*, DWORD*, FATFS**);	/* Get number of free clusters on the drive */
-FRESULT f_truncate (FIL*);							/* Truncate file */
-FRESULT f_sync (FIL*);								/* Flush cached data of a writing file */
-FRESULT f_unlink (const XCHAR*);					/* Delete an existing file or directory */
-FRESULT	f_mkdir (const XCHAR*);						/* Create a new directory */
-FRESULT f_chmod (const XCHAR*, BYTE, BYTE);			/* Change attribute of the file/dir */
-FRESULT f_utime (const XCHAR*, const FILINFO*);		/* Change time-stamp of the file/dir */
-FRESULT f_rename (const XCHAR*, const XCHAR*);		/* Rename/Move a file or directory */
-FRESULT f_forward (FIL*, UINT(*)(const BYTE*,UINT), UINT, UINT*);	/* Forward data to the stream */
-FRESULT f_mkfs (BYTE, BYTE, WORD);					/* Create a file system on the drive */
-FRESULT f_chdir (const XCHAR*);						/* Change current directory */
-FRESULT f_chdrive (BYTE);							/* Change current drive */
+FRESULT f_mount (BYTE vol, FATFS *fs);						/* Mount/Unmount a logical drive */
+FRESULT f_open (FIL *fp, const XCHAR *path, BYTE mode);			/* Open or create a file */
+FRESULT f_read (FIL *fp, void *buff, UINT btr,UINT *br);			/* Read data from a file */
+FRESULT f_write (FIL *fp, const void *buff, UINT btw, UINT *bw);	/* Write data to a file */
+FRESULT f_lseek (FIL *fp, DWORD ofs);						/* Move file pointer of a file object */
+FRESULT f_close (FIL *fp);								/* Close an open file object */
+FRESULT f_opendir (DIR *dj, const XCHAR *path);				/* Open an existing directory */
+FRESULT f_readdir (DIR *dj, FILINFO *fno);					/* Read a directory item */
+FRESULT f_stat (const XCHAR *path, FILINFO *fno);			/* Get file status */
+FRESULT f_getfree (const XCHAR *path, DWORD *nclst, FATFS **fatfs);	/* Get number of free clusters on the drive */
+FRESULT f_truncate (FIL *fp);							/* Truncate file */
+FRESULT f_sync (FIL *fp);								/* Flush cached data of a writing file */
+FRESULT f_unlink (const XCHAR *path);					/* Delete an existing file or directory */
+FRESULT	f_mkdir (const XCHAR *path);						/* Create a new directory */
+FRESULT f_chmod (const XCHAR *path, BYTE value, BYTE mask);			/* Change attribute of the file/dir */
+FRESULT f_utime (const XCHAR *path, const FILINFO *fno);		/* Change time-stamp of the file/dir */
+FRESULT f_rename (const XCHAR *path_old, const XCHAR *path_new);		/* Rename/Move a file or directory */
+FRESULT f_forward (FIL *fp, UINT (*func)(const BYTE*,UINT), UINT btr, UINT *bf);	/* Forward data to the stream */
+FRESULT f_mkfs (BYTE drv, BYTE partition, WORD allocsize);					/* Create a file system on the drive */
+FRESULT f_chdir (const XCHAR *path);						/* Change current directory */
+FRESULT f_chdrive (BYTE drv);							/* Change current drive */
 
 #if _USE_STRFUNC
-int f_putc (int, FIL*);								/* Put a character to the file */
-int f_puts (const char*, FIL*);						/* Put a string to the file */
-int f_printf (FIL*, const char*, ...);				/* Put a formatted string to the file */
-char* f_gets (char*, int, FIL*);					/* Get a string from the file */
+int f_putc (int chr, FIL* fil);								/* Put a character to the file */
+int f_puts (const char* str, FIL* fil);						/* Put a string to the file */
+int f_printf (FIL* fil, const char* str,  ...);				/* Put a formatted string to the file */
+char* f_gets (char* buff, int len, FIL* fil);					/* Get a string from the file */
 #define f_eof(fp) (((fp)->fptr == (fp)->fsize) ? 1 : 0)
 #define f_error(fp) (((fp)->flag & FA__ERROR) ? 1 : 0)
 #ifndef EOF
-#define EOF -1
+#define EOF (-1)
 #endif
 #endif
 
@@ -482,98 +481,98 @@ void ff_rel_grant(_SYNC_t);
 
 /* File access control and file status flags (FIL.flag) */
 
-#define	FA_READ				0x01
-#define	FA_OPEN_EXISTING	0x00
+#define	FA_READ			0x01u
+#define	FA_OPEN_EXISTING	0x00u
 #if _FS_READONLY == 0
-#define	FA_WRITE			0x02
-#define	FA_CREATE_NEW		0x04
-#define	FA_CREATE_ALWAYS	0x08
-#define	FA_OPEN_ALWAYS		0x10
-#define FA__WRITTEN			0x20
-#define FA__DIRTY			0x40
+#define	FA_WRITE		0x02u
+#define	FA_CREATE_NEW		0x04u
+#define	FA_CREATE_ALWAYS	0x08u
+#define	FA_OPEN_ALWAYS		0x10u
+#define FA__WRITTEN		0x20u
+#define FA__DIRTY		0x40u
 #endif
-#define FA__ERROR			0x80
+#define FA__ERROR		0x80u
 
 
 /* FAT sub type (FATFS.fs_type) */
 
-#define FS_FAT12	1
-#define FS_FAT16	2
-#define FS_FAT32	3
+#define FS_FAT12	1u
+#define FS_FAT16	2u
+#define FS_FAT32	3u
 
 
 /* File attribute bits for directory entry */
 
-#define	AM_RDO	0x01	/* Read only */
-#define	AM_HID	0x02	/* Hidden */
-#define	AM_SYS	0x04	/* System */
-#define	AM_VOL	0x08	/* Volume label */
-#define AM_LFN	0x0F	/* LFN entry */
-#define AM_DIR	0x10	/* Directory */
-#define AM_ARC	0x20	/* Archive */
-#define AM_MASK	0x3F	/* Mask of defined bits */
+#define	AM_RDO	0x01u	/* Read only */
+#define	AM_HID	0x02u	/* Hidden */
+#define	AM_SYS	0x04u	/* System */
+#define	AM_VOL	0x08u	/* Volume label */
+#define AM_LFN	0x0Fu	/* LFN entry */
+#define AM_DIR	0x10u	/* Directory */
+#define AM_ARC	0x20u	/* Archive */
+#define AM_MASK	0x3Fu	/* Mask of defined bits */
 
 
 /* FatFs refers the members in the FAT structures with byte offset instead
 / of structure member because there are incompatibility of the packing option
 / between various compilers. */
 
-#define BS_jmpBoot			0
-#define BS_OEMName			3
-#define BPB_BytsPerSec		11
-#define BPB_SecPerClus		13
-#define BPB_RsvdSecCnt		14
-#define BPB_NumFATs			16
-#define BPB_RootEntCnt		17
-#define BPB_TotSec16		19
-#define BPB_Media			21
-#define BPB_FATSz16			22
-#define BPB_SecPerTrk		24
-#define BPB_NumHeads		26
-#define BPB_HiddSec			28
-#define BPB_TotSec32		32
-#define BS_55AA				510
+#define BS_jmpBoot		 0u
+#define BS_OEMName		 3u
+#define BPB_BytsPerSec		11u
+#define BPB_SecPerClus		13u
+#define BPB_RsvdSecCnt		14u
+#define BPB_NumFATs		16u
+#define BPB_RootEntCnt		17u
+#define BPB_TotSec16		19u
+#define BPB_Media		21u
+#define BPB_FATSz16		22u
+#define BPB_SecPerTrk		24u
+#define BPB_NumHeads		26u
+#define BPB_HiddSec		28u
+#define BPB_TotSec32		32u
+#define BS_55AA		       510u
 
-#define BS_DrvNum			36
-#define BS_BootSig			38
-#define BS_VolID			39
-#define BS_VolLab			43
-#define BS_FilSysType		54
+#define BS_DrvNum		36u
+#define BS_BootSig		38u
+#define BS_VolID		39u
+#define BS_VolLab		43u
+#define BS_FilSysType		54u
 
-#define BPB_FATSz32			36
-#define BPB_ExtFlags		40
-#define BPB_FSVer			42
-#define BPB_RootClus		44
-#define BPB_FSInfo			48
-#define BPB_BkBootSec		50
-#define BS_DrvNum32			64
-#define BS_BootSig32		66
-#define BS_VolID32			67
-#define BS_VolLab32			71
-#define BS_FilSysType32		82
+#define BPB_FATSz32		36u
+#define BPB_ExtFlags		40u
+#define BPB_FSVer		42u
+#define BPB_RootClus		44u
+#define BPB_FSInfo		48u
+#define BPB_BkBootSec		50u
+#define BS_DrvNum32		64u
+#define BS_BootSig32		66u
+#define BS_VolID32		67u
+#define BS_VolLab32		71u
+#define BS_FilSysType32		82u
 
-#define	FSI_LeadSig			0
-#define	FSI_StrucSig		484
-#define	FSI_Free_Count		488
-#define	FSI_Nxt_Free		492
+#define	FSI_LeadSig		  0u
+#define	FSI_StrucSig		484u
+#define	FSI_Free_Count		488u
+#define	FSI_Nxt_Free		492u
 
-#define MBR_Table			446
+#define MBR_Table		446u
 
-#define	DIR_Name			0
-#define	DIR_Attr			11
-#define	DIR_NTres			12
-#define	DIR_CrtTime			14
-#define	DIR_CrtDate			16
-#define	DIR_FstClusHI		20
-#define	DIR_WrtTime			22
-#define	DIR_WrtDate			24
-#define	DIR_FstClusLO		26
-#define	DIR_FileSize		28
-#define	LDIR_Ord			0
-#define	LDIR_Attr			11
-#define	LDIR_Type			12
-#define	LDIR_Chksum			13
-#define	LDIR_FstClusLO		26
+#define	DIR_Name		 0u
+#define	DIR_Attr		11u
+#define	DIR_NTres		12u
+#define	DIR_CrtTime		14u
+#define	DIR_CrtDate		16u
+#define	DIR_FstClusHI		20u
+#define	DIR_WrtTime		22u
+#define	DIR_WrtDate		24u
+#define	DIR_FstClusLO		26u
+#define	DIR_FileSize		28u
+#define	LDIR_Ord		 0u
+#define	LDIR_Attr		11u
+#define	LDIR_Type		12u
+#define	LDIR_Chksum		13u
+#define	LDIR_FstClusLO		26u
 
 
 
@@ -586,10 +585,21 @@ void ff_rel_grant(_SYNC_t);
 #define	ST_WORD(ptr,val)	*(WORD*)(BYTE*)(ptr)=(WORD)(val)
 #define	ST_DWORD(ptr,val)	*(DWORD*)(BYTE*)(ptr)=(DWORD)(val)
 #else					/* Use byte-by-byte access to the FAT structure */
-#define	LD_WORD(ptr)		(WORD)(((WORD)*(BYTE*)((ptr)+1)<<8)|(WORD)*(BYTE*)(ptr))
-#define	LD_DWORD(ptr)		(DWORD)(((DWORD)*(BYTE*)((ptr)+3)<<24)|((DWORD)*(BYTE*)((ptr)+2)<<16)|((WORD)*(BYTE*)((ptr)+1)<<8)|*(BYTE*)(ptr))
-#define	ST_WORD(ptr,val)	*(BYTE*)(ptr)=(BYTE)(val); *(BYTE*)((ptr)+1)=(BYTE)((WORD)(val)>>8)
-#define	ST_DWORD(ptr,val)	*(BYTE*)(ptr)=(BYTE)(val); *(BYTE*)((ptr)+1)=(BYTE)((WORD)(val)>>8); *(BYTE*)((ptr)+2)=(BYTE)((DWORD)(val)>>16); *(BYTE*)((ptr)+3)=(BYTE)((DWORD)(val)>>24)
+#define	LD_WORD(ptr)		(WORD)(((WORD)*(BYTE*)((ptr)+1u)<<8u)|(WORD)*(BYTE*)(ptr))
+#define	LD_DWORD(ptr)		(DWORD)(((DWORD)*(BYTE*)((ptr)+3u)<<24u)|((DWORD)*(BYTE*)((ptr)+2u)<<16u)|((WORD)*(BYTE*)((ptr)+1u)<<8u)|*(BYTE*)(ptr))
+#define	ST_WORD(ptr,val)	\
+do{                             \
+*(BYTE*)(ptr)=(BYTE)(val);      \
+*(BYTE*)((ptr)+1u)=(BYTE)((WORD)(val)>>8u);\
+}while(0u)
+
+#define	ST_DWORD(ptr,val)	\
+do{                             \
+*(BYTE*)(ptr)=(BYTE)(val);      \
+*(BYTE*)((ptr)+1u)=(BYTE)((WORD)(val)>>8u);\
+*(BYTE*)((ptr)+2u)=(BYTE)((DWORD)(val)>>16u); \
+*(BYTE*)((ptr)+3u)=(BYTE)((DWORD)(val)>>24u);\
+}while(0u)
 #endif
 
 

@@ -62,20 +62,20 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* RTC 1Hz output Port/Pin definition */
-#define RTC_ONEHZ_OUTPUT_PORT           PortC
-#define RTC_ONEHZ_OUTPUT_PIN            Pin13
+#define RTC_ONEHZ_OUTPUT_PORT           (PortC)
+#define RTC_ONEHZ_OUTPUT_PIN            (Pin13)
 
 /* XTAL32 measure window lower and upper definition */
-#define XTAL32_MEASURE_LOWER            20000
-#define XTAL32_MEASURE_UPPER            40000
+#define XTAL32_MEASURE_LOWER            20000u
+#define XTAL32_MEASURE_UPPER            40000u
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -88,8 +88,8 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static const float EPSINON = 0.000001;
-static uint8_t u8SecIntFlag = 0;
+static const float EPSINON = 0.000001f;
+static uint8_t u8SecIntFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -103,7 +103,7 @@ static uint8_t u8SecIntFlag = 0;
  ** \retval None
  **
  ******************************************************************************/
-void RtcPeriod_IrqCallback(void)
+static void RtcPeriod_IrqCallback(void)
 {
     u8SecIntFlag = 1u;
 }
@@ -117,7 +117,7 @@ void RtcPeriod_IrqCallback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Xtal32_ClockConfig(void)
+static void Xtal32_ClockConfig(void)
 {
     stc_clk_xtal32_cfg_t stcXtal32Cfg;
 
@@ -126,7 +126,7 @@ void Xtal32_ClockConfig(void)
 
     /* Stop xtal32 */
     CLK_Xtal32Cmd(Disable);
-    Ddl_Delay1ms(100);
+    Ddl_Delay1ms(100u);
     /* Configuration xtal32 structure */
     stcXtal32Cfg.enFastStartup = Disable;
     stcXtal32Cfg.enDrv = ClkXtal32HighDrv;
@@ -135,7 +135,7 @@ void Xtal32_ClockConfig(void)
     /* Startup xtal32 */
     CLK_Xtal32Cmd(Enable);
     /* wait for xtal32 running */
-    Ddl_Delay1ms(3000);
+    Ddl_Delay1ms(3000u);
 }
 
 /**
@@ -147,7 +147,7 @@ void Xtal32_ClockConfig(void)
  ** \retval None
  **
  ******************************************************************************/
-void SystemClk_Init(void)
+static void SystemClk_Init(void)
 {
     stc_clk_sysclk_cfg_t    stcSysClkCfg;
     stc_clk_xtal_cfg_t      stcXtalCfg;
@@ -173,7 +173,9 @@ void SystemClk_Init(void)
     CLK_XtalCmd(Enable);
 
     /* Wait XTAL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagXTALRdy));
+    while (Set != CLK_GetFlagStatus(ClkFlagXTALRdy))
+    {
+    }
     /* Switch system clock source to XTAL. */
     CLK_SetSysClkSource(ClkSysSrcXTAL);
 }
@@ -187,7 +189,7 @@ void SystemClk_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Clock_MeasureConfig(void)
+static void Clock_MeasureConfig(void)
 {
     stc_clk_fcm_cfg_t stcClkFcmCfg;
     stc_clk_fcm_window_cfg_t stcClkFcmWinCfg;
@@ -236,11 +238,13 @@ void Clock_MeasureConfig(void)
  ** \retval uint16_t                            Rtc compensation value
  **
  ******************************************************************************/
-uint16_t Rtc_GetCompenValue(void)
+static uint16_t Rtc_GetCompenValue(void)
 {
+    uint32_t u32Tmp = 0ul;
+    en_flag_status_t enStaTmp;
     float clkMeasureVal;
-    uint16_t integerVal = 0, decimalsVal = 0;
-    uint16_t clkCompenVal = 0;
+    uint16_t integerVal = 0u, decimalsVal = 0u;
+    uint16_t clkCompenVal = 0u;
     stc_clk_freq_t stcClkFreq;
 
     MEM_ZERO_STRUCT(stcClkFreq);
@@ -248,49 +252,54 @@ uint16_t Rtc_GetCompenValue(void)
     CLK_FcmCmd(Enable);
     do
     {
+        enStaTmp = CLK_GetFcmFlag(ClkFcmFlagErrf);
         /* counter overflow or trigger frequency abnormal */
-        if ((Set == CLK_GetFcmFlag(ClkFcmFlagOvf)) ||
-            (Set == CLK_GetFcmFlag(ClkFcmFlagErrf)))
+        if ((Set == CLK_GetFcmFlag(ClkFcmFlagOvf)) || (Set == enStaTmp))
         {
             CLK_FcmCmd(Disable);
             CLK_ClearFcmFlag(ClkFcmFlagOvf);
             CLK_ClearFcmFlag(ClkFcmFlagErrf);
-            return 0;
+            u32Tmp = 0xffu;
         }
     } while (Reset == CLK_GetFcmFlag(ClkFcmFlagMendf));
 
-    /* Get measure result */
-    CLK_GetClockFreq(&stcClkFreq);
-    clkMeasureVal = CLK_GetFcmCounter();
-    clkMeasureVal = stcClkFreq.sysclkFreq * 128 / clkMeasureVal;
-    /* stop measure */
-    CLK_FcmCmd(Disable);
-    CLK_ClearFcmFlag(ClkFcmFlagMendf);
-
-    /* calculate clock compensation value */
-    if (!((clkMeasureVal >= -EPSINON) && (clkMeasureVal <= EPSINON)))
+    if (0xffu != u32Tmp)
     {
-        clkMeasureVal = (clkMeasureVal - XTAL32_VALUE) / XTAL32_VALUE * 1000000;
-        clkMeasureVal = clkMeasureVal * XTAL32_VALUE / 1000000;
+        /* Get measure result */
+        CLK_GetClockFreq(&stcClkFreq);
+        u32Tmp = CLK_GetFcmCounter();
+        clkMeasureVal = ((float)stcClkFreq.sysclkFreq * 128.0f) / (float)u32Tmp;
+        /* stop measure */
+        CLK_FcmCmd(Disable);
+        CLK_ClearFcmFlag(ClkFcmFlagMendf);
 
-        if (clkMeasureVal < -EPSINON)    /* negative */
+        /* calculate clock compensation value */
+        if (!((clkMeasureVal >= -EPSINON) && (clkMeasureVal <= EPSINON)))
         {
-            clkMeasureVal = fabs(clkMeasureVal);
-            integerVal = (~((uint32_t)clkMeasureVal) + 1) & 0x0F;
-            /* Magnify one thousand times */
-            clkMeasureVal = (clkMeasureVal - (uint32_t)clkMeasureVal) * 1000;
-            decimalsVal = (((~((uint32_t)clkMeasureVal)) & 0x3E0) >> 5) + 1;
+            clkMeasureVal = (clkMeasureVal - (float)XTAL32_VALUE) / (float)XTAL32_VALUE * (float)1000000.0f;
+            clkMeasureVal = clkMeasureVal * (float)XTAL32_VALUE / 1000000.0f;
+
+            if (clkMeasureVal < -EPSINON)    /* negative */
+            {
+                clkMeasureVal = (float)fabs((double)clkMeasureVal);
+                integerVal = (uint16_t)(((~((uint32_t)clkMeasureVal)) + 1u) & 0x0Fu);
+                /* Magnify one thousand times */
+                u32Tmp = (uint32_t)clkMeasureVal;
+                clkMeasureVal = (clkMeasureVal - (float)u32Tmp) * 1000.0f;
+                decimalsVal = (uint16_t)((((~((uint32_t)clkMeasureVal)) & 0x3E0u) >> 5u) + 1u);
+            }
+            else                            /* positive */
+            {
+                clkMeasureVal += 1.0f;
+                integerVal = (uint16_t)(((uint32_t)clkMeasureVal) & 0x0Fu);
+                /* Magnify one thousand times */
+                u32Tmp = (uint32_t)clkMeasureVal;
+                clkMeasureVal = (float)((clkMeasureVal - (float)u32Tmp) * 1000.0f);
+                decimalsVal = (uint16_t)(((uint32_t)clkMeasureVal & 0x3E0u) >> 5u);
+            }
         }
-        else                            /* positive */
-        {
-            clkMeasureVal += 1.0f;
-            integerVal = ((uint32_t)clkMeasureVal) & 0x0F;
-            /* Magnify one thousand times */
-            clkMeasureVal = (clkMeasureVal - (uint32_t)clkMeasureVal) * 1000;
-            decimalsVal = ((uint32_t)clkMeasureVal & 0x3E0) >> 5;
-        }
+        clkCompenVal = ((uint16_t)(integerVal << 5u) | decimalsVal) & 0x1FFu;
     }
-    clkCompenVal = ((integerVal << 5) | decimalsVal) & 0x1FF;
 
     return clkCompenVal;
 }
@@ -304,11 +313,11 @@ uint16_t Rtc_GetCompenValue(void)
  ** \retval None
  **
  ******************************************************************************/
-void Rtc_Config(void)
+static void Rtc_Config(void)
 {
     stc_rtc_init_t stcRtcInit;
     stc_irq_regi_conf_t stcIrqRegiConf;
-    uint16_t clkCompenVal = 0;
+    uint16_t clkCompenVal = 0u;
 
     /* configuration structure initialization */
     MEM_ZERO_STRUCT(stcRtcInit);
@@ -321,33 +330,34 @@ void Rtc_Config(void)
     if (RTC_DeInit() == ErrorTimeout)
     {
         printf("reset rtc failed!\r\n");
-        return;
     }
+    else
+    {
+        clkCompenVal = Rtc_GetCompenValue();
+        /* Configuration rtc structure */
+        stcRtcInit.enClkSource = RtcClkXtal32;
+        stcRtcInit.enPeriodInt = RtcPeriodIntOneSec;
+        stcRtcInit.enTimeFormat = RtcTimeFormat24Hour;
+        stcRtcInit.enCompenWay = RtcOutputCompenUniform;
+        stcRtcInit.enCompenEn = Enable;
+        stcRtcInit.u16CompenVal = clkCompenVal;
+        RTC_Init(&stcRtcInit);
+        RTC_OneHzOutputCmd(Enable);
 
-    clkCompenVal = Rtc_GetCompenValue();
-    /* Configuration rtc structure */
-    stcRtcInit.enClkSource = RtcClkXtal32;
-    stcRtcInit.enPeriodInt = RtcPeriodIntOneSec;
-    stcRtcInit.enTimeFormat = RtcTimeFormat24Hour;
-    stcRtcInit.enCompenWay = RtcOutputCompenUniform;
-    stcRtcInit.enCompenEn = Enable;
-    stcRtcInit.u16CompenVal = clkCompenVal;
-    RTC_Init(&stcRtcInit);
-    RTC_OneHzOutputCmd(Enable);
+        /* Configure interrupt of rtc period */
+        stcIrqRegiConf.enIntSrc = INT_RTC_PRD;
+        stcIrqRegiConf.enIRQn = Int006_IRQn;
+        stcIrqRegiConf.pfnCallback = &RtcPeriod_IrqCallback;
+        enIrqRegistration(&stcIrqRegiConf);
+        NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
+        NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
+        NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
 
-    /* Configure interrupt of rtc period */
-    stcIrqRegiConf.enIntSrc = INT_RTC_PRD;
-    stcIrqRegiConf.enIRQn = Int006_IRQn;
-    stcIrqRegiConf.pfnCallback = RtcPeriod_IrqCallback;
-    enIrqRegistration(&stcIrqRegiConf);
-    NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
-    NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
-    NVIC_EnableIRQ(stcIrqRegiConf.enIRQn);
-
-    /* Enable period interrupt */
-    RTC_IrqCmd(RtcIrqPeriod, Enable);
-    /* Startup rtc count */
-    RTC_Cmd(Enable);
+        /* Enable period interrupt */
+        RTC_IrqCmd(RtcIrqPeriod, Enable);
+        /* Startup rtc count */
+        RTC_Cmd(Enable);
+    }
 }
 
 /**

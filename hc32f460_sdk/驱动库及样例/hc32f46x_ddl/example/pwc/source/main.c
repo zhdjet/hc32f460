@@ -60,23 +60,23 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define PVD_IRQn                Int141_IRQn
+#define PVD_IRQn                (Int141_IRQn)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT              (PortB)
+#define  LED2_PIN               (Pin05)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
 /* LED2 definition */
-#define LED2_ON()               PORT_SetBits(LED2_PORT, LED2_PIN)
-#define LED2_OFF()              PORT_ResetBits(LED2_PORT, LED2_PIN)
+#define LED2_ON()               (PORT_SetBits(LED2_PORT, LED2_PIN))
+#define LED2_OFF()              (PORT_ResetBits(LED2_PORT, LED2_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -102,7 +102,7 @@
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -148,7 +148,7 @@ void Lvd1_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-void Pvd2_IrqHandler(void)
+static void Pvd2_IrqHandler(void)
 {
     PORT_Unlock();
     LED0_OFF();
@@ -209,7 +209,7 @@ int32_t main(void)
     /* Disbale filter. */
     stcNmiCfd.enFilterEn = Disable;
     /* Set Pvd2 interrupt callback. */
-    stcNmiCfd.pfnNmiCallback = Pvd2_IrqHandler;
+    stcNmiCfd.pfnNmiCallback = &Pvd2_IrqHandler;
 
     NMI_Init(&stcNmiCfd);
 
@@ -226,7 +226,10 @@ int32_t main(void)
     /* Enable PVD2. */
     PWC_Pvd2Cmd(Enable);
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

@@ -142,15 +142,15 @@
 
 /****************** USB OTG HS CONFIGURATION **********************************/
 #ifdef USB_OTG_HS_CORE
- #define RX_FIFO_HS_SIZE                          512
- #define TX0_FIFO_HS_SIZE                         128
- #define TX1_FIFO_HS_SIZE                         256
- #define TX2_FIFO_HS_SIZE                          0
- #define TX3_FIFO_HS_SIZE                          0
- #define TX4_FIFO_HS_SIZE                          0
- #define TX5_FIFO_HS_SIZE                          0
- #define TX6_FIFO_HS_SIZE                          0
- #define TX7_FIFO_HS_SIZE                          0
+ #define RX_FIFO_HS_SIZE                          512u
+ #define TX0_FIFO_HS_SIZE                         128u
+ #define TX1_FIFO_HS_SIZE                         256u
+ #define TX2_FIFO_HS_SIZE                           0u
+ #define TX3_FIFO_HS_SIZE                           0u
+ #define TX4_FIFO_HS_SIZE                           0u
+ #define TX5_FIFO_HS_SIZE                           0u
+ #define TX6_FIFO_HS_SIZE                           0u
+ #define TX7_FIFO_HS_SIZE                           0u
 
 
 // #define USB_OTG_HS_SOF_OUTPUT_ENABLED
@@ -168,13 +168,13 @@
 
 /****************** USB OTG FS CONFIGURATION **********************************/
 #ifdef USB_OTG_FS_CORE
- #define RX_FIFO_FS_SIZE                          128
- #define TX0_FIFO_FS_SIZE                          64
- #define TX1_FIFO_FS_SIZE                         128
- #define TX2_FIFO_FS_SIZE                          0
- #define TX3_FIFO_FS_SIZE                          0
- #define TX4_FIFO_FS_SIZE                          0
- #define TX5_FIFO_FS_SIZE                          0
+ #define RX_FIFO_FS_SIZE                          128u
+ #define TX0_FIFO_FS_SIZE                          64u
+ #define TX1_FIFO_FS_SIZE                         128u
+ #define TX2_FIFO_FS_SIZE                           0u
+ #define TX3_FIFO_FS_SIZE                           0u
+ #define TX4_FIFO_FS_SIZE                           0u
+ #define TX5_FIFO_FS_SIZE                           0u
  #define USB_OTG_HS_INTERNAL_DMA_ENABLED
 // #define USB_OTG_FS_LOW_PWR_MGMT_SUPPORT
 // #define USB_OTG_FS_SOF_OUTPUT_ENABLED
@@ -213,13 +213,13 @@
 #endif
 
 
- #define RX_FIFO_HS_SIZE                          512
- #define TXH_NP_HS_FIFOSIZ                        128
- #define TXH_P_HS_FIFOSIZ                         256
+ #define RX_FIFO_HS_SIZE                          512u
+ #define TXH_NP_HS_FIFOSIZ                        128u
+ #define TXH_P_HS_FIFOSIZ                         256u
 
-#define RX_FIFO_FS_SIZE                          128
- #define TXH_NP_FS_FIFOSIZ                         32
- #define TXH_P_FS_FIFOSIZ                          64
+#define RX_FIFO_FS_SIZE                           128u
+ #define TXH_NP_FS_FIFOSIZ                         32u
+ #define TXH_P_FS_FIFOSIZ                          64u
 
 /****************** C Compilers dependant keywords ****************************/
 /* In HS mode and when the DMA is used, all variables and data structures dealing
@@ -247,7 +247,7 @@
 #if defined (__CC_ARM)         /* ARM Compiler */
   #define __packed    __packed
 #elif defined (__ICCARM__)     /* IAR Compiler */
-  #define __packed    __packed
+//  #define __packed    __packed
 #elif defined   ( __GNUC__ )   /* GNU Compiler */
   #define __packed    __attribute__ ((__packed__))
 #elif defined   (__TASKING__)  /* TASKING Compiler */

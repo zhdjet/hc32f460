@@ -62,38 +62,38 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /* KEY1 Port/Pin definition */
-#define KEY1_PORT                       PortD
-#define KEY1_PIN                        Pin04
-#define KEY1_TRIGGER_EVENT              EVT_PORT_EIRQ4
+#define KEY1_PORT                       (PortD)
+#define KEY1_PIN                        (Pin04)
+#define KEY1_TRIGGER_EVENT              (EVT_PORT_EIRQ4)
 
 /* TIMERA unit and clock definition */
-#define TIMERA_UNIT1                    M4_TMRA1
-#define TIMERA_UNIT1_CLOCK              PWC_FCG2_PERIPH_TIMA1
-#define TIMERA_UNIT1_OVERFLOW_INT       INT_TMRA1_OVF
+#define TIMERA_UNIT1                    (M4_TMRA1)
+#define TIMERA_UNIT1_CLOCK              (PWC_FCG2_PERIPH_TIMA1)
+#define TIMERA_UNIT1_OVERFLOW_INT       (INT_TMRA1_OVF)
 
 /* TIMERA channel 1 Port/Pin definition */
-#define TIMERA_UNIT1_CH1                TimeraCh1
-#define TIMERA_UNIT1_CH1_PORT           PortE
-#define TIMERA_UNIT1_CH1_PIN            Pin09
-#define TIMERA_UNIT1_CH1_FUNC           Func_Tima0
+#define TIMERA_UNIT1_CH1                (TimeraCh1)
+#define TIMERA_UNIT1_CH1_PORT           (PortE)
+#define TIMERA_UNIT1_CH1_PIN            (Pin09)
+#define TIMERA_UNIT1_CH1_FUNC           (Func_Tima0)
 
 /* TIMERA channel 3 Port/Pin definition */
-#define TIMERA_UNIT1_CH3                TimeraCh3
-#define TIMERA_UNIT1_CH3_PORT           PortE
-#define TIMERA_UNIT1_CH3_PIN            Pin13
-#define TIMERA_UNIT1_CH3_FUNC           Func_Tima0
+#define TIMERA_UNIT1_CH3                (TimeraCh3)
+#define TIMERA_UNIT1_CH3_PORT           (PortE)
+#define TIMERA_UNIT1_CH3_PIN            (Pin13)
+#define TIMERA_UNIT1_CH3_FUNC           (Func_Tima0)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -106,7 +106,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8ExIntFlag = 0, u8TmraUnit1Cnt = 0;
+static uint8_t u8ExIntFlag = 0u, u8TmraUnit1Cnt = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -120,10 +120,10 @@ static uint8_t u8ExIntFlag = 0, u8TmraUnit1Cnt = 0;
  ** \retval None
  **
  ******************************************************************************/
-void TimeraUnit1_IrqCallback(void)
+static void TimeraUnit1_IrqCallback(void)
 {
     u8TmraUnit1Cnt++;
-    if (u8TmraUnit1Cnt >= 100)      //1s
+    if (u8TmraUnit1Cnt >= 100u)      //1s
     {
         u8TmraUnit1Cnt = 0u;
         LED0_TOGGLE();
@@ -140,7 +140,7 @@ void TimeraUnit1_IrqCallback(void)
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
@@ -158,7 +158,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -186,7 +186,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -207,15 +207,12 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void SystemClk_Init(void)
+static void SystemClk_Init(void)
 {
-    en_clk_sys_source_t     enSysClkSrc;
     stc_clk_sysclk_cfg_t    stcSysClkCfg;
     stc_clk_xtal_cfg_t      stcXtalCfg;
     stc_clk_mpll_cfg_t      stcMpllCfg;
-    stc_clk_freq_t          stcClkFreq;
 
-    MEM_ZERO_STRUCT(enSysClkSrc);
     MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
     MEM_ZERO_STRUCT(stcMpllCfg);
@@ -239,11 +236,11 @@ void SystemClk_Init(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln = 42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -256,14 +253,12 @@ void SystemClk_Init(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
-
-    /* Check source and frequence. */
-    enSysClkSrc = CLK_GetSysClkSource();
-    CLK_GetClockFreq(&stcClkFreq);
 }
 
 /**
@@ -275,7 +270,7 @@ void SystemClk_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Timera_Config(void)
+static void Timera_Config(void)
 {
     stc_timera_base_init_t stcTimeraInit;
     stc_timera_compare_init_t stcTimerCompareInit;
@@ -303,11 +298,11 @@ void Timera_Config(void)
     stcTimeraInit.enCntMode = TimeraCountModeTriangularWave;
     stcTimeraInit.enCntDir = TimeraCountDirUp;
     stcTimeraInit.enSyncStartupEn = Disable;
-    stcTimeraInit.u16PeriodVal = 0xCD0;        //freq: 100Hz
+    stcTimeraInit.u16PeriodVal = 0xCD0u;        //freq: 100Hz
     TIMERA_BaseInit(TIMERA_UNIT1, &stcTimeraInit);
 
     /* Configuration timera unit 1 compare structure */
-    stcTimerCompareInit.u16CompareVal = stcTimeraInit.u16PeriodVal * 4 / 5;
+    stcTimerCompareInit.u16CompareVal = stcTimeraInit.u16PeriodVal * 4u / 5u;
     stcTimerCompareInit.enStartCountOutput = TimeraCountStartOutputLow;
     stcTimerCompareInit.enStopCountOutput = TimeraCountStopOutputLow;
     stcTimerCompareInit.enCompareMatchOutput = TimeraCompareMatchOutputReverse;
@@ -332,7 +327,7 @@ void Timera_Config(void)
     /* Interrupt of timera unit 1 */
     stcIrqRegiConf.enIntSrc = TIMERA_UNIT1_OVERFLOW_INT;
     stcIrqRegiConf.enIRQn = Int006_IRQn;
-    stcIrqRegiConf.pfnCallback = TimeraUnit1_IrqCallback;
+    stcIrqRegiConf.pfnCallback = &TimeraUnit1_IrqCallback;
     enIrqRegistration(&stcIrqRegiConf);
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
     NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
@@ -361,7 +356,7 @@ void Timera_Config(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint16_t u16TimerPeriod = 0, u16DutyCycle = 0;
+    uint16_t u16TimerPeriod = 0u, u16DutyCycle = 0u;
     stc_port_init_t stcPortInit;
 
     /* configure structure initialization */
@@ -386,11 +381,11 @@ int32_t main(void)
     {
         if (1u == u8ExIntFlag)
         {
-            u8ExIntFlag = 0;
-            u16DutyCycle += u16TimerPeriod / 20;
+            u8ExIntFlag = 0u;
+            u16DutyCycle += u16TimerPeriod / 20u;
             if (u16DutyCycle > u16TimerPeriod)
             {
-                u16DutyCycle = 0;
+                u16DutyCycle = 0u;
             }
             TIMERA_SetCacheValue(TIMERA_UNIT1, TIMERA_UNIT1_CH1, u16DutyCycle);
             TIMERA_SetCacheValue(TIMERA_UNIT1, TIMERA_UNIT1_CH3, u16DutyCycle);

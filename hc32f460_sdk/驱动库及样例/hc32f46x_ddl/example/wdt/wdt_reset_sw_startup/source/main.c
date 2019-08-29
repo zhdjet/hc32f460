@@ -61,16 +61,16 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /* WDT count cycle definition */
 #define WDT_COUNT_CYCLE                 (16384u)
@@ -91,7 +91,7 @@
  * Local variable definitions ('static')
  ******************************************************************************/
 static uint8_t u8SysWorkSta;
-static uint8_t u8ExIntFlag = 0;
+static uint8_t u8ExIntFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -105,7 +105,7 @@ static uint8_t u8ExIntFlag = 0;
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
@@ -123,7 +123,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -151,7 +151,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -172,7 +172,7 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Wdt_Config(void)
+static void Wdt_Config(void)
 {
     stc_wdt_init_t stcWdtInit;
 
@@ -231,22 +231,22 @@ int32_t main(void)
     /* First refresh to start WDT */
     WDT_RefreshCounter();
     /* Wait for WDT module to complete initial load */
-    Ddl_Delay1ms(200);
+    Ddl_Delay1ms(200u);
     /* Count cycle=16384,range=0%-25% */
-    u16CmpVal = WDT_COUNT_CYCLE / 4;
+    u16CmpVal = WDT_COUNT_CYCLE / 4u;
     while (1)
     {
         if (1u == u8ExIntFlag)
         {
             u8ExIntFlag = 0u;
-            u16CmpVal = WDT_COUNT_CYCLE / 2;
+            u16CmpVal = WDT_COUNT_CYCLE / 2u;
         }
 
         if (WDT_GetCountValue() < u16CmpVal)
         {
             WDT_RefreshCounter();
             /* wait for the count value to update */
-            Ddl_Delay1ms(10);
+            Ddl_Delay1ms(10u);
             if (RESET_OTHER_TRIGGER == u8SysWorkSta)
             {
                 LED0_TOGGLE();

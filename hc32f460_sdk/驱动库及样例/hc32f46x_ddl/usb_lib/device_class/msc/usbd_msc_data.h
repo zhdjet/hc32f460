@@ -64,17 +64,17 @@
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define MODE_SENSE6_LEN                 8
-#define MODE_SENSE10_LEN                8
-#define LENGTH_INQUIRY_PAGE00           7
-#define LENGTH_FORMAT_CAPACITIES        20
+#define MODE_SENSE6_LEN                 (8u)
+#define MODE_SENSE10_LEN                (8u)
+#define LENGTH_INQUIRY_PAGE00           (7u)
+#define LENGTH_FORMAT_CAPACITIES        (20u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/
-extern const uint8_t MSC_Page00_Inquiry_Data[];
-extern const uint8_t MSC_Mode_Sense6_data[];
-extern const uint8_t MSC_Mode_Sense10_data[];
+extern const uint8_t MSC_Page00_Inquiry_Data[LENGTH_INQUIRY_PAGE00];
+extern const uint8_t MSC_Mode_Sense6_data[MODE_SENSE6_LEN];
+extern const uint8_t MSC_Mode_Sense10_data[MODE_SENSE10_LEN];
 
 /*******************************************************************************
  * Global function prototypes (definition in C source)

@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file implements functions for opening and closing host channels
-	@endlink
+        This file implements functions for opening and closing host channels
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -99,21 +99,21 @@ uint8_t USBH_Open_Channel  (USB_OTG_CORE_HANDLE *pdev,
                             uint8_t ep_type,
                             uint16_t mps)
 {
-    pdev->host.hc[hc_num].ep_num = pdev->host.channel[hc_num]& 0x7F;
-    pdev->host.hc[hc_num].ep_is_in = (pdev->host.channel[hc_num] & 0x80 ) == 0x80;
+    pdev->host.hc[hc_num].ep_num =(uint8_t) pdev->host.channel[hc_num]& 0x7Fu;
+    pdev->host.hc[hc_num].ep_is_in = (pdev->host.channel[hc_num] & 0x80u ) == 0x80u;
     pdev->host.hc[hc_num].dev_addr = dev_address;
     pdev->host.hc[hc_num].ep_type = ep_type;
     pdev->host.hc[hc_num].max_packet = mps;
     pdev->host.hc[hc_num].speed = speed;
-    pdev->host.hc[hc_num].toggle_in = 0;
-    pdev->host.hc[hc_num].toggle_out = 0;
+    pdev->host.hc[hc_num].toggle_in = 0u;
+    pdev->host.hc[hc_num].toggle_out = 0u;
     if(speed == HPRT0_PRTSPD_HIGH_SPEED)
     {
-        pdev->host.hc[hc_num].do_ping = 1;
+        pdev->host.hc[hc_num].do_ping = 1u;
     }
 
     USB_OTG_HC_Init(pdev, hc_num) ;
-    return HC_OK;
+    return (uint8_t)HC_OK;
 }
 
 /**
@@ -135,23 +135,23 @@ uint8_t USBH_Modify_Channel (USB_OTG_CORE_HANDLE *pdev,
                             uint8_t ep_type,
                             uint16_t mps)
 {
-    if(dev_address != 0)
+    if(dev_address != 0u)
     {
         pdev->host.hc[hc_num].dev_addr = dev_address;
     }
 
-    if((pdev->host.hc[hc_num].max_packet != mps) && (mps != 0))
+    if((pdev->host.hc[hc_num].max_packet != mps) && (mps != 0u))
     {
         pdev->host.hc[hc_num].max_packet = mps;
     }
 
-    if((pdev->host.hc[hc_num].speed != speed ) && (speed != 0 ))
+    if((pdev->host.hc[hc_num].speed != speed ) && (speed != 0u ))
     {
         pdev->host.hc[hc_num].speed = speed;
     }
 
     USB_OTG_HC_Init(pdev, hc_num);
-    return HC_OK;
+    return (uint8_t)HC_OK;
 }
 
 /**
@@ -169,9 +169,9 @@ uint8_t USBH_Alloc_Channel  (USB_OTG_CORE_HANDLE *pdev, uint8_t ep_addr)
 
     if (hc_num != HC_ERROR)
     {
-        pdev->host.channel[hc_num] = HC_USED | ep_addr;
+        pdev->host.channel[hc_num & (USB_OTG_MAX_TX_FIFOS-1u)] = HC_USED | ep_addr;  /* C-STAT */
     }
-    return hc_num;
+    return (uint8_t)hc_num;
 }
 
 /**
@@ -185,7 +185,7 @@ uint8_t USBH_Free_Channel  (USB_OTG_CORE_HANDLE *pdev, uint8_t idx)
 {
     if(idx < HC_MAX)
     {
-        pdev->host.channel[idx] &= HC_USED_MASK;
+        pdev->host.channel[idx & (USB_OTG_MAX_TX_FIFOS-1u)] &= HC_USED_MASK;
     }
     return USBH_OK;
 }
@@ -201,9 +201,9 @@ uint8_t USBH_DeAllocate_AllChannel  (USB_OTG_CORE_HANDLE *pdev)
 {
     uint8_t idx;
 
-    for (idx = 2; idx < HC_MAX ; idx ++)
+    for (idx = 2u; idx < HC_MAX ; idx ++)
     {
-        pdev->host.channel[idx] = 0;
+        pdev->host.channel[idx & (USB_OTG_MAX_TX_FIFOS-1u)] = 0u;
     }
     return USBH_OK;
 }
@@ -217,16 +217,29 @@ uint8_t USBH_DeAllocate_AllChannel  (USB_OTG_CORE_HANDLE *pdev)
  ******************************************************************************/
 static uint16_t USBH_GetFreeChannel (USB_OTG_CORE_HANDLE *pdev)
 {
-    uint8_t idx = 0;
+    uint8_t idx = 0u;
+    uint16_t u16Ret = HC_ERROR;
 
-    for (idx = 0 + 0 ; idx < HC_MAX ; idx++)
+    for (idx = 0u ; idx < HC_MAX ; idx++)
     {
-        if ((pdev->host.channel[idx] & HC_USED) == 0)
+        if ((pdev->host.channel[idx & (USB_OTG_MAX_TX_FIFOS-1u)] & HC_USED) == 0u)
         {
-            return idx;
+            //return idx;
+            u16Ret = HC_OK;
+            break;
         }
     }
-    return HC_ERROR;
+
+    if(u16Ret == HC_OK)
+    {
+        u16Ret = idx;
+    }
+    else
+    {
+        //
+    }
+
+    return u16Ret;
 }
 
 /*******************************************************************************

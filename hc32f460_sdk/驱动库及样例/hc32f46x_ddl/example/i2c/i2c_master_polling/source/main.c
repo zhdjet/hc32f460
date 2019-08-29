@@ -62,42 +62,42 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Define I2C unit used for the example */
-#define I2C_CH                          M4_I2C1
+#define I2C_CH                          (M4_I2C1)
 /* Define slave device address for example */
-#define DEVICE_ADDRESS                  0x06
+#define DEVICE_ADDRESS                  0x06u
 /* Define port and pin for SDA and SCL */
-#define I2C1_SCL_PORT                   PortC
-#define I2C1_SCL_PIN                    Pin04
-#define I2C1_SDA_PORT                   PortC
-#define I2C1_SDA_PIN                    Pin05
+#define I2C1_SCL_PORT                   (PortC)
+#define I2C1_SCL_PIN                    (Pin04)
+#define I2C1_SDA_PORT                   (PortC)
+#define I2C1_SDA_PIN                    (Pin05)
 
 #define TIMEOUT                         ((uint32_t)0x10000)
 
-#define I2C_RET_OK                      0
-#define I2C_RET_ERROR                   1
+#define I2C_RET_OK                      0u
+#define I2C_RET_ERROR                   1u
 
-#define GENERATE_START                  0x00
-#define GENERATE_RESTART                0x01
+#define GENERATE_START                  0x00u
+#define GENERATE_RESTART                0x01u
 
-#define ADDRESS_W                       0x00
-#define ADDRESS_R                       0x01
+#define ADDRESS_W                       0x00u
+#define ADDRESS_R                       0x01u
 
 /* Define Write and read data length for the example */
-#define TEST_DATA_LEN                   256
+#define TEST_DATA_LEN                   256u
 /* Define i2c baudrate */
-#define I2C_BAUDRATE                    400000
+#define I2C_BAUDRATE                    400000ul
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT        (PortE)
+#define  LED0_PIN         (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortA
-#define  LED1_PIN         Pin07
+#define  LED1_PORT        (PortA)
+#define  LED1_PIN         (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -128,14 +128,20 @@
 static uint8_t Master_StartOrRestart(uint8_t u8Start)
 {
     uint32_t u32TimeOut = TIMEOUT;
+    en_flag_status_t enFlagBusy = Reset;
+    en_flag_status_t enFlagStartf = Reset;
 
     /* generate start or restart signal */
-    if(GENERATE_START == u8Start)
+    //if(GENERATE_START == u8Start)
+    if(!u8Start)
     {
         /* Wait I2C bus idle */
         while(Set == I2C_GetStatus(I2C_CH, I2C_SR_BUSY))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         I2C_GenerateStart(I2C_CH , Enable);
@@ -150,10 +156,18 @@ static uint8_t Master_StartOrRestart(uint8_t u8Start)
 
     /* Judge if start success*/
     u32TimeOut = TIMEOUT;
-    while((Reset == I2C_GetStatus(I2C_CH, I2C_SR_BUSY)) ||
-            (Reset == I2C_GetStatus(I2C_CH, I2C_SR_STARTF)))
+    while(1)
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        enFlagBusy = I2C_GetStatus(I2C_CH, I2C_SR_BUSY);
+        enFlagStartf = I2C_GetStatus(I2C_CH, I2C_SR_STARTF);
+        if(enFlagBusy && enFlagStartf)
+        {
+            break;
+        }
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     return I2C_RET_OK;
@@ -176,26 +190,36 @@ static uint8_t Master_SendAdr(uint8_t u8Adr)
     /* Wait tx buffer empty */
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     /* Send I2C address */
     I2C_SendData(I2C_CH, u8Adr);
 
-    if(ADDRESS_W == (u8Adr & 0x01))
+    //if(E2_ADDRESS_W == (u8Adr & 0x01u))
+    if(!(u8Adr & 0x01u))     /*  C-STAT MISRAC2004-13.7 */
     {
         /* If in master transfer process, Need wait transfer end*/
         uint32_t u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
+    }
 
-        /* Check ACK */
-        u32TimeOut = TIMEOUT;
-        while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    /* Check ACK */
+    u32TimeOut = TIMEOUT;
+    while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    {
+        if(0ul == (u32TimeOut--))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            return I2C_RET_ERROR;
         }
     }
 
@@ -224,7 +248,10 @@ static uint8_t Master_WriteData(uint8_t *pTxData, uint32_t u32Size)
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* Send one byte data */
@@ -234,14 +261,20 @@ static uint8_t Master_WriteData(uint8_t *pTxData, uint32_t u32Size)
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TENDF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* Check ACK */
         u32TimeOut = TIMEOUT;
         while(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
     }
 
@@ -250,9 +283,8 @@ static uint8_t Master_WriteData(uint8_t *pTxData, uint32_t u32Size)
 
 /**
  ******************************************************************************
- ** \brief  Write address and receive data from slave
+ ** \brief  Receive data from slave
  **
- ** \param  u8Adr    Device address and R/W bit
  ** \param  pTxData  Pointer to the data buffer
  ** \param  u32Size  Data size
  **
@@ -260,35 +292,26 @@ static uint8_t Master_WriteData(uint8_t *pTxData, uint32_t u32Size)
  **         - I2C_RET_ERROR  Process failed
  **         - I2C_RET_OK     Process success
  ******************************************************************************/
-static uint8_t Master_SendAdrRevData(uint8_t u8Adr, uint8_t *pRxData, uint32_t u32Size)
+static uint8_t Master_RevData(uint8_t *pRxData, uint32_t u32Size)
 {
     uint32_t u32TimeOut = TIMEOUT;
 
-    /* Wait tx buffer empty */
-    while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TEMPTYF))
-    {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
-    }
-
-    for(uint32_t i=0; i<u32Size; i++)
+    for(uint32_t i=0ul; i<u32Size; i++)
     {
         /* if the last byte receive, need config NACK*/
-        if(i == (u32Size - 1))
+        if(i == (u32Size - 1ul))
         {
             I2C_NackConfig(I2C_CH, Enable);
-        }
-
-        /* if first byte receive, need send adr*/
-        if(0 == i)
-        {
-            I2C_SendData(I2C_CH, u8Adr);
         }
 
         /* Wait receive full flag*/
         u32TimeOut = TIMEOUT;
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_RFULLF))
         {
-            if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+            if(0ul == (u32TimeOut--))
+            {
+                return I2C_RET_ERROR;
+            }
         }
 
         /* read data from register*/
@@ -315,7 +338,10 @@ uint8_t Master_Stop(void)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_BUSY))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
 
     I2C_GenerateStop(I2C_CH, Enable);
@@ -324,7 +350,10 @@ uint8_t Master_Stop(void)
     u32TimeOut = TIMEOUT;
     while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_STOPF))
     {
-        if(0 == (u32TimeOut--)) return I2C_RET_ERROR;
+        if(0ul == (u32TimeOut--))
+        {
+            return I2C_RET_ERROR;
+        }
     }
     return I2C_RET_OK;
 }
@@ -342,13 +371,18 @@ uint8_t Master_Stop(void)
 uint8_t Master_Initialize(void)
 {
     stc_i2c_init_t stcI2cInit;
+    stc_clk_freq_t stcClkFreq;
 
     I2C_DeInit(I2C_CH);
 
+    /* Get system clock frequency */
+    CLK_GetClockFreq(&stcClkFreq);
+
     MEM_ZERO_STRUCT(stcI2cInit);
     stcI2cInit.enI2cMode = I2cMaster;
+    stcI2cInit.u32Pclk3 = stcClkFreq.pclk3Freq;
     stcI2cInit.u32Baudrate = I2C_BAUDRATE;
-    stcI2cInit.u32SclTime = 0;
+    stcI2cInit.u32SclTime = 0ul;
     I2C_Init(I2C_CH, &stcI2cInit);
 
     I2C_Cmd(I2C_CH, Enable);
@@ -395,11 +429,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =50u;
+    stcMpllCfg.PllpDiv = 4u;
+    stcMpllCfg.PllqDiv = 4u;
+    stcMpllCfg.PllrDiv = 4u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -412,7 +446,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -433,7 +470,7 @@ static void JudgeResult(uint8_t u8Result)
         while(1)
         {
             LED0_TOGGLE();
-            Ddl_Delay1ms(500);
+            Ddl_Delay1ms(500ul);
         }
     }
 }
@@ -455,9 +492,9 @@ int32_t  main(void)
     uint8_t u8Ret = I2C_RET_OK;
     stc_port_init_t stcPortInit;
 
-    for(i=0; i<TEST_DATA_LEN; i++)
+    for(i=0ul; i<TEST_DATA_LEN; i++)
     {
-        u8TxBuf[i] = i+1;
+        u8TxBuf[i] = (uint8_t)(i+1ul);
     }
     memset(u8RxBuf, 0x00, TEST_DATA_LEN);
 
@@ -486,11 +523,11 @@ int32_t  main(void)
     /* Initialize I2C peripheral and enable function*/
     Master_Initialize();
 
-    Ddl_Delay1ms(5);
+    Ddl_Delay1ms(5ul);
     /* I2C master data write*/
     u8Ret = Master_StartOrRestart(GENERATE_START);
     JudgeResult(u8Ret);
-    u8Ret = Master_SendAdr((DEVICE_ADDRESS<<1)|ADDRESS_W);
+    u8Ret = Master_SendAdr((uint8_t)(DEVICE_ADDRESS<<1u)|ADDRESS_W);
     JudgeResult(u8Ret);
     u8Ret = Master_WriteData(u8TxBuf, TEST_DATA_LEN);
     JudgeResult(u8Ret);
@@ -498,18 +535,20 @@ int32_t  main(void)
     JudgeResult(u8Ret);
 
     /* 5mS delay for device*/
-    Ddl_Delay1ms(5);
+    Ddl_Delay1ms(5ul);
 
     /* I2C master data read*/
     u8Ret = Master_StartOrRestart(GENERATE_START);
     JudgeResult(u8Ret);
-    u8Ret = Master_SendAdrRevData((DEVICE_ADDRESS<<1)|ADDRESS_R, u8RxBuf, TEST_DATA_LEN);
+    u8Ret = Master_SendAdr((uint8_t)(DEVICE_ADDRESS<<1u)|ADDRESS_R);
+    JudgeResult(u8Ret);
+    u8Ret = Master_RevData(u8RxBuf, TEST_DATA_LEN);
     JudgeResult(u8Ret);
     u8Ret = Master_Stop();
     JudgeResult(u8Ret);
 
     /* Compare the data */
-    for(i=0; i<TEST_DATA_LEN; i++)
+    for(i=0ul; i<TEST_DATA_LEN; i++)
     {
         if(u8TxBuf[i] != u8RxBuf[i])
         {
@@ -517,7 +556,7 @@ int32_t  main(void)
             while(1)
             {
                 LED0_TOGGLE();
-                Ddl_Delay1ms(500);
+                Ddl_Delay1ms(500ul);
             }
         }
     }
@@ -526,7 +565,7 @@ int32_t  main(void)
     while(1)
     {
         LED1_TOGGLE();
-        Ddl_Delay1ms(500);
+        Ddl_Delay1ms(500ul);
     }
 }
 

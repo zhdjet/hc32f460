@@ -66,18 +66,15 @@
 #define OTS_CLK_SEL_HRC             (1u)
 
 /* Select XTAL as OTS clock. */
-#define OTS_CLK_SEL                 OTS_CLK_SEL_HRC
+#define OTS_CLK_SEL                 (OTS_CLK_SEL_HRC)
 
 /* Timer definition for this example. */
-#define TMR_UNIT                    M4_TMR02
-#define ENABLE_TMR0()               PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable)
+#define TMR_UNIT                    (M4_TMR02)
 
 /* Select EVT_TMR02_GCMA as OTS trigger source. */
-#define OTS_TRG_SRC                 EVT_TMR02_GCMA
+#define OTS_TRG_SRC                 (EVT_TMR02_GCMA)
 
-/* Enable AOS macro definition */
-#define ENABLE_AOS()                PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable)
-
+/* System clock frequency in MHz. */
 #define SYS_CLOCK_FREQ_MHZ          (SystemCoreClock / 1000000ul)
 
 /*******************************************************************************
@@ -203,7 +200,10 @@ static void SystemClockConfig(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Set system clock source. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -258,7 +258,7 @@ static void OtsInitConfig(void)
 #else
     stcOtsInit.enClkSel = OtsClkSel_Xtal;
 #endif
-    stcOtsInit.u8ClkFreq = SYS_CLOCK_FREQ_MHZ;
+    stcOtsInit.u8ClkFreq = (uint8_t)SYS_CLOCK_FREQ_MHZ;
 
     /* 1. Enable OTS. */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_OTS, Enable);
@@ -306,7 +306,8 @@ static void OtsClockConfig(void)
 static void OtsTriggerSrcConfig(void)
 {
     /* 1. Enable AOS. */
-    ENABLE_AOS();
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+
     /* 2. Set OTS trigger source. */
     OTS_SetTriggerSrc(OTS_TRG_SRC);
 }
@@ -328,7 +329,7 @@ static void OtsIrqConfig(void)
     stcOtsIrqCfg.enIntSrc    = INT_OTS;
     /* stcOtsIrqCfg.enIRQn: [Int000_IRQn, Int031_IRQn] [Int110_IRQn, Int115_IRQn] */
     stcOtsIrqCfg.enIRQn      = Int113_IRQn;
-    stcOtsIrqCfg.pfnCallback = OtsIrqCallback;
+    stcOtsIrqCfg.pfnCallback = &OtsIrqCallback;
     enIrqRegResult           = enIrqRegistration(&stcOtsIrqCfg);
 
     if (Ok == enIrqRegResult)
@@ -360,13 +361,13 @@ static void TimerConfig(void)
     u32Pclk1 = stcClkTmp.pclk1Freq;
 
     /* Timer0 peripheral enable. */
-    ENABLE_TMR0();
+    PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable);
     /* Config register for channel A. */
     stcTimerCfg.Tim0_CounterMode = Tim0_Sync;
     stcTimerCfg.Tim0_SyncClockSource = Tim0_Pclk1;
     stcTimerCfg.Tim0_ClockDivision = Tim0_ClkDiv1024;
     /* Tim0_CmpValue's type is uint16_t!!! Be careful!!! */
-    stcTimerCfg.Tim0_CmpValue = u32Pclk1 / 1024 - 1;
+    stcTimerCfg.Tim0_CmpValue = (uint16_t)(u32Pclk1 / 1024u - 1u);
     TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelA, &stcTimerCfg);
 
     /* Start timer0. */

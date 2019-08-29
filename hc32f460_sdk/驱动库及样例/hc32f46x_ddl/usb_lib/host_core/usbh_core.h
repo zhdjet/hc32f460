@@ -204,7 +204,7 @@ typedef struct _Host_TypeDef
     USBH_Device_TypeDef   device_prop;
 
     USBH_Class_cb_TypeDef               *class_cb;
-    USBH_Usr_cb_TypeDef  	              *usr_cb;
+    USBH_Usr_cb_TypeDef                   *usr_cb;
 } USBH_HOST, *pUSBH_HOST;
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
@@ -214,14 +214,14 @@ typedef struct _Host_TypeDef
  ** \brief USBH_CORE_Exported_Defines
  **
  ******************************************************************************/
-#define MSC_CLASS                         0x08
-#define HID_CLASS                         0x03
-#define MSC_PROTOCOL                      0x50
-#define CBI_PROTOCOL                      0x01
+#define MSC_CLASS                         (0x08u)
+#define HID_CLASS                         (0x03u)
+#define MSC_PROTOCOL                      (0x50u)
+#define CBI_PROTOCOL                      (0x01u)
 
-#define USBH_MAX_ERROR_COUNT                            2
-#define USBH_DEVICE_ADDRESS_DEFAULT                     0
-#define USBH_DEVICE_ADDRESS                             1
+#define USBH_MAX_ERROR_COUNT                            (2u)
+#define USBH_DEVICE_ADDRESS_DEFAULT                     (0u)
+#define USBH_DEVICE_ADDRESS                             (1u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

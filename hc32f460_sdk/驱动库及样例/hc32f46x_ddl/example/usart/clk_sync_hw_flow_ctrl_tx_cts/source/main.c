@@ -64,7 +64,7 @@
 typedef struct stc_buf_handle
 {
     uint8_t u8Size;
-    uint8_t *pu8Buf;
+    uint8_t au8Buf[200];
 } stc_buf_handle_t;
 
 /*******************************************************************************
@@ -72,40 +72,37 @@ typedef struct stc_buf_handle
  ******************************************************************************/
 
 /* USART channel definition */
-#define USART_CH                        M4_USART2
+#define USART_CH                        (M4_USART2)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (3000000)
+#define USART_BAUDRATE                  (3000000ul)
 
 /* USART TX Port/Pin definition */
-#define USART_TX_PORT                   PortA
-#define USART_TX_PIN                    Pin02
-#define USART_TX_FUNC                   Func_Usart2_Tx
+#define USART_TX_PORT                   (PortA)
+#define USART_TX_PIN                    (Pin02)
+#define USART_TX_FUNC                   (Func_Usart2_Tx)
 
 /* USART CK Port/Pin definition */
-#define USART_CK_PORT                   PortD
-#define USART_CK_PIN                    Pin07
-#define USART_CK_FUNC                   Func_Usart_Ck
+#define USART_CK_PORT                   (PortD)
+#define USART_CK_PIN                    (Pin07)
+#define USART_CK_FUNC                   (Func_Usart_Ck)
 
 /* USART CTS Port/Pin definition */
-#define USART_CTS_PORT                  PortA
-#define USART_CTS_PIN                   Pin00
-#define USART_CTS_FUNC                  Func_Usart2_Cts
-
-/* USART send times */
-#define USART_TX_TIMES                  (200u)
+#define USART_CTS_PORT                  (PortA)
+#define USART_CTS_PIN                   (Pin00)
+#define USART_CTS_FUNC                  (Func_Usart2_Cts)
 
 /* LED(D26: green color) Port/Pin definition */
-#define LED_PORT                        PortA
-#define LED_PIN                         Pin07
+#define LED_PORT                        (PortA)
+#define LED_PIN                         (Pin07)
 
 /* LED operation */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /* User key:SW2 Port/Pin definition */
-#define KEY_PORT                        PortD
-#define KEY_PIN                         Pin03
+#define KEY_PORT                        (PortD)
+#define KEY_PIN                         (Pin03)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -120,16 +117,7 @@ static void LedInit(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t m_au8TxBuf[USART_TX_TIMES];
-
-static stc_buf_handle_t m_stcTxBufHanlde = {sizeof(m_au8TxBuf), m_au8TxBuf};
-
-static const stc_usart_clksync_init_t m_stcInitCfg = {
-    UsartIntClkCkOutput,
-    UsartClkDiv_1,
-    UsartDataLsbFirst,
-    UsartCtsEnable,
-};
+static stc_buf_handle_t m_stcTxBufHanlde;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -174,11 +162,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -233,12 +221,22 @@ static void LedInit(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint8_t i = 0;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint8_t i = 0u;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_clksync_init_t stcInitCfg = {
+        UsartIntClkCkOutput,
+        UsartClkDiv_1,
+        UsartDataLsbFirst,
+        UsartCtsEnable,
+    };
 
-    for (i = 0; i < m_stcTxBufHanlde.u8Size ; i++)
+    /* Initialize buffer */
+    m_stcTxBufHanlde.u8Size = (uint8_t)sizeof(m_stcTxBufHanlde.au8Buf);
+
+    for (i = 0u; i < m_stcTxBufHanlde.u8Size ; i++)
     {
-        m_stcTxBufHanlde.pu8Buf[i] = i;
+        m_stcTxBufHanlde.au8Buf[i] = i;
     }
 
     /* Initialize Clock */
@@ -256,7 +254,7 @@ int32_t main(void)
     PORT_SetFunc(USART_CTS_PORT, USART_CTS_PIN, USART_CTS_FUNC, Disable);
 
     /* Initialize USART */
-    if (Ok != USART_CLKSYNC_Init(USART_CH, &m_stcInitCfg))
+    if (Ok != USART_CLKSYNC_Init(USART_CH, &stcInitCfg))
     {
         while (1)
         {
@@ -289,13 +287,13 @@ int32_t main(void)
     /*Enable TX function*/
     USART_FuncCmd(USART_CH, UsartTx, Enable);
 
-    for (i = 0; i < m_stcTxBufHanlde.u8Size ; i++)
+    for (i = 0u; i < m_stcTxBufHanlde.u8Size ; i++)
     {
         while (Reset == USART_GetStatus(USART_CH, UsartTxEmpty))
         {
         }
 
-        USART_SendData(USART_CH, i);
+        USART_SendData(USART_CH, (uint16_t)i);
     }
 
     LED_ON();  /* Send completely */

@@ -75,13 +75,15 @@ static void AesFillData(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-const static uint8_t m_au8AesKey[AES_KEYLEN] = {0x12, 0x34, 0x56, 0x78, 0x9A, 0xCD, 0xEF,
-                                                0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7};
+const static uint8_t m_au8AesKey[AES_KEYLEN] =
+{
+    0x12, 0x34, 0x56, 0x78, 0x9A, 0xCD, 0xEF,
+    0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7
+};
 
-static uint8_t m_au8SrcData[57u];
-
-static uint8_t m_au8Plaintext[64u] = {0u};
-static uint8_t m_au8Ciphertext[64u];
+/* Word alignment. */
+__ALIGN_BEGIN static uint8_t m_au8Plaintext[64u] = {0u};
+__ALIGN_BEGIN static uint8_t m_au8Ciphertext[64u];
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -156,11 +158,8 @@ int32_t main(void)
  ******************************************************************************/
 static void AesConfig(void)
 {
-    /* 1. Enable AES. */
+    /* Enable AES peripheral clock. */
     PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AES, Enable);
-
-    /* 2. Initialize AES. */
-    AES_Init();
 }
 
 /**
@@ -176,12 +175,10 @@ static void AesFillData(void)
 {
     uint32_t i;
 
-    for (i = 0u; i < sizeof(m_au8SrcData); i++)
+    for (i = 0u; i < sizeof(m_au8Plaintext); i++)
     {
-        m_au8SrcData[i] = i + 1u;
+        m_au8Plaintext[i] = (uint8_t)(i + 1u);
     }
-
-    memcpy(m_au8Plaintext, m_au8SrcData, sizeof(m_au8SrcData));
 }
 
 /*******************************************************************************

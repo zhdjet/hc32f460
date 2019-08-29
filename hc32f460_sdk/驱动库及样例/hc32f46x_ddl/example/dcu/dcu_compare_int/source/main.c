@@ -60,21 +60,22 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define DCU_UNIT                        M4_DCU1
+#define DCU_UNIT                        (M4_DCU1)
+#define DCU_INT_NUM                     (INT_DCU1)
 
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED0 & LED1 */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /* Parameter valid check for DCU Instances. */
 #define IS_VALID_DCU(__DCUx__)                                                 \
@@ -92,7 +93,6 @@
  ******************************************************************************/
 static void LedInit(void);
 static void DcuIrqCallback(void);
-static en_int_src_t GetDcuIntNum(M4_DCU_TypeDef *DCUx);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -103,10 +103,6 @@ static en_int_status_t m_enLs1IntStatus = Reset;
 static en_int_status_t m_enEq2IntStatus = Reset;
 static en_int_status_t m_enGt2IntStatus = Reset;
 static en_int_status_t m_enLs2IntStatus = Reset;
-
-static uint16_t m_au8Data0Val[4] = {0x00, 0x22, 0x44, 0x88};
-static uint16_t m_au8Data1Val[4] = {0x00, 0x11, 0x55, 0x88};
-static uint16_t m_au8Data2Val[4] = {0x00, 0x11, 0x55, 0x88};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -201,48 +197,6 @@ static void DcuIrqCallback(void)
 
 /**
  *******************************************************************************
- ** \brief Get DCU interrupt number.
- **
- ** \param [in] DCUx                    Pointer to DCU instance register base
- ** \arg M4_DCU1                        DCU unit 1 instance register base
- ** \arg M4_DCU2                        DCU unit 2 instance register base
- ** \arg M4_DCU3                        DCU unit 3 instance register base
- ** \arg M4_DCU4                        DCU unit 4 instance register base
- **
- ** \retval                             DCU interrupt number
- **
- ******************************************************************************/
-static en_int_src_t GetDcuIntNum(M4_DCU_TypeDef *DCUx)
-{
-    en_int_src_t enIntSrc;
-
-    DDL_ASSERT(IS_VALID_DCU(DCUx));
-
-    if (M4_DCU1 == DCUx)
-    {
-        enIntSrc = INT_DCU1;
-    }
-    else if (M4_DCU2 == DCUx)
-    {
-        enIntSrc = INT_DCU2;
-    }
-    else if (M4_DCU3 == DCUx)
-    {
-        enIntSrc = INT_DCU3;
-    }
-    else if (M4_DCU4 == DCUx)
-    {
-        enIntSrc = INT_DCU4;
-    }
-    else
-    {
-    }
-
-    return enIntSrc;
-}
-
-/**
- *******************************************************************************
  ** \brief  Main function of project
  **
  ** \param  None
@@ -255,6 +209,9 @@ int32_t main(void)
     stc_dcu_init_t stcDcuInit;
     en_result_t enTestResult = Ok;
     stc_irq_regi_conf_t stcIrqRegiCfg;
+    uint8_t au8Data0Val[4] = {0x00u, 0x22u, 0x44u, 0x88u};
+    uint8_t au8Data1Val[4] = {0x00u, 0x11u, 0x55u, 0x88u};
+    uint8_t au8Data2Val[4] = {0x00u, 0x11u, 0x55u, 0x88u};
 
     /* Initialize LED */
     LedInit();
@@ -274,17 +231,17 @@ int32_t main(void)
 
     /* Set DCU IRQ */
     stcIrqRegiCfg.enIRQn = Int000_IRQn;
-    stcIrqRegiCfg.pfnCallback = DcuIrqCallback;
-    stcIrqRegiCfg.enIntSrc = GetDcuIntNum(DCU_UNIT);
+    stcIrqRegiCfg.pfnCallback = &DcuIrqCallback;
+    stcIrqRegiCfg.enIntSrc = DCU_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);
     NVIC_EnableIRQ(stcIrqRegiCfg.enIRQn);
 
     /* DATA0 = DATA1  &&  DATA0 = DATA2 */
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, m_au8Data1Val[0]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, m_au8Data2Val[0]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, m_au8Data0Val[0]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, au8Data1Val[0]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, au8Data2Val[0]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, au8Data0Val[0]);
     if ((Set != m_enEq1IntStatus) || (Set != m_enEq2IntStatus))
     {
         enTestResult = Error;
@@ -294,9 +251,9 @@ int32_t main(void)
     }
 
     /* DATA0 > DATA1  &&  DATA0 > DATA2 */
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, m_au8Data1Val[1]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, m_au8Data2Val[1]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, m_au8Data0Val[1]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, au8Data1Val[1]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, au8Data2Val[1]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, au8Data0Val[1]);
     if ((Set != m_enGt1IntStatus) || (Set != m_enGt2IntStatus))
     {
         enTestResult = Error;
@@ -306,9 +263,9 @@ int32_t main(void)
     }
 
     /* DATA0 < DATA1  &&  DATA0 < DATA2 */
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, m_au8Data1Val[2]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, m_au8Data2Val[2]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, m_au8Data0Val[2]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, au8Data1Val[2]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, au8Data2Val[2]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, au8Data0Val[2]);
     if ((Set != m_enLs1IntStatus) || (Set != m_enLs2IntStatus))
     {
         enTestResult = Error;
@@ -320,9 +277,9 @@ int32_t main(void)
     m_enEq1IntStatus = Reset;
     m_enEq2IntStatus = Reset;
     /* DATA0 = DATA1  &&  DATA0 = DATA2 */
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, m_au8Data1Val[3]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, m_au8Data2Val[3]);
-    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, m_au8Data0Val[3]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData1, au8Data1Val[3]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData2, au8Data2Val[3]);
+    DCU_WriteDataByte(DCU_UNIT, DcuRegisterData0, au8Data0Val[3]);
     if ((Set != m_enEq1IntStatus) || (Set != m_enEq2IntStatus))
     {
         enTestResult = Error;

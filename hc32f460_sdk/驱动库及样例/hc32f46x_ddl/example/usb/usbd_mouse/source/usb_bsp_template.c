@@ -136,11 +136,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 4;     //MPLLP = 84
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 7;    //MPLLR 168/4 = 48
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =42u;
+    stcMpllCfg.PllpDiv = 4u;     //MPLLP = 84
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 7u;    //MPLLR 168/4 = 48
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -152,20 +152,26 @@ static void SysClkIni(void)
     /* Enable MPLL. */
     CLK_MpllCmd(Enable);
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
 
-    stcUpllCfg.pllmDiv = 2;
-    stcUpllCfg.plln = 84;
-    stcUpllCfg.PllpDiv = 7;//48M
-    stcUpllCfg.PllqDiv = 7;
-    stcUpllCfg.PllrDiv = 7;
+    stcUpllCfg.pllmDiv = 2u;
+    stcUpllCfg.plln = 84u;
+    stcUpllCfg.PllpDiv = 7u;//48M
+    stcUpllCfg.PllqDiv = 7u;
+    stcUpllCfg.PllrDiv = 7u;
     CLK_UpllConfig(&stcUpllCfg);
     CLK_UpllCmd(Enable);
     /* Wait UPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagUPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagUPLLRdy))
+    {
+        ;
+    }
 
     /* Set USB clock source */
     CLK_SetUsbClkSource(ClkUsbSrcUpllp);
@@ -225,7 +231,7 @@ void USB_OTG_BSP_EnableInterrupt(void)
     /* Select INT_USBFS_GLB interrupt function */
     stcIrqRegiConf.enIntSrc = INT_USBFS_GLB;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = USB_IRQ_Handler;
+    stcIrqRegiConf.pfnCallback = &USB_IRQ_Handler;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -276,13 +282,16 @@ void USB_OTG_BSP_TimeInit ( void )
  ** \param  usec : Value of delay required in micro sec
  ** \retval None
  ******************************************************************************/
-#define Fclk    15000000
+#define Fclk    15000000ul
 void USB_OTG_BSP_uDelay (const uint32_t t)
 {
     uint32_t    i;
     uint32_t    j;
-    j=Fclk / 1000000 * t;
-    for(i = 0; i < j; i++);
+    j=Fclk / 1000000ul * t;
+    for(i = 0u; i < j; i++)
+    {
+        ;
+    }
 }
 
 /**
@@ -293,7 +302,7 @@ void USB_OTG_BSP_uDelay (const uint32_t t)
  ******************************************************************************/
 void USB_OTG_BSP_mDelay (const uint32_t msec)
 {
-    USB_OTG_BSP_uDelay(msec * 1000);
+    USB_OTG_BSP_uDelay(msec * 1000ul);
 }
 
 /**

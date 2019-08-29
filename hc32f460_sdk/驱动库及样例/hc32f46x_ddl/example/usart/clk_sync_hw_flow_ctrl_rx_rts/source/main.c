@@ -65,7 +65,7 @@ typedef struct stc_buf_handle
 {
     uint8_t u8Cnt;
     uint8_t u8Size;
-    uint8_t *pu8Buf;
+    uint8_t au8Buf[200];
 } stc_buf_handle_t;
 
 /*******************************************************************************
@@ -73,49 +73,46 @@ typedef struct stc_buf_handle
  ******************************************************************************/
 
 /* USART channel definition */
-#define USART_CH                        M4_USART2
+#define USART_CH                        (M4_USART2)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (3000000)
+#define USART_BAUDRATE                  (3000000ul)
 
 /* USART RX Port/Pin definition */
-#define USART_RX_PORT                   PortA
-#define USART_RX_PIN                    Pin03
-#define USART_RX_FUNC                   Func_Usart2_Rx
+#define USART_RX_PORT                   (PortA)
+#define USART_RX_PIN                    (Pin03)
+#define USART_RX_FUNC                   (Func_Usart2_Rx)
 
 /* USART CK Port/Pin definition */
-#define USART_CK_PORT                   PortD
-#define USART_CK_PIN                    Pin07
-#define USART_CK_FUNC                   Func_Usart_Ck
+#define USART_CK_PORT                   (PortD)
+#define USART_CK_PIN                    (Pin07)
+#define USART_CK_FUNC                   (Func_Usart_Ck)
 
 /* USART RTS Port/Pin definition */
-#define USART_RTS_PORT                  PortA
-#define USART_RTS_PIN                   Pin01
-#define USART_RTS_FUNC                  Func_Usart2_Rts
+#define USART_RTS_PORT                  (PortA)
+#define USART_RTS_PIN                   (Pin01)
+#define USART_RTS_FUNC                  (Func_Usart2_Rts)
 
 /* USART interrupt  */
-#define USART_EI_NUM                    INT_USART2_EI
-#define USART_EI_IRQn                   Int001_IRQn
+#define USART_EI_NUM                    (INT_USART2_EI)
+#define USART_EI_IRQn                   (Int001_IRQn)
 
 /* USART delay time for reading */
 #define USART_DELAY                     (5u)
 
-/* USART send times */
-#define USART_RX_TIMES                  (200u)
-
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED operation */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -133,16 +130,7 @@ static void UsartErrIrqCallback(void);
  ******************************************************************************/
 static en_result_t m_enTestResult = Ok;
 
-static uint8_t m_au8RxBuf[USART_RX_TIMES];
-
-static stc_buf_handle_t m_stcRxBufHanlde = {0, sizeof(m_au8RxBuf), m_au8RxBuf};
-
-static const stc_usart_clksync_init_t m_stcInitCfg = {
-    UsartExtClk,
-    UsartClkDiv_1,
-    UsartDataLsbFirst,
-    UsartRtsEnable,
-};
+static stc_buf_handle_t m_stcRxBufHanlde;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -187,11 +175,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -287,7 +275,14 @@ static void UsartErrIrqCallback(void)
 int32_t main(void)
 {
     stc_irq_regi_conf_t stcIrqRegiCfg;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_clksync_init_t stcInitCfg = {
+        UsartExtClk,
+        UsartClkDiv_1,
+        UsartDataLsbFirst,
+        UsartRtsEnable,
+    };
 
     /* Initialize Clock */
     ClkInit();
@@ -303,15 +298,15 @@ int32_t main(void)
     PORT_SetFunc(USART_RX_PORT, USART_RX_PIN, USART_RX_FUNC, Disable);
     PORT_SetFunc(USART_RTS_PORT, USART_RTS_PIN, USART_RTS_FUNC, Disable);
 
+    /* Initialize buffer */
+    m_stcRxBufHanlde.u8Size = (uint8_t)sizeof(m_stcRxBufHanlde.au8Buf);
+
     /* Initialize USART */
-    if (Ok != USART_CLKSYNC_Init(USART_CH, &m_stcInitCfg))
+    if (Ok != USART_CLKSYNC_Init(USART_CH, &stcInitCfg))
     {
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /* Set baudrate */
@@ -321,13 +316,10 @@ int32_t main(void)
         {
         }
     }
-    else
-    {
-    }
 
     /* Set USART RX error IRQ */
     stcIrqRegiCfg.enIRQn = USART_EI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartErrIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartErrIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_EI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -337,32 +329,20 @@ int32_t main(void)
     /*Enable RX && RX interupt function*/
     USART_FuncCmd(USART_CH, UsartRx, Enable);
 
-    while (1)
+    while (m_stcRxBufHanlde.u8Cnt != m_stcRxBufHanlde.u8Size)
     {
         if (Set == USART_GetStatus(USART_CH, UsartRxNoEmpty))
         {
             Ddl_Delay1ms(USART_DELAY);
-            m_stcRxBufHanlde.pu8Buf[m_stcRxBufHanlde.u8Cnt] = USART_RecData(USART_CH);
+            m_stcRxBufHanlde.au8Buf[m_stcRxBufHanlde.u8Cnt] = (uint8_t)USART_RecData(USART_CH);
 
-            if (m_stcRxBufHanlde.pu8Buf[m_stcRxBufHanlde.u8Cnt] != m_stcRxBufHanlde.u8Cnt)
+            if (m_stcRxBufHanlde.au8Buf[m_stcRxBufHanlde.u8Cnt] != m_stcRxBufHanlde.u8Cnt)
             {
                 m_enTestResult = Error;
                 break;
             }
-            else
-            {
-            }
 
-            if(++m_stcRxBufHanlde.u8Cnt == m_stcRxBufHanlde.u8Size)
-            {
-                break;
-            }
-            else
-            {
-            }
-        }
-        else
-        {
+            ++m_stcRxBufHanlde.u8Cnt;
         }
     }
 

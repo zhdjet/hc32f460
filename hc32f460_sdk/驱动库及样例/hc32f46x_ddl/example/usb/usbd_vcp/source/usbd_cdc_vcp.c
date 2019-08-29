@@ -77,7 +77,7 @@ LINE_CODING linecoding =
  ******************************************************************************/
 /* These are external variables imported from CDC core to be used for IN
    transfer management. */
-extern uint8_t  APP_Rx_Buffer []; /* Write CDC received data in this buffer.
+extern uint8_t  APP_Rx_Buffer [APP_RX_DATA_SIZE]; /* Write CDC received data in this buffer.
                                      These data will be sent over USB IN endpoint
                                      in the CDC core functions. */
 extern uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
@@ -90,17 +90,20 @@ extern uint32_t APP_Rx_ptr_in;    /* Increment this pointer or roll it back to
 static uint16_t VCP_Init     (void);
 static uint16_t VCP_DeInit   (void);
 static uint16_t VCP_Ctrl     (uint32_t Cmd, uint8_t* Buf, uint32_t Len);
-static uint16_t VCP_DataTx   (uint8_t* Buf, uint32_t Len);
+static uint16_t VCP_DataTx   (uint32_t Len);
 static uint16_t VCP_DataRx   (uint8_t* Buf, uint32_t Len);
-static uint16_t VCP_COMConfig(uint8_t Conf);
+static uint16_t VCP_COMConfig(void);  /* MISRAC 2004*/
+
+static void UsartErrIrqCallback(void);
+static void UsartRxIrqCallback(void);
 
 CDC_IF_Prop_TypeDef VCP_fops =
 {
-    VCP_Init,
-    VCP_DeInit,
-    VCP_Ctrl,
-    VCP_DataTx,
-    VCP_DataRx
+    &VCP_Init,
+    &VCP_DeInit,
+    &VCP_Ctrl,
+    &VCP_DataTx,
+    &VCP_DataRx
 };
 
 /*******************************************************************************
@@ -123,19 +126,6 @@ static uint16_t VCP_Init(void)
 
     MEM_ZERO_STRUCT(stcInitCfg);
     MEM_ZERO_STRUCT(stcIrqRegiCfg);
-#if 0
-    // USART1
-    PORT_SetFunc(PortB, Pin01, Func_Usart1_Rx, Disable); //RX
-    PORT_SetFunc(PortB, Pin00, Func_Usart1_Tx, Disable); //TX
-    PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USART1, Enable);
-
-    // USART3
-    /* PB04 --> RX, PB05 --> TX for full-duplex */
-    PORT_SetFunc(PortB, Pin04, Func_Usart3_Rx, Disable); //RX
-    PORT_SetFunc(PortB, Pin05, Func_Usart3_Tx, Disable); //TX
-    PORT_DebugPortSetting(TRST, Disable);
-    PWC_Fcg1PeriphClockCmd(PWC_FCG1_PERIPH_USART3, Enable);
-#endif
 
     /* PC13 --> RX, PH02 --> TX for full-duplex */
     PORT_SetFunc(PortC, Pin13, Func_Usart4_Rx, Disable); //RX
@@ -151,11 +141,11 @@ static uint16_t VCP_Init(void)
     stcInitCfg.enDetectMode     = UsartStartBitFallEdge;
     stcInitCfg.enHwFlow         = UsartRtsEnable;
     USART_UART_Init(CDC_COMM, &stcInitCfg);
-    if(Ok == USART_SetBaudrate(CDC_COMM, 115200))
+    if(Ok == USART_SetBaudrate(CDC_COMM, 115200ul))
     {
         /* Set USART RX IRQ */
         stcIrqRegiCfg.enIRQn = Int000_IRQn;
-        stcIrqRegiCfg.pfnCallback = UsartRxIrqCallback;
+        stcIrqRegiCfg.pfnCallback = &UsartRxIrqCallback;
         stcIrqRegiCfg.enIntSrc = INT_USART4_RI;
         enIrqRegistration(&stcIrqRegiCfg);
         NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_01);
@@ -163,7 +153,7 @@ static uint16_t VCP_Init(void)
         NVIC_EnableIRQ(stcIrqRegiCfg.enIRQn);
         /* Set USART RX error IRQ */
         stcIrqRegiCfg.enIRQn = Int001_IRQn;
-        stcIrqRegiCfg.pfnCallback = UsartErrIrqCallback;
+        stcIrqRegiCfg.pfnCallback = &UsartErrIrqCallback;
         stcIrqRegiCfg.enIntSrc = INT_USART4_EI;
         enIrqRegistration(&stcIrqRegiCfg);
         NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_01);
@@ -226,18 +216,18 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
         break;
 
         case SET_LINE_CODING:
-            linecoding.bitrate = (uint32_t)(Buf[0] | (Buf[1] << 8) | (Buf[2] << 16) | (Buf[3] << 24));
+            linecoding.bitrate = ((uint32_t)Buf[0] | ((uint32_t)Buf[1] << 8u) | ((uint32_t)Buf[2] << 16u) | ((uint32_t)Buf[3] << 24u));
             linecoding.format = Buf[4];
             linecoding.paritytype = Buf[5];
             linecoding.datatype = Buf[6];
             /* Set the new configuration */
-            VCP_COMConfig(OTHER_CONFIG);
+            VCP_COMConfig();  /* MISRAC 2004*/
         break;
         case GET_LINE_CODING:
             Buf[0] = (uint8_t)(linecoding.bitrate);
-            Buf[1] = (uint8_t)(linecoding.bitrate >> 8);
-            Buf[2] = (uint8_t)(linecoding.bitrate >> 16);
-            Buf[3] = (uint8_t)(linecoding.bitrate >> 24);
+            Buf[1] = (uint8_t)(linecoding.bitrate >> 8u);
+            Buf[2] = (uint8_t)(linecoding.bitrate >> 16u);
+            Buf[3] = (uint8_t)(linecoding.bitrate >> 24u);
             Buf[4] = linecoding.format;
             Buf[5] = linecoding.paritytype;
             Buf[6] = linecoding.datatype;
@@ -258,19 +248,22 @@ static uint16_t VCP_Ctrl (uint32_t Cmd, uint8_t* Buf, uint32_t Len)
   * @brief  VCP_DataTx
   *         CDC received data to be send over USB IN endpoint are managed in
   *         this function.
-  * @param  Buf: Buffer of data to be sent
   * @param  Len: Number of data to be sent (in bytes)
   * @retval Result of the opeartion: USBD_OK if all operations are OK else VCP_FAIL
   */
-static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
+static uint16_t VCP_DataTx (uint32_t Len)
 {
-    if (linecoding.datatype == 7)
+    if (linecoding.datatype == 7u)
     {
-        APP_Rx_Buffer[APP_Rx_ptr_in] = USART_RecData(CDC_COMM) & 0x7F;
+        APP_Rx_Buffer[APP_Rx_ptr_in] = (uint8_t)USART_RecData(CDC_COMM) & 0x7Fu;
     }
-    else if (linecoding.datatype == 8)
+    else if (linecoding.datatype == 8u)
     {
-        APP_Rx_Buffer[APP_Rx_ptr_in] = USART_RecData(CDC_COMM);
+        APP_Rx_Buffer[APP_Rx_ptr_in] = (uint8_t)USART_RecData(CDC_COMM);
+    }
+    else
+    {
+        //
     }
 
     APP_Rx_ptr_in++;
@@ -278,7 +271,7 @@ static uint16_t VCP_DataTx (uint8_t* Buf, uint32_t Len)
     /* To avoid buffer overflow */
     if(APP_Rx_ptr_in == APP_RX_DATA_SIZE)
     {
-        APP_Rx_ptr_in = 0;
+        APP_Rx_ptr_in = 0u;
     }
 
     return USBD_OK;
@@ -303,142 +296,163 @@ static uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len)
 {
     uint32_t i;
 
-    for (i = 0; i < Len; i++)
+    for (i = 0ul; i < Len; i++)
     {
-        while(Set != USART_GetStatus(CDC_COMM, UsartTxEmpty));
-        USART_SendData(CDC_COMM, *(Buf + i));
+        while(Set != USART_GetStatus(CDC_COMM, UsartTxEmpty))
+        {
+            ;
+        }
+        USART_SendData(CDC_COMM, (uint16_t)*(Buf + i));
     }
-//    while(Set != USART_GetStatus(CDC_COMM, UsartTxComplete));
-
     return USBD_OK;
 }
 
+uint16_t VCP_COMConfigDefault(void)
+{
+    stc_usart_uart_init_t stcInitCfg;
+    uint16_t u16Res = USBD_OK;
+    uint8_t u8Cnt;
+    MEM_ZERO_STRUCT(stcInitCfg);
+
+    stcInitCfg.enClkMode        = UsartIntClkCkNoOutput;
+    stcInitCfg.enClkDiv         = UsartClkDiv_1;
+    stcInitCfg.enDataLength     = UsartDataBits8;
+    stcInitCfg.enDirection      = UsartDataLsbFirst;
+    stcInitCfg.enStopBit        = UsartOneStopBit;
+    stcInitCfg.enParity         = UsartParityNone;
+    stcInitCfg.enSampleMode     = UsartSamleBit16;
+    stcInitCfg.enDetectMode     = UsartStartBitFallEdge;
+    stcInitCfg.enHwFlow         = UsartRtsEnable;
+    USART_UART_Init(CDC_COMM, &stcInitCfg);
+    for (u8Cnt=0u; u8Cnt < 4u; u8Cnt++)
+    {
+            if(Ok == USART_SetBaudrate(CDC_COMM, 115200u))
+            {
+            USART_FuncCmd(CDC_COMM, UsartTx, Enable);
+            USART_FuncCmd(CDC_COMM, UsartRx, Enable);
+            USART_FuncCmd(CDC_COMM, UsartRxInt, Enable);
+            break;
+        }
+        else
+        {
+            USART_SetClockDiv(CDC_COMM, (en_usart_clk_div_t)u8Cnt);
+        }
+    }
+    if (u8Cnt == 4u)
+    {
+        u16Res = USBD_FAIL;
+    }
+    return u16Res;
+}
 /**
   * @brief  VCP_COMConfig
   *         Configure the COM Port with default values or values received from host.
-  * @param  Conf: can be DEFAULT_CONFIG to set the default configuration or OTHER_CONFIG
-  *         to set a configuration received from the host.
+  * @param  None  MISRAC 2004
+  *
   * @retval None.
   */
-static uint16_t VCP_COMConfig(uint8_t Conf)
+static uint16_t VCP_COMConfig(void)
 {
     stc_usart_uart_init_t stcInitCfg;
     uint8_t u8Cnt;
     MEM_ZERO_STRUCT(stcInitCfg);
+    uint16_t u16Res = USBD_OK;
+    uint8_t u8ReturnFlag = 0u;
 
-    if (Conf == DEFAULT_CONFIG)
+    /* set the Stop bit*/
+    switch (linecoding.format)
     {
-        stcInitCfg.enClkMode        = UsartIntClkCkNoOutput;
-        stcInitCfg.enClkDiv         = UsartClkDiv_1;
-        stcInitCfg.enDataLength     = UsartDataBits8;
-        stcInitCfg.enDirection      = UsartDataLsbFirst;
-        stcInitCfg.enStopBit        = UsartOneStopBit;
-        stcInitCfg.enParity         = UsartParityNone;
-        stcInitCfg.enSampleMode     = UsartSamleBit16;
-        stcInitCfg.enDetectMode     = UsartStartBitFallEdge;
-        stcInitCfg.enHwFlow         = UsartRtsEnable;
-        USART_UART_Init(CDC_COMM, &stcInitCfg);
-        for (u8Cnt=0; u8Cnt < 4; u8Cnt++)
-        {
-            if(Ok == USART_SetBaudrate(CDC_COMM, 115200))
-            {
-                USART_FuncCmd(CDC_COMM, UsartTx, Enable);
-                USART_FuncCmd(CDC_COMM, UsartRx, Enable);
-                USART_FuncCmd(CDC_COMM, UsartRxInt, Enable);
-                break;
-            }
-            else
-            {
-                USART_SetClockDiv(CDC_COMM, (en_usart_clk_div_t)u8Cnt);
-            }
-        }
-        if (u8Cnt == 4)
-        {
-            return (USBD_FAIL);
-        }
+        case 0u:
+            stcInitCfg.enStopBit = UsartOneStopBit;
+            break;
+        case 1u:
+            stcInitCfg.enStopBit = UsartOneStopBit;
+            break;
+        case 2u:
+            stcInitCfg.enStopBit = UsartTwoStopBit;
+            break;
+        default :
+            VCP_COMConfigDefault();
+            u16Res = USBD_FAIL;
+            u8ReturnFlag = 1u;
+            break;
     }
-    else
-    {
-        /* set the Stop bit*/
-        switch (linecoding.format)
-        {
-            case 0:
-                stcInitCfg.enStopBit = UsartOneStopBit;
-                break;
-            case 1:
-                stcInitCfg.enStopBit = UsartOneStopBit;
-                break;
-            case 2:
-                stcInitCfg.enStopBit = UsartTwoStopBit;
-                break;
-            default :
-                VCP_COMConfig(DEFAULT_CONFIG);
-                return (USBD_FAIL);
-        }
 
+    if(1u != u8ReturnFlag)
+    {
         /* set the parity bit*/
         switch (linecoding.paritytype)
         {
-        case 0:
-            stcInitCfg.enParity = UsartParityNone;
-            break;
-        case 1:
-            stcInitCfg.enParity = UsartParityEven;
-            break;
-        case 2:
-            stcInitCfg.enParity = UsartParityOdd;
-            break;
-        default :
-            VCP_COMConfig(DEFAULT_CONFIG);
-            return (USBD_FAIL);
-        }
-
-        /*set the data type : only 8bits and 9bits is supported */
-        switch (linecoding.datatype)
-        {
-            case 0x07:
-                /* With this configuration a parity (Even or Odd) should be set */
-                stcInitCfg.enDataLength = UsartDataBits8;
+            case 0u:
+                stcInitCfg.enParity = UsartParityNone;
                 break;
-            case 0x08:
-                if (stcInitCfg.enParity == UsartParityNone)
-                {
-                    stcInitCfg.enDataLength = UsartDataBits8;
-                }
-                else
-                {
-                    stcInitCfg.enDataLength = UsartDataBits9;
-                }
+            case 1u:
+                stcInitCfg.enParity = UsartParityEven;
+                break;
+            case 2u:
+                stcInitCfg.enParity = UsartParityOdd;
                 break;
             default :
-                VCP_COMConfig(DEFAULT_CONFIG);
-                return (USBD_FAIL);
-        }
-//      /* Configure and enable the USART */
-
-        stcInitCfg.enHwFlow = UsartRtsEnable;
-        USART_UART_Init(CDC_COMM, &stcInitCfg);
-        
-        for (u8Cnt=0; u8Cnt < 4; u8Cnt++)
-        {
-            if(Ok == USART_SetBaudrate(CDC_COMM, 115200))
-            {
-                USART_FuncCmd(CDC_COMM, UsartTx, Enable);
-                USART_FuncCmd(CDC_COMM, UsartRx, Enable);
-                USART_FuncCmd(CDC_COMM, UsartRxInt, Enable);
+                VCP_COMConfigDefault();
+                u16Res = USBD_FAIL;
+                u8ReturnFlag = 1u;
                 break;
-            }
-            else
-            {
-                USART_SetClockDiv(CDC_COMM, (en_usart_clk_div_t)u8Cnt);
-            }
         }
-        if (u8Cnt == 4)
+
+        if(1u != u8ReturnFlag)
         {
-            return (USBD_FAIL);
+            /*set the data type : only 8bits and 9bits is supported */
+            switch (linecoding.datatype)
+            {
+                case 0x07u:
+                    /* With this configuration a parity (Even or Odd) should be set */
+                    stcInitCfg.enDataLength = UsartDataBits8;
+                    break;
+                case 0x08u:
+                    if (stcInitCfg.enParity == UsartParityNone)
+                    {
+                        stcInitCfg.enDataLength = UsartDataBits8;
+                    }
+                    else
+                    {
+                        stcInitCfg.enDataLength = UsartDataBits9;
+                    }
+                    break;
+                default :
+                    VCP_COMConfigDefault();
+                    u16Res = USBD_FAIL;
+                    u8ReturnFlag = 1u;
+                    break;
+            }
+
+            if(1u != u8ReturnFlag)
+            {
+                /* Configure and enable the USART */
+                stcInitCfg.enHwFlow = UsartRtsEnable;
+                USART_UART_Init(CDC_COMM, &stcInitCfg);
+
+                for (u8Cnt=0u; u8Cnt < 4u; u8Cnt++)
+                {
+                    if(Ok == USART_SetBaudrate(CDC_COMM, 115200ul))
+                    {
+                        USART_FuncCmd(CDC_COMM, UsartTx, Enable);
+                        USART_FuncCmd(CDC_COMM, UsartRx, Enable);
+                        USART_FuncCmd(CDC_COMM, UsartRxInt, Enable);
+                        break;
+                    }
+                    else
+                    {
+                        USART_SetClockDiv(CDC_COMM, (en_usart_clk_div_t)u8Cnt);
+                    }
+                }
+                if (u8Cnt == 4u)
+                {
+                    u16Res = USBD_FAIL;
+                }
+            }
         }
     }
-    return USBD_OK;
+    return u16Res;
 }
 
 /**
@@ -450,12 +464,12 @@ static uint16_t VCP_COMConfig(uint8_t Conf)
  ** \retval None
  **
  ******************************************************************************/
-void UsartRxIrqCallback(void)
+static void UsartRxIrqCallback(void)
 {
     if (Set == USART_GetStatus(CDC_COMM, UsartRxNoEmpty))
     {
         /* Send the received data to the PC Host*/
-        VCP_DataTx (0,0);
+        VCP_DataTx (0u);
     }
 }
 
@@ -468,7 +482,7 @@ void UsartRxIrqCallback(void)
  ** \retval None
  **
  ******************************************************************************/
-void UsartErrIrqCallback(void)
+static void UsartErrIrqCallback(void)
 {
     if (Set == USART_GetStatus(CDC_COMM, UsartFrameErr))
     {

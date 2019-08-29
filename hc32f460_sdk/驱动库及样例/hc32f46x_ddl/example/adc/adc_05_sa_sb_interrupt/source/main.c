@@ -67,36 +67,21 @@
  */
 #define ADC_CH_REMAP                (0u)
 
-/* The AOS function is used in this example. */
-#define ENABLE_AOS()                PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable)
-
-/* Enable ADC1. */
-#define ENABLE_ADC1()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable)
-
-/* Enable ADC2. */
-#define ENABLE_ADC2()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Enable)
-
-/* Disable ADC1. */
-#define DISABLE_ADC1()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Disable)
-
-/* Disable ADC2. */
-#define DISABLE_ADC2()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Disable)
-
 /* ADC clock selection definition. */
 #define ADC_CLK_PCLK                (1u)
 #define ADC_CLK_MPLLQ               (2u)
 #define ADC_CLK_UPLLR               (3u)
 
 /* Select MPLLQ as ADC clock. */
-#define ADC_CLK                     ADC_CLK_PCLK
+#define ADC_CLK                     (ADC_CLK_PCLK)
 
 /* ADC1 channel definition for this example. */
 #define ADC1_SA_NORMAL_CHANNEL      (ADC1_CH0 | ADC1_CH10)
-#define ADC1_SA_CHANNEL             ADC1_SA_NORMAL_CHANNEL
+#define ADC1_SA_CHANNEL             (ADC1_SA_NORMAL_CHANNEL)
 #define ADC1_SA_CHANNEL_COUNT       (2u)
 
 #define ADC1_SB_NORMAL_CHANNEL      (ADC1_CH4 | ADC1_CH5 | ADC1_CH6)
-#define ADC1_SB_CHANNEL             ADC1_SB_NORMAL_CHANNEL
+#define ADC1_SB_CHANNEL             (ADC1_SB_NORMAL_CHANNEL)
 #define ADC1_SB_CHANNEL_COUNT       (3u)
 
 #define ADC1_CHANNEL                (ADC1_SA_CHANNEL | ADC1_SB_CHANNEL)
@@ -108,16 +93,16 @@
 #define ADC1_SB_CHANNEL_SAMPLE_TIME { 0x50,     0x60,      0x45 }
 
 /* ADC2 channel definition for this example. */
-#define ADC2_SA_NORMAL_CHANNEL      ADC2_CH0
-#define ADC2_SA_AVG_CHANNEL         ADC2_CH5
+#define ADC2_SA_NORMAL_CHANNEL      (ADC2_CH0)
+#define ADC2_SA_AVG_CHANNEL         (ADC2_CH5)
 #define ADC2_SA_CHANNEL             (ADC2_SA_NORMAL_CHANNEL | ADC2_SA_AVG_CHANNEL)
 #define ADC2_SA_CHANNEL_COUNT       (2u)
 
 #define ADC2_SB_NORMAL_CHANNEL      (ADC2_CH2 | ADC2_CH3)
-#define ADC2_SB_CHANNEL             ADC2_SB_NORMAL_CHANNEL
+#define ADC2_SB_CHANNEL             (ADC2_SB_NORMAL_CHANNEL)
 #define ADC2_SB_CHANNEL_COUNT       (2u)
 
-#define ADC2_AVG_CHANNEL            ADC2_SA_AVG_CHANNEL
+#define ADC2_AVG_CHANNEL            (ADC2_SA_AVG_CHANNEL)
 #define ADC2_CHANNEL                (ADC2_SA_CHANNEL | ADC2_SB_CHANNEL)
 
 /* ADC2 channel sampling time.     ADC2_CH0  ADC2_CH5 */
@@ -131,8 +116,8 @@
 #define ADC_RESOLUTION_10BIT        (10u)
 #define ADC_RESOLUTION_12BIT        (12u)
 
-#define ADC1_RESOLUTION             ADC_RESOLUTION_12BIT
-#define ADC2_RESOLUTION             ADC_RESOLUTION_10BIT
+#define ADC1_RESOLUTION             (ADC_RESOLUTION_12BIT)
+#define ADC2_RESOLUTION             (ADC_RESOLUTION_10BIT)
 
 /* ADC reference voltage. The voltage of pin VREFH. */
 #define ADC_VREF                    (3.2879f)
@@ -141,8 +126,7 @@
 #define ADC1_ACCURACY               (1ul << ADC1_RESOLUTION)
 
 /* Timer definition for this example. */
-#define TMR_UNIT                    M4_TMR02
-#define ENABLE_TMR0()               PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable)
+#define TMR_UNIT                    (M4_TMR02)
 
 /* ADC interrupt flag bit mask definition. */
 #define ADC1_SA_IRQ_BIT             (1ul << 0u)
@@ -167,7 +151,7 @@ static void AdcIrqRegister(stc_irq_regi_conf_t *pstcCfg, uint32_t u32Priority);
 
 static void TimerConfig(void);
 
-static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
+static void AdcSetChannelPinMode(const M4_ADC_TypeDef *ADCx,
                                  uint32_t u32Channel,
                                  en_pin_mode_t enMode);
 static void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode);
@@ -381,7 +365,7 @@ static void AdcInitConfig(void)
     stcAdcInit.enScanMode   = AdcMode_SAOnceSBOnce;
     stcAdcInit.enRschsel    = AdcRschsel_Continue;
     /* 1. Enable ADC1. */
-    ENABLE_ADC1();
+    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable);
     /* 2. Initialize ADC1. */
     ADC_Init(M4_ADC1, &stcAdcInit);
 
@@ -393,7 +377,7 @@ static void AdcInitConfig(void)
     stcAdcInit.enResolution = AdcResolution_12Bit;
 #endif
     /* 1. Enable ADC2. */
-    ENABLE_ADC2();
+    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Enable);
     /* 2. Initialize ADC2. */
     ADC_Init(M4_ADC2, &stcAdcInit);
 }
@@ -418,13 +402,13 @@ static void AdcChannelConfig(void)
     AdcSetChannelPinMode(M4_ADC1, ADC1_CHANNEL, Pin_Mode_Ana);
 
     stcChCfg.u32Channel  = ADC1_SA_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_A;
+    stcChCfg.u8Sequence  = ADC_SEQ_A;
     stcChCfg.pu8SampTime = au8Adc1SaSampTime;
     /* 2. Add ADC channel. */
     ADC_AddAdcChannel(M4_ADC1, &stcChCfg);
 
     stcChCfg.u32Channel  = ADC1_SB_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_B;
+    stcChCfg.u8Sequence  = ADC_SEQ_B;
     stcChCfg.pu8SampTime = au8Adc1SbSampTime;
     /* 2. Add ADC channel. */
     ADC_AddAdcChannel(M4_ADC1, &stcChCfg);
@@ -434,13 +418,13 @@ static void AdcChannelConfig(void)
     AdcSetChannelPinMode(M4_ADC2, ADC2_CHANNEL, Pin_Mode_Ana);
 
     stcChCfg.u32Channel  = ADC2_SA_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_A;
+    stcChCfg.u8Sequence  = ADC_SEQ_A;
     stcChCfg.pu8SampTime = au8Adc2SaSampTime;
     /* 2. Add ADC channel. */
     ADC_AddAdcChannel(M4_ADC2, &stcChCfg);
 
     stcChCfg.u32Channel  = ADC2_SB_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_B;
+    stcChCfg.u8Sequence  = ADC_SEQ_B;
     stcChCfg.pu8SampTime = au8Adc2SbSampTime;
     /* 2. Add ADC channel. */
     ADC_AddAdcChannel(M4_ADC2, &stcChCfg);
@@ -452,16 +436,16 @@ static void AdcChannelConfig(void)
 
     /**************************** Enable interrupts ***************************/
     /* Enable ADC1 sequence A interrupt. */
-    ADC_SeqITCmd(M4_ADC1, AdcSequence_A, Enable);
+    ADC_SeqITCmd(M4_ADC1, ADC_SEQ_A, Enable);
 
     /* Enable ADC1 sequence B interrupt. */
-    ADC_SeqITCmd(M4_ADC1, AdcSequence_B, Enable);
+    ADC_SeqITCmd(M4_ADC1, ADC_SEQ_B, Enable);
 
     /* Enable ADC2 sequence A interrupt. */
-    ADC_SeqITCmd(M4_ADC2, AdcSequence_A, Enable);
+    ADC_SeqITCmd(M4_ADC2, ADC_SEQ_A, Enable);
 
     /* Enable ADC2 sequence B interrupt. */
-    ADC_SeqITCmd(M4_ADC2, AdcSequence_B, Enable);
+    ADC_SeqITCmd(M4_ADC2, ADC_SEQ_B, Enable);
 }
 
 /**
@@ -479,35 +463,35 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    ENABLE_AOS();
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     /* Select EVT_TMR02_GCMA as ADC1 sequence A trigger source. */
-    stcTrgCfg.u8Sequence = AdcSequence_A;
+    stcTrgCfg.u8Sequence = ADC_SEQ_A;
     stcTrgCfg.enTrgSel   = AdcTrgsel_TRGX0;
     stcTrgCfg.enInTrg0   = EVT_TMR02_GCMA;
     ADC_ConfigTriggerSrc(M4_ADC1, &stcTrgCfg);
-    ADC_TriggerSrcCmd(M4_ADC1, AdcSequence_A, Enable);
+    ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_A, Enable);
 
     /* ADC1 sequence A scan ends to trigger ADC1 sequence B. */
-    stcTrgCfg.u8Sequence = AdcSequence_B;
+    stcTrgCfg.u8Sequence = ADC_SEQ_B;
     stcTrgCfg.enTrgSel   = AdcTrgsel_TRGX1;
     stcTrgCfg.enInTrg1   = EVT_ADC1_EOCA;
     ADC_ConfigTriggerSrc(M4_ADC1, &stcTrgCfg);
-    ADC_TriggerSrcCmd(M4_ADC1, AdcSequence_B, Enable);
+    ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_B, Enable);
 
     /* ADC1 sequence B scan ends to trigger ADC2 sequence A. */
-    stcTrgCfg.u8Sequence = AdcSequence_A;
+    stcTrgCfg.u8Sequence = ADC_SEQ_A;
     stcTrgCfg.enTrgSel   = AdcTrgsel_TRGX0;
     stcTrgCfg.enInTrg0   = EVT_ADC1_EOCB;
     ADC_ConfigTriggerSrc(M4_ADC2, &stcTrgCfg);
-    ADC_TriggerSrcCmd(M4_ADC2, AdcSequence_A, Enable);
+    ADC_TriggerSrcCmd(M4_ADC2, ADC_SEQ_A, Enable);
 
     /* ADC2 sequence A scan ends to trigger ADC2 sequence B. */
-    stcTrgCfg.u8Sequence = AdcSequence_B;
+    stcTrgCfg.u8Sequence = ADC_SEQ_B;
     stcTrgCfg.enTrgSel   = AdcTrgsel_TRGX1;
     stcTrgCfg.enInTrg1   = EVT_ADC2_EOCA;
     ADC_ConfigTriggerSrc(M4_ADC2, &stcTrgCfg);
-    ADC_TriggerSrcCmd(M4_ADC2, AdcSequence_B, Enable);
+    ADC_TriggerSrcCmd(M4_ADC2, ADC_SEQ_B, Enable);
 }
 
 /**
@@ -526,19 +510,19 @@ static void AdcIrqConfig(void)
     /* Config ADC1 sequence A interrupt */
     stcAdcIrqCfg.enIntSrc    = INT_ADC1_EOCA;
     stcAdcIrqCfg.enIRQn      = Int030_IRQn;
-    stcAdcIrqCfg.pfnCallback = ADC1A_IrqHandler;
+    stcAdcIrqCfg.pfnCallback = &ADC1A_IrqHandler;
     AdcIrqRegister(&stcAdcIrqCfg, DDL_IRQ_PRIORITY_03);
 
     /* Config ADC1 sequence B interrupt */
     stcAdcIrqCfg.enIntSrc    = INT_ADC1_EOCB;
     stcAdcIrqCfg.enIRQn      = Int116_IRQn;
-    stcAdcIrqCfg.pfnCallback = ADC1B_IrqHandler;
+    stcAdcIrqCfg.pfnCallback = &ADC1B_IrqHandler;
     AdcIrqRegister(&stcAdcIrqCfg, DDL_IRQ_PRIORITY_04);
 
     /* Config ADC2 sequence A interrupt */
     stcAdcIrqCfg.enIntSrc    = INT_ADC2_EOCA;
     stcAdcIrqCfg.enIRQn      = Int120_IRQn;
-    stcAdcIrqCfg.pfnCallback = ADC2A_IrqHandler;
+    stcAdcIrqCfg.pfnCallback = &ADC2A_IrqHandler;
     AdcIrqRegister(&stcAdcIrqCfg, DDL_IRQ_PRIORITY_06);
 
     /* Config ADC2 sequence B interrupt */
@@ -593,13 +577,13 @@ static void TimerConfig(void)
     u32Pclk1 = stcClkTmp.pclk1Freq;
 
     /* Timer0 peripheral enable. */
-    ENABLE_TMR0();
+    PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable);
     /* Config register for channel A. */
     stcTimerCfg.Tim0_CounterMode = Tim0_Sync;
     stcTimerCfg.Tim0_SyncClockSource = Tim0_Pclk1;
     stcTimerCfg.Tim0_ClockDivision = Tim0_ClkDiv1024;
     /* Tim0_CmpValue's type is uint16_t!!! Be careful!!! */
-    stcTimerCfg.Tim0_CmpValue = u32Pclk1 / 1024 - 1;
+    stcTimerCfg.Tim0_CmpValue = (uint16_t)(u32Pclk1 / 1024u - 1u);
     TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelA, &stcTimerCfg);
 
     /* Start timer0. */
@@ -613,40 +597,40 @@ static void TimerConfig(void)
  ******************************************************************************/
 void ADC1A_IrqHandler(void)
 {
-    if (Set == ADC_GetConvFlag(M4_ADC1, AdcSequence_A))
+    if (Set == ADC_GetEocFlag(M4_ADC1, ADC_SEQ_A))
     {
-        ADC_GetData(M4_ADC1, m_au16Adc1Value);
-        ADC_ClrConvFlag(M4_ADC1, AdcSequence_A);
+        ADC_GetAllData(M4_ADC1, m_au16Adc1Value, ADC1_CH_COUNT);
+        ADC_ClrEocFlag(M4_ADC1, ADC_SEQ_A);
         m_u32AdcIrqFlag |= ADC1_SA_IRQ_BIT;
     }
 }
 
 void ADC1B_IrqHandler(void)
 {
-    if (Set == ADC_GetConvFlag(M4_ADC1, AdcSequence_B))
+    if (Set == ADC_GetEocFlag(M4_ADC1, ADC_SEQ_B))
     {
-        ADC_GetData(M4_ADC1, m_au16Adc1Value);
-        ADC_ClrConvFlag(M4_ADC1, AdcSequence_B);
+        ADC_GetAllData(M4_ADC1, m_au16Adc1Value, ADC1_CH_COUNT);
+        ADC_ClrEocFlag(M4_ADC1, ADC_SEQ_B);
         m_u32AdcIrqFlag |= ADC1_SB_IRQ_BIT;
     }
 }
 
 void ADC2A_IrqHandler(void)
 {
-    if (Set == ADC_GetConvFlag(M4_ADC2, AdcSequence_A))
+    if (Set == ADC_GetEocFlag(M4_ADC2, ADC_SEQ_A))
     {
-        ADC_GetData(M4_ADC2, m_au16Adc2Value);
-        ADC_ClrConvFlag(M4_ADC2, AdcSequence_A);
+        ADC_GetAllData(M4_ADC2, m_au16Adc2Value, ADC2_CH_COUNT);
+        ADC_ClrEocFlag(M4_ADC2, ADC_SEQ_A);
         m_u32AdcIrqFlag |= ADC2_SA_IRQ_BIT;
     }
 }
 
 void ADC2B_IrqHandler(void)
 {
-    if (Set == ADC_GetConvFlag(M4_ADC2, AdcSequence_B))
+    if (Set == ADC_GetEocFlag(M4_ADC2, ADC_SEQ_B))
     {
-        ADC_GetData(M4_ADC2, m_au16Adc2Value);
-        ADC_ClrConvFlag(M4_ADC2, AdcSequence_B);
+        ADC_GetAllData(M4_ADC2, m_au16Adc2Value, ADC2_CH_COUNT);
+        ADC_ClrEocFlag(M4_ADC2, ADC_SEQ_B);
         m_u32AdcIrqFlag |= ADC2_SB_IRQ_BIT;
     }
 }
@@ -656,7 +640,7 @@ void ADC2B_IrqHandler(void)
  ** \brief  Config the pin which is mapping the channel to analog or digit mode.
  **
  ******************************************************************************/
-static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
+static void AdcSetChannelPinMode(const M4_ADC_TypeDef *ADCx,
                                  uint32_t u32Channel,
                                  en_pin_mode_t enMode)
 {
@@ -666,11 +650,6 @@ static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
 #else
     uint8_t u8ChOffset = 0u;
 #endif
-
-    if ((NULL == ADCx) || (0u == u32Channel))
-    {
-        return;
-    }
 
     if (M4_ADC1 == ADCx)
     {
@@ -709,13 +688,14 @@ static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
  ******************************************************************************/
 static void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode)
 {
-    en_port_t enPort;
-    en_pin_t enPin;
+    en_port_t enPort = PortA;
+    en_pin_t enPin   = Pin00;
+    bool bFlag       = true;
     stc_port_init_t stcPortInit;
 
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enPinMode = enMode;
-    stcPortInit.enPullUp = Disable;
+    stcPortInit.enPullUp  = Disable;
 
     switch (u8AdcPin)
     {
@@ -800,10 +780,14 @@ static void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode)
         break;
 
     default:
-        return;
+        bFlag = false;
+        break;
     }
 
-    PORT_Init(enPort, enPin, &stcPortInit);
+    if (true == bFlag)
+    {
+        PORT_Init(enPort, enPin, &stcPortInit);
+    }
 }
 
 /*******************************************************************************

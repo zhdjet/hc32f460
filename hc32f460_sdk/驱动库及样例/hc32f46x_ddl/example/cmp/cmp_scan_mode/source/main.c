@@ -62,9 +62,9 @@
  ******************************************************************************/
 
 /* CMP definition */
-#define CMP_UNIT                        M4_CMP2
-#define CMP_INT_NUM                     INT_ACMP2
-#define CMP_INT_IRQn                    Int002_IRQn
+#define CMP_UNIT                        (M4_CMP2)
+#define CMP_INT_NUM                     (INT_ACMP2)
+#define CMP_INT_IRQn                    (Int002_IRQn)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -129,7 +129,7 @@ int32_t main(void)
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_DAC, Enable);
 
     /* Set DAC */
-    stcDacInitCfg.u8DacData = 0x80;
+    stcDacInitCfg.u8DacData = 0x80u;
     stcDacInitCfg.enCmpDacEN = Enable;
     CMP_DAC_Init(CmpDac1, &stcDacInitCfg);
     CMP_DAC_Init(CmpDac2, &stcDacInitCfg);
@@ -148,12 +148,12 @@ int32_t main(void)
     stcCmpInput.enInmSel = CmpInm3;
     CMP_InputSel(CMP_UNIT, &stcCmpInput);
 
-    CMP_SetScanTime(CMP_UNIT, 0x02, 200);
+    CMP_SetScanTime(CMP_UNIT, 2u, 200u);
 
     /* Registration IRQ : CMP */
     stcIrqRegiConf.enIntSrc = CMP_INT_NUM;
     stcIrqRegiConf.enIRQn = CMP_INT_IRQn;
-    stcIrqRegiConf.pfnCallback = CmpCallback;
+    stcIrqRegiConf.pfnCallback = &CmpCallback;
     enIrqRegistration(&stcIrqRegiConf);
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn); /* Clear pending */
     NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15); /* Set priority */

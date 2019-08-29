@@ -149,10 +149,10 @@ en_flag_status_t SWDT_GetFlag(en_swdt_flag_type_t enFlag)
     switch (enFlag)
     {
         case SwdtFlagCountUnderflow:
-            enFlagSta = (1u == M4_SWDT->SR_f.UDF) ? Set : Reset;
+            enFlagSta = (en_flag_status_t)M4_SWDT->SR_f.UDF;
             break;
         case SwdtFlagRefreshError:
-            enFlagSta = (1u == M4_SWDT->SR_f.REF) ? Set : Reset;
+            enFlagSta = (en_flag_status_t)M4_SWDT->SR_f.REF;
             break;
         default:
             break;

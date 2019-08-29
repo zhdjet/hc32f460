@@ -73,16 +73,16 @@
  **
  ******************************************************************************/
 /*Standard Feature Selector for clear feature command*/
-#define FEATURE_SELECTOR_ENDPOINT         0X00
-#define FEATURE_SELECTOR_DEVICE           0X01
+#define FEATURE_SELECTOR_ENDPOINT         (0x00u)
+#define FEATURE_SELECTOR_DEVICE           (0x01u)
 
 
-#define INTERFACE_DESC_TYPE               0x04
-#define ENDPOINT_DESC_TYPE                0x05
-#define INTERFACE_DESC_SIZE               0x09
+#define INTERFACE_DESC_TYPE               (0x04u)
+#define ENDPOINT_DESC_TYPE                (0x05u)
+#define INTERFACE_DESC_SIZE               (0x09u)
 
 
-#define USBH_HID_CLASS                    0x03
+#define USBH_HID_CLASS                    (0x03u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

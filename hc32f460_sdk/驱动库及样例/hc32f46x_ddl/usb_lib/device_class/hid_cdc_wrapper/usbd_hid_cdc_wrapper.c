@@ -44,7 +44,7 @@
  **
  ** A detailed description is available at
  ** @link
-		This file provides the CDC_HID composite functions.
+        This file provides the CDC_HID composite functions.
   @endlink
  ** @brief   This file provides the high layer firmware functions to manage the
  **          following functionalities of the USB composite device:
@@ -98,10 +98,10 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define USB_HID_CDC_CONFIG_DESC_SIZ  (USB_CUSTOM_HID_CONFIG_DESC_SIZ -9 + USB_CDC_CONFIG_DESC_SIZ  + 8)
+#define USB_HID_CDC_CONFIG_DESC_SIZ  (USB_CUSTOM_HID_CONFIG_DESC_SIZ -9u + USB_CDC_CONFIG_DESC_SIZ  + 8u)
 
-#define HID_INTERFACE 0x0
-#define CDC_COM_INTERFACE 0x1
+#define HID_INTERFACE       (0x0u)
+#define CDC_COM_INTERFACE   (0x1u)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -162,17 +162,17 @@ static uint8_t*  USBD_HID_CDC_GetConfigDescriptor( uint8_t speed , uint16_t *len
 
 USBD_Class_cb_TypeDef  USBD_HID_CDC_cb =
 {
-    USBD_HID_CDC_Init,
-    USBD_HID_CDC_DeInit,
-    USBD_HID_CDC_Setup,
+    &USBD_HID_CDC_Init,
+    &USBD_HID_CDC_DeInit,
+    &USBD_HID_CDC_Setup,
     NULL,
-    USBD_HID_CDC_EP0_RxReady,
-    USBD_HID_CDC_DataIn,
-    USBD_HID_CDC_DataOut,
-    USBD_HID_CDC_SOF,
+    &USBD_HID_CDC_EP0_RxReady,
+    &USBD_HID_CDC_DataIn,
+    &USBD_HID_CDC_DataOut,
+    &USBD_HID_CDC_SOF,
     NULL,
     NULL,
-    USBD_HID_CDC_GetConfigDescriptor,
+    &USBD_HID_CDC_GetConfigDescriptor,
 };
 
 /*******************************************************************************
@@ -384,29 +384,34 @@ static uint8_t  USBD_HID_CDC_DeInit (void  *pdev,
 static uint8_t  USBD_HID_CDC_Setup (void  *pdev,
                                     USB_SETUP_REQ *req)
 {
+    uint8_t u8Res = USBD_OK;
     switch (req->bmRequest & USB_REQ_RECIPIENT_MASK)
     {
         case USB_REQ_RECIPIENT_INTERFACE:
             if (req->wIndex == HID_INTERFACE)
             {
-                return (USBD_CUSTOM_HID_Setup(pdev, req));
+                u8Res = USBD_CUSTOM_HID_Setup(pdev, req);
             }
             else
             {
-                return (usbd_cdc_Setup(pdev, req));
+                u8Res = usbd_cdc_Setup(pdev, req);
             }
+            break;
 
         case USB_REQ_RECIPIENT_ENDPOINT:
             if (req->wIndex == HID_IN_EP)
             {
-                return (USBD_CUSTOM_HID_Setup (pdev, req));
+                u8Res = USBD_CUSTOM_HID_Setup (pdev, req);
             }
             else
             {
-                return (usbd_cdc_Setup(pdev, req));
+                u8Res = usbd_cdc_Setup(pdev, req);
             }
+            break;
+        default:
+            break;
     }
-    return USBD_OK;
+    return u8Res;
 }
 
 /**
@@ -418,7 +423,7 @@ static uint8_t  USBD_HID_CDC_Setup (void  *pdev,
   */
 uint8_t  *USBD_HID_CDC_GetConfigDescriptor (uint8_t speed, uint16_t *length)
 {
-    *length = sizeof (USBD_HID_CDC_CfgDesc);
+    *length = (uint16_t)sizeof (USBD_HID_CDC_CfgDesc);
     return USBD_HID_CDC_CfgDesc;
 }
 
@@ -432,31 +437,35 @@ uint8_t  *USBD_HID_CDC_GetConfigDescriptor (uint8_t speed, uint16_t *length)
 static uint8_t  USBD_HID_CDC_DataIn (void  *pdev,
                                      uint8_t epnum)
 {
+    uint8_t u8Ret = 0u;
     /*DataIN can be for CDC or HID */
-    if (epnum == (CDC_IN_EP&~0x80) )
+    if (epnum == ((uint8_t)CDC_IN_EP&((uint8_t)~0x80u)))
     {
-        return (usbd_cdc_DataIn(pdev, epnum));
+        u8Ret = (usbd_cdc_DataIn(pdev, epnum));
     }
     else
     {
-        return (USBD_CUSTOM_HID_DataIn(pdev, epnum));
+        u8Ret = (USBD_CUSTOM_HID_DataIn(pdev, epnum));
     }
+    return u8Ret;
 }
 
 
 uint8_t  USBD_HID_CDC_DataOut(void *pdev , uint8_t epnum)
 {
+    uint8_t u8Ret = 0u;
     /*DataOUT can be for CDC or HID */
-    if (epnum == (CDC_OUT_EP&~0x80) )
+    if (epnum == ((uint8_t)CDC_OUT_EP&(uint8_t)~0x80u) )
     {
         /*DataOut can be for CDC */
-        return (usbd_cdc_DataOut(pdev, epnum));
+        u8Ret = usbd_cdc_DataOut(pdev, epnum);
     }
     else
     {
         /*DataOut can be for HID */
-        return(USBD_CUSTOM_HID_DataOut(pdev, epnum));
+        u8Ret = USBD_CUSTOM_HID_DataOut(pdev, epnum);
     }
+    return u8Ret;
 }
 
 uint8_t  USBD_HID_CDC_SOF (void *pdev)

@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file provides the HID core functions.
-	@endlink
+        This file provides the HID core functions.
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -108,19 +108,19 @@ uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
  ******************************************************************************/
 USBD_Class_cb_TypeDef  USBD_HID_cb =
 {
-    USBD_HID_Init,
-    USBD_HID_DeInit,
-    USBD_HID_Setup,
+    &USBD_HID_Init,
+    &USBD_HID_DeInit,
+    &USBD_HID_Setup,
     NULL, /*EP0_TxSent*/
     NULL, /*EP0_RxReady*/
-    USBD_HID_DataIn, /*DataIn*/
-    USBD_HID_DataOut, /*DataOut*/
+    &USBD_HID_DataIn, /*DataIn*/
+    &USBD_HID_DataOut, /*DataOut*/
     NULL, /*SOF */
     NULL,
     NULL,
-    USBD_HID_GetCfgDesc,
+    &USBD_HID_GetCfgDesc,
 #ifdef USB_OTG_HS_CORE
-    USBD_HID_GetCfgDesc, /* use same config as per FS */
+    &USBD_HID_GetCfgDesc, /* use same config as per FS */
 #endif
 };
 
@@ -129,21 +129,21 @@ USBD_Class_cb_TypeDef  USBD_HID_cb =
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_AltSet  __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_AltSet  __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_Protocol  __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_Protocol  __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_IdleState __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_IdleState __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
@@ -162,7 +162,7 @@ __USB_ALIGN_BEGIN static uint8_t USBD_HID_CfgDesc[USB_HID_CONFIG_DESC_SIZ] __USB
     0x01,         /*bConfigurationValue: Configuration value*/
     0x00,         /*iConfiguration: Index of string descriptor describing
     the configuration*/
-    0x80 | SELF_POWERED,         /*bmAttributes: bus powered and Support Remote Wake-up */
+    (uint8_t)0x80 | (uint8_t)SELF_POWERED,         /*bmAttributes: bus powered and Support Remote Wake-up */
     0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
 
     /************** Descriptor of Joystick Mouse interface ****************/
@@ -318,7 +318,7 @@ uint8_t  USBD_HID_Init (void  *pdev,
     DCD_EP_PrepareRx(pdev,
                      HID_OUT_EP,
                      u8HidRevBuf,
-                     sizeof(u8HidRevBuf)/sizeof(uint8_t));
+                     (uint16_t)(sizeof(u8HidRevBuf)/sizeof(uint8_t)));
     DCD_SetEPStatus (pdev , HID_OUT_EP , USB_OTG_EP_RX_VALID);
 
     return USBD_OK;
@@ -352,8 +352,9 @@ uint8_t  USBD_HID_DeInit (void  *pdev,
 uint8_t  USBD_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req)
 {
-    uint16_t len = 0;
+    uint16_t len = 0u;
     uint8_t  *pbuf = NULL;
+    uint8_t u8Res = USBD_OK;
 
     switch (req->bmRequest & USB_REQ_TYPE_MASK)
     {
@@ -366,38 +367,43 @@ uint8_t  USBD_HID_Setup (void  *pdev,
                 case HID_REQ_GET_PROTOCOL:
                     USBD_CtlSendData (pdev,
                     (uint8_t *)&USBD_HID_Protocol,
-                    1);
+                    1u);
                     break;
                 case HID_REQ_SET_IDLE:
-                    USBD_HID_IdleState = (uint8_t)(req->wValue >> 8);
+                    USBD_HID_IdleState = (uint8_t)(req->wValue >> 8u);
                     break;
                 case HID_REQ_GET_IDLE:
                     USBD_CtlSendData (pdev,
                                     (uint8_t *)&USBD_HID_IdleState,
-                                    1);
+                                    1u);
                     break;
                 default:
-                    USBD_CtlError (pdev, req);
-                    return USBD_FAIL;
+                    USBD_CtlError (pdev);
+                    u8Res = USBD_FAIL;
+                    break;
             }
             break;
         case USB_REQ_TYPE_STANDARD:
             switch (req->bRequest)
             {
                 case USB_REQ_GET_DESCRIPTOR:
-                    if( req->wValue >> 8 == HID_REPORT_DESC)
+                    if((req->wValue >> 8u) == (uint16_t)HID_REPORT_DESC)
                     {
-                        len = __MIN(HID_MOUSE_REPORT_DESC_SIZE , req->wLength);
+                        len = (uint16_t)__MIN(HID_MOUSE_REPORT_DESC_SIZE , req->wLength);
                         pbuf = HID_MOUSE_ReportDesc;
                     }
-                    else if( req->wValue >> 8 == HID_DESCRIPTOR_TYPE)
+                    else if((req->wValue >> 8u) == (uint16_t)HID_DESCRIPTOR_TYPE)
                     {
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
                         pbuf = USBD_HID_Desc;
 #else
                         pbuf = USBD_HID_CfgDesc + 0x12;
 #endif
-                        len = __MIN(USB_HID_DESC_SIZ , req->wLength);
+                        len = (uint16_t)__MIN(USB_HID_DESC_SIZ , req->wLength);
+                    }
+                    else
+                    {
+                        //
                     }
                     USBD_CtlSendData (pdev,
                                         pbuf,
@@ -406,14 +412,19 @@ uint8_t  USBD_HID_Setup (void  *pdev,
                 case USB_REQ_GET_INTERFACE :
                     USBD_CtlSendData (pdev,
                                         (uint8_t *)&USBD_HID_AltSet,
-                                        1);
+                                        1u);
                     break;
                 case USB_REQ_SET_INTERFACE :
                     USBD_HID_AltSet = (uint8_t)(req->wValue);
                     break;
+                default:
+                    break;
             }
+            break;
+        default:
+            break;
     }
-    return USBD_OK;
+    return u8Res;
 }
 
 /**
@@ -430,7 +441,7 @@ uint8_t USBD_HID_SendReport     (USB_OTG_CORE_HANDLE  *pdev,
 {
     if (pdev->dev.device_status == USB_OTG_CONFIGURED )
     {
-        DCD_EP_Tx (pdev, HID_IN_EP, report, len);
+        DCD_EP_Tx (pdev, HID_IN_EP, report, (uint32_t)len);
     }
     return USBD_OK;
 }
@@ -445,7 +456,7 @@ uint8_t USBD_HID_SendReport     (USB_OTG_CORE_HANDLE  *pdev,
  ******************************************************************************/
 static uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
 {
-    *length = sizeof (USBD_HID_CfgDesc);
+    *length = (uint16_t)sizeof (USBD_HID_CfgDesc);
     return USBD_HID_CfgDesc;
 }
 
@@ -473,7 +484,7 @@ uint8_t  USBD_HID_DataOut (void  *pdev,
     DCD_EP_PrepareRx(pdev,
                      HID_OUT_EP,
                      u8HidRevBuf,
-                     sizeof(u8HidRevBuf)/sizeof(uint8_t));
+                     (uint16_t)(sizeof(u8HidRevBuf)/sizeof(uint8_t)));
     DCD_SetEPStatus (pdev , HID_OUT_EP , USB_OTG_EP_RX_VALID);
 
     return USBD_OK;

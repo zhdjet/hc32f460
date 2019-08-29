@@ -61,39 +61,39 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 (SW2)*/
-#define  SW2_PORT   PortD
-#define  SW2_PIN    Pin03
+#define  SW2_PORT           (PortD)
+#define  SW2_PIN            (Pin03)
 /* KEY1 (SW4)*/
-#define  SW4_PORT   PortD
-#define  SW4_PIN    Pin04
+#define  SW4_PORT           (PortD)
+#define  SW4_PIN            (Pin04)
 /* KEY2 (SW3)*/
-#define  SW3_PORT   PortD
-#define  SW3_PIN    Pin05
+#define  SW3_PORT           (PortD)
+#define  SW3_PIN            (Pin05)
 /* KEY3 (SW5)*/
-#define  SW5_PORT   PortD
-#define  SW5_PIN    Pin06
+#define  SW5_PORT           (PortD)
+#define  SW5_PIN            (Pin06)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortD
-#define  LED1_PIN         Pin07
+#define  LED1_PORT          (PortD)
+#define  LED1_PIN           (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT          (PortB)
+#define  LED2_PIN           (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT        PortB
-#define  LED3_PIN         Pin09
+#define  LED3_PORT          (PortB)
+#define  LED3_PIN           (Pin09)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()    PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()    PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()      (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()      (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -124,15 +124,15 @@ void Timer61_OverFlow_CallBack(void)
 {
     static uint8_t i;
 
-    if( 0 == i)
+    if( 0u == i)
     {
-        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x2000);
-        i = 1;
+        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x2000u);
+        i = 1u;
     }
-    else if(1 == i)
+    else
     {
-        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x6000);
-        i = 0;
+        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x6000u);
+        i = 0u;
     }
 }
 
@@ -141,9 +141,9 @@ void Timer62_CapInputCallBack(void)
 {
     u16CaptureA = Timer6_GetGeneralCmpValue(M4_TMR62, Timer6GenCompareA);
     u16CaptureC = Timer6_GetGeneralCmpValue(M4_TMR62, Timer6GenCompareC);
-    if(0 == M4_PORT->PCRE11_f.PIN)
+    if(0u == M4_PORT->PCRE11_f.PIN)
     {
-        ftCapDuty = (float)u16CaptureC / u16CaptureA;
+        ftCapDuty = (float)u16CaptureC / (float)u16CaptureA;
     }
 }
 
@@ -179,11 +179,11 @@ static void SysClkIni(void)
     CLK_HrcCmd(Enable);       //Enable HRC
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2;   //HRC 16M / 2
-    stcMpllCfg.plln =42;      //8M*42 = 336M
-    stcMpllCfg.PllpDiv = 2;   //MLLP = 168M
-    stcMpllCfg.PllqDiv = 2;   //MLLQ = 168M
-    stcMpllCfg.PllrDiv = 2;   //MLLR = 168M
+    stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
+    stcMpllCfg.plln    =42ul;   //8M*42 = 336M
+    stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
+    stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
+    stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -196,7 +196,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -253,12 +256,12 @@ int32_t main(void)
     stcTIM6BaseCntCfg.enCntClkDiv = Timer6PclkDiv1024;                  //Count clock: pclk0/1024
     Timer6_Init(M4_TMR61, &stcTIM6BaseCntCfg);                          //timer6 PWM frequency, count mode and clk config
 
-    u16Period = 0x8000;
+    u16Period = 0x8000u;
     Timer6_SetPeriod(M4_TMR61, Timer6PeriodA, u16Period);                //period set
 
-    u16Compare = 0x2000;
+    u16Compare = 0x2000u;
     Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareA, u16Compare);  //Set General Compare RegisterA Value
-    u16Compare = 0x6000;
+    u16Compare = 0x6000u;
     Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, u16Compare);  //Set General Compare RegisterC Value as buffer register of GCMAR
 
 
@@ -283,7 +286,7 @@ int32_t main(void)
 
     stcIrqRegiConf.enIRQn = Int002_IRQn;                    //Register INT_TMR61_GUDF Int to Vect.No.002
     stcIrqRegiConf.enIntSrc = INT_TMR61_GOVF;               //Select Event interrupt function
-    stcIrqRegiConf.pfnCallback = Timer61_OverFlow_CallBack; //Callback function
+    stcIrqRegiConf.pfnCallback = &Timer61_OverFlow_CallBack; //Callback function
     enIrqRegistration(&stcIrqRegiConf);                     //Registration IRQ
 
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            //Clear Pending
@@ -298,7 +301,7 @@ int32_t main(void)
     stcTIM6BaseCntCfg.enCntClkDiv = Timer6PclkDiv1024;                  //Count clock: pclk0/1024
     Timer6_Init(M4_TMR62, &stcTIM6BaseCntCfg);                          //timer6 PWM frequency, count mode and clk config
 
-    u16Period = 0xFFFF;
+    u16Period = 0xFFFFu;
     Timer6_SetPeriod(M4_TMR62, Timer6PeriodA, u16Period);               //Period set
 
     /*PWMA input buffer config*/
@@ -324,7 +327,7 @@ int32_t main(void)
 
     stcIrqRegiConf.enIRQn = Int003_IRQn;                    //Register INT_TMR61_GUDF Int to Vect.No.002
     stcIrqRegiConf.enIntSrc = INT_TMR62_GCMA;               //Select Event interrupt function
-    stcIrqRegiConf.pfnCallback = Timer62_CapInputCallBack;  //Callback function
+    stcIrqRegiConf.pfnCallback = &Timer62_CapInputCallBack;  //Callback function
     enIrqRegistration(&stcIrqRegiConf);                     //Registration IRQ
 
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            //Clear Pending
@@ -339,7 +342,7 @@ int32_t main(void)
 
     while(1)
     {
-
+        ;
     }
 
 }

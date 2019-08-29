@@ -60,19 +60,19 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define PVD_IRQn                        Int141_IRQn
+#define PVD_IRQn                        (Int141_IRQn)
 
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED0 off definition */
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
 /* LED0 toggle definition */
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
-#define DLY_MS                          1000
+#define DLY_MS                          (1000u)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -98,7 +98,7 @@
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -123,11 +123,11 @@ void Led_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Port_Init(void)
+static void Port_Init(void)
 {
     PORT_Unlock();
 
-    M4_PORT->PCRA0_f.INTE = 1;
+    M4_PORT->PCRA0_f.INTE = 1u;
 
     PORT_Lock();
 }
@@ -155,14 +155,17 @@ int32_t main(void)
     Ddl_Delay1ms(DLY_MS);
 
     /* SW2 */
-    while(0 != PORT_GetBit(PortD, Pin03));
+    while(0 != PORT_GetBit(PortD, Pin03))
+    {
+        ;
+    }
 
     /* Config power down mode. */
     stcPwcPwrMdCfg.enPwrDownMd = PowerDownMd1;
     stcPwcPwrMdCfg.enRLdo = Enable;
     stcPwcPwrMdCfg.enIoRetain = IoPwrDownRetain;
     stcPwcPwrMdCfg.enRetSram = Disable;
-    stcPwcPwrMdCfg.enVHrc = Disable;
+    stcPwcPwrMdCfg.enVHrc = Enable;
     stcPwcPwrMdCfg.enVPll = Disable;
     stcPwcPwrMdCfg.enDynVol =  Voltage09;
     stcPwcPwrMdCfg.enDrvAbility = Ulowspeed;
@@ -198,7 +201,10 @@ int32_t main(void)
 
     PWC_EnterPowerDownMd();
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

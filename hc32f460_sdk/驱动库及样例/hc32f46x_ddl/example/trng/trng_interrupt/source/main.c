@@ -67,7 +67,7 @@
 #define TRNG_CLK_UPLLR              (3u)
 
 /* Select UPLLR as TRNG clock. */
-#define TRNG_CLK                    TRNG_CLK_UPLLR
+#define TRNG_CLK                    (TRNG_CLK_UPLLR)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -137,7 +137,10 @@ int32_t main(void)
         TRNG_StartIT();
 
         /* Check TRNG. */
-        while (false == m_bTrngIrqFlag);
+        while (false == m_bTrngIrqFlag)
+        {
+            ;
+        }
         m_bTrngIrqFlag = false;
 
         printf("\nRand number: 0x%.8x 0x%.8x.", m_au32Random[0u], m_au32Random[1u]);
@@ -204,7 +207,10 @@ static void SystemClockConfig(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Set system clock source. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -349,7 +355,7 @@ static void TrngIrqConfig(void)
     stcTrngIrqCfg.enIntSrc    = INT_TRNG_END;
     /* stcTrngIrqCfg.enIRQn: [Int000_IRQn, Int031_IRQn] [Int116_IRQn, Int121_IRQn] */
     stcTrngIrqCfg.enIRQn      = Int121_IRQn;
-    stcTrngIrqCfg.pfnCallback = TrngIrqCallback;
+    stcTrngIrqCfg.pfnCallback = &TrngIrqCallback;
     enIrqRegResult = enIrqRegistration(&stcTrngIrqCfg);
 
     if (Ok == enIrqRegResult)
@@ -368,7 +374,7 @@ static void TrngIrqConfig(void)
  ******************************************************************************/
 static void TrngIrqCallback(void)
 {
-    TRNG_GetRandomNum(m_au32Random);
+    TRNG_GetRandomNum(m_au32Random, 2u);
     m_bTrngIrqFlag = true;
 }
 

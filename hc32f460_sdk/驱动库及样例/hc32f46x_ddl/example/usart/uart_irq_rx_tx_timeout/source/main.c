@@ -61,43 +61,44 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* USART channel definition */
-#define USART_CH                        M4_USART3
+#define USART_CH                        (M4_USART3)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (115200)
+#define USART_BAUDRATE                  (115200ul)
 
 /* USART RX Port/Pin definition */
-#define USART_RX_PORT                   PortE
-#define USART_RX_PIN                    Pin04
-#define USART_RX_FUNC                   Func_Usart3_Rx
+#define USART_RX_PORT                   (PortE)
+#define USART_RX_PIN                    (Pin04)
+#define USART_RX_FUNC                   (Func_Usart3_Rx)
 
 /* USART TX Port/Pin definition */
-#define USART_TX_PORT                   PortE
-#define USART_TX_PIN                    Pin05
-#define USART_TX_FUNC                   Func_Usart3_Tx
+#define USART_TX_PORT                   (PortE)
+#define USART_TX_PIN                    (Pin05)
+#define USART_TX_FUNC                   (Func_Usart3_Tx)
 
 /* USART interrupt number  */
-#define USART_RI_NUM                    INT_USART3_RI
-#define USART_RI_IRQn                   Int000_IRQn
-#define USART_EI_NUM                    INT_USART3_EI
-#define USART_EI_IRQn                   Int001_IRQn
-#define USART_RTO_NUM                   INT_USART3_RTO
-#define USART_RTO_IRQn                  Int002_IRQn
-#define USART_TI_NUM                    INT_USART3_TI
-#define USART_TI_IRQn                   Int003_IRQn
-#define USART_TCI_NUM                   INT_USART3_TCI
-#define USART_TCI_IRQn                  Int004_IRQn
+#define USART_RI_NUM                    (INT_USART3_RI)
+#define USART_RI_IRQn                   (Int000_IRQn)
+#define USART_EI_NUM                    (INT_USART3_EI)
+#define USART_EI_IRQn                   (Int001_IRQn)
+#define USART_RTO_NUM                   (INT_USART3_RTO)
+#define USART_RTO_IRQn                  (Int002_IRQn)
+#define USART_TI_NUM                    (INT_USART3_TI)
+#define USART_TI_IRQn                   (Int003_IRQn)
+#define USART_TCI_NUM                   (INT_USART3_TCI)
+#define USART_TCI_IRQn                  (Int004_IRQn)
 
 /* LED(D23: red color) Port/Pin definition */
-#define LED_PORT                        PortE
-#define LED_PIN                         Pin06
+#define LED_PORT                        (PortE)
+#define LED_PIN                         (Pin06)
 
 /* LED operation */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /* Timer0 unit definition */
-#define TMR_UNIT                        M4_TMR02
+#define TMR_UNIT                        (M4_TMR02)
+#define TMR_FCG_PERIPH                  (PWC_FCG2_PERIPH_TIM02)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -118,17 +119,6 @@ static void UsartTxCmpltIrqCallback(void);
  * Local variable definitions ('static')
  ******************************************************************************/
 static uint16_t m_u16RxData;
-
-static const stc_usart_uart_init_t m_stcInitCfg = {
-    UsartIntClkCkOutput,
-    UsartClkDiv_1,
-    UsartDataBits8,
-    UsartDataLsbFirst,
-    UsartOneStopBit,
-    UsartParityNone,
-    UsartSamleBit8,
-    UsartStartBitFallEdge,
-};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -173,11 +163,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -235,14 +225,13 @@ static void Timer0Init(void)
     stc_clk_freq_t stcClkTmp;
     stc_tim0_base_init_t stcTimerCfg;
     stc_tim0_trigger_init_t StcTimer0TrigInit;
-    uint32_t u32PeriphClk = (TMR_UNIT == M4_TMR01) ? PWC_FCG2_PERIPH_TIM01 : PWC_FCG2_PERIPH_TIM02;
 
     MEM_ZERO_STRUCT(stcClkTmp);
     MEM_ZERO_STRUCT(stcTimerCfg);
     MEM_ZERO_STRUCT(StcTimer0TrigInit);
 
     /* Timer0 peripheral enable */
-    PWC_Fcg2PeriphClockCmd(u32PeriphClk, Enable);
+    PWC_Fcg2PeriphClockCmd(TMR_FCG_PERIPH, Enable);
 
     /* Clear CNTAR register for channel A */
     TIMER0_WriteCntReg(TMR_UNIT, Tim0_ChannelA, 0u);
@@ -252,7 +241,7 @@ static void Timer0Init(void)
     stcTimerCfg.Tim0_CounterMode = Tim0_Async;
     stcTimerCfg.Tim0_AsyncClockSource = Tim0_XTAL32;
     stcTimerCfg.Tim0_ClockDivision = Tim0_ClkDiv8;
-    stcTimerCfg.Tim0_CmpValue = 32000;
+    stcTimerCfg.Tim0_CmpValue = 32000u;
     TIMER0_BaseInit(TMR_UNIT, Tim0_ChannelA, &stcTimerCfg);
 
     /* Clear compare flag */
@@ -329,7 +318,7 @@ static void UsartErrIrqCallback(void)
 static void UsartTimeoutIrqCallback(void)
 {
     LED_ON();
-
+    TIMER0_Cmd(TMR_UNIT, Tim0_ChannelA,Disable);
     USART_ClearStatus(USART_CH, UsartRxTimeOut);
 }
 
@@ -378,7 +367,19 @@ int32_t main(void)
 {
     en_result_t enRet = Ok;
     stc_irq_regi_conf_t stcIrqRegiCfg;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_uart_init_t stcInitCfg = {
+        UsartIntClkCkOutput,
+        UsartClkDiv_1,
+        UsartDataBits8,
+        UsartDataLsbFirst,
+        UsartOneStopBit,
+        UsartParityNone,
+        UsartSamleBit8,
+        UsartStartBitFallEdge,
+        UsartRtsEnable,
+    };
 
     /* Initialize Clock */
     ClkInit();
@@ -397,15 +398,12 @@ int32_t main(void)
     PORT_SetFunc(USART_TX_PORT, USART_TX_PIN, USART_TX_FUNC, Disable);
 
     /* Initialize UART */
-    enRet = USART_UART_Init(USART_CH, &m_stcInitCfg);
+    enRet = USART_UART_Init(USART_CH, &stcInitCfg);
     if (enRet != Ok)
     {
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /* Set baudrate */
@@ -416,13 +414,10 @@ int32_t main(void)
         {
         }
     }
-    else
-    {
-    }
 
     /* Set USART RX IRQ */
     stcIrqRegiCfg.enIRQn = USART_RI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartRxIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartRxIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_RI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -431,7 +426,7 @@ int32_t main(void)
 
     /* Set USART RX error IRQ */
     stcIrqRegiCfg.enIRQn = USART_EI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartErrIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartErrIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_EI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -440,7 +435,7 @@ int32_t main(void)
 
     /* Set USART RX timeout error IRQ */
     stcIrqRegiCfg.enIRQn = USART_RTO_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartTimeoutIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartTimeoutIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_RTO_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -449,7 +444,7 @@ int32_t main(void)
 
     /* Set USART TX IRQ */
     stcIrqRegiCfg.enIRQn = USART_TI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartTxIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartTxIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_TI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -458,7 +453,7 @@ int32_t main(void)
 
     /* Set USART TX complete IRQ */
     stcIrqRegiCfg.enIRQn = USART_TCI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartTxCmpltIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartTxCmpltIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_TCI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);

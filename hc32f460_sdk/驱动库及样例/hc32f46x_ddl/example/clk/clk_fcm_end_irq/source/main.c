@@ -61,26 +61,26 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define FCM_IRQn                Int141_IRQn
+#define FCM_IRQn                (Int141_IRQn)
 
 /* FCM windows lower/upper limitition */
-#define FCM_WINDOWS_LOWER       0x0
-#define FCM_WINDOWS_UPPER       0xFFFF
+#define FCM_WINDOWS_LOWER       (0x0u)
+#define FCM_WINDOWS_UPPER       (0xFFFFu)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -96,7 +96,7 @@
                   / stcFcmMeasCfg.enSrcDiv
                   * stcFcmRefCfg.enIntRefDiv
                   / stcFcmRefCfg.enIntRefSrc   */
-uint16_t u16ExpectCnt = 1953;
+
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -111,11 +111,12 @@ uint16_t u16ExpectCnt = 1953;
  ******************************************************************************/
 void FcmEnd_IrqHandler(void)
 {
-    uint16_t u16Cnt = 0;
+    uint32_t u32ExpectCnt = 1953u;
+    uint32_t u32Cnt = 0u;
 
-    u16Cnt = CLK_GetFcmCounter();
+    u32Cnt = CLK_GetFcmCounter();
 
-    if((u16Cnt < (u16ExpectCnt+20)) &&(u16Cnt > (u16ExpectCnt-20)))
+    if((u32Cnt < (u32ExpectCnt+20u)) &&(u32Cnt > (u32ExpectCnt-20u)))
     {
         LED1_ON();
     }
@@ -135,7 +136,7 @@ void FcmEnd_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -240,7 +241,10 @@ int32_t main(void)
     /* Enable Fcm. */
     CLK_FcmCmd(Enable);
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

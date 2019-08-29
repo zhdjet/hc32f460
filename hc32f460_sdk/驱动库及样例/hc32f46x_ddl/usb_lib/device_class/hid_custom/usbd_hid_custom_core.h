@@ -68,38 +68,38 @@
  ** \brief USBD_HID_Exported_Defines
  **
  ******************************************************************************/
-#define CUSTOM_HID_REPORT_DESC_SIZE         116
+#define CUSTOM_HID_REPORT_DESC_SIZE         (116u)
 
-#define USB_CUSTOM_HID_CONFIG_DESC_SIZ      41
-#define USB_CUSTOM_HID_DESC_SIZ             9
+#define USB_CUSTOM_HID_CONFIG_DESC_SIZ      (41u)
+#define USB_CUSTOM_HID_DESC_SIZ             (9u)
 
-#define CUSTOM_HID_DESCRIPTOR_TYPE          0x21
-#define CUSTOM_HID_REPORT_DESC              0x22
+#define CUSTOM_HID_DESCRIPTOR_TYPE          (0x21u)
+#define CUSTOM_HID_REPORT_DESC              (0x22u)
 
-#define CUSTOM_HID_REQ_SET_PROTOCOL         0x0B
-#define CUSTOM_HID_REQ_GET_PROTOCOL         0x03
+#define CUSTOM_HID_REQ_SET_PROTOCOL         (0x0Bu)
+#define CUSTOM_HID_REQ_GET_PROTOCOL         (0x03u)
 
-#define CUSTOM_HID_REQ_SET_IDLE             0x0A
-#define CUSTOM_HID_REQ_GET_IDLE             0x02
+#define CUSTOM_HID_REQ_SET_IDLE             (0x0Au)
+#define CUSTOM_HID_REQ_GET_IDLE             (0x02u)
 
-#define CUSTOM_HID_REQ_SET_REPORT           0x09
-#define CUSTOM_HID_REQ_GET_REPORT           0x01
+#define CUSTOM_HID_REQ_SET_REPORT           (0x09u)
+#define CUSTOM_HID_REQ_GET_REPORT           (0x01u)
 
-#define LED1_REPORT_ID                      0x01
-#define LED1_REPORT_COUNT                   0x01
+#define LED1_REPORT_ID                      (0x01u)
+#define LED1_REPORT_COUNT                   (0x01u)
 
-#define LED2_REPORT_ID                      0x02
-#define LED2_REPORT_COUNT                   0x01
+#define LED2_REPORT_ID                      (0x02u)
+#define LED2_REPORT_COUNT                   (0x01u)
 
-#define LED3_REPORT_ID                      0x03
-#define LED3_REPORT_COUNT                   0x01
+#define LED3_REPORT_ID                      (0x03u)
+#define LED3_REPORT_COUNT                   (0x01u)
 
-#define LED4_REPORT_ID                      0x04
-#define LED4_REPORT_COUNT                   0x01
+#define LED4_REPORT_ID                      (0x04u)
+#define LED4_REPORT_COUNT                   (0x01u)
 
-#define KEY_REPORT_ID                       0x05
-#define TAMPER_REPORT_ID                    0x06
-#define ADC_REPORT_ID                       0x07
+#define KEY_REPORT_ID                       (0x05u)
+#define TAMPER_REPORT_ID                    (0x06u)
+#define ADC_REPORT_ID                       (0x07u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

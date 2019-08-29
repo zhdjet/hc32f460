@@ -62,33 +62,36 @@
  ******************************************************************************/
 
 /* KEY0 (SW2)*/
-#define SW2_PORT                        PortD
-#define SW2_PIN                         Pin03
+#define SW2_PORT                        (PortD)
+#define SW2_PIN                         (Pin03)
 
 /* LED(D23: red color) Port/Pin definition */
-#define LED_PORT                        PortE
-#define LED_PIN                         Pin06
+#define LED_PORT                        (PortE)
+#define LED_PIN                         (Pin06)
 
 /* LED operation */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /* Timer4 CNT */
-#define TIMER4_UNIT                     M4_TMR41
+#define TIMER4_UNIT                     (M4_TMR41)
 #define TIMER4_CNT_CYCLE_VAL            (50000u)       /* Timer4 counter cycle value */
 
 /* Timer4 OCO */
-#define TIMER4_OCO_HIGH_CH              Timer4OcoOuh   /* only Timer4OcoOuh  Timer4OcoOvh  Timer4OcoOwh */
+#define TIMER4_OCO_HIGH_CH              (Timer4OcoOuh)   /* only Timer4OcoOuh  Timer4OcoOvh  Timer4OcoOwh */
+
+/* Timer4 PWM */
+#define TIMER4_PWM_CH                   (Timer4PwmU)
 
 /* Define port and pin for Timer4Pwm */
-#define TIMER4_PWM_H_PORT               PortE          /* TIM4_1_OUH_B:PE9   TIM4_1_OVH_B:PE11   TIM4_1_OWH_B:PE13 */
-#define TIMER4_PWM_H_PIN                Pin09
+#define TIMER4_PWM_H_PORT               (PortE)          /* TIM4_1_OUH_B:PE9   TIM4_1_OVH_B:PE11   TIM4_1_OWH_B:PE13 */
+#define TIMER4_PWM_H_PIN                (Pin09)
 
 /* EMB unit */
-#define EMB_UNIT                        M4_EMB2
+#define EMB_UNIT                        (M4_EMB2)
 
 /* EMB unit interrupt number */
-#define EMB_INT_NUM                     INT_EMB_GR1
+#define EMB_INT_NUM                     (INT_EMB_GR1)
 
 #define DAC_Enable
 
@@ -99,7 +102,12 @@
 /*******************************************************************************
  * Local function prototypes ('static')
  ******************************************************************************/
+static void EmbCallBack(void);
 static void LedInit(void);
+static void ClkInit(void);
+static void Timer4PwmConfig(void);
+static void EmbCallBack(void);
+static void M4_CMP_Init(void);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -109,12 +117,6 @@ static bool m_bEmbBraking = false;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-/**
- *******************************************************************************
- ** \brief Callback function of external interrupt ch.0
- **
- ******************************************************************************/
-
 /**
  *******************************************************************************
  ** \brief Callback function of EMB interrupt
@@ -159,7 +161,7 @@ static void LedInit(void)
 }
 
 /**
- ******************************************************************************
+ *******************************************************************************
  ** \brief  Initialize the system clock
  **
  ** \param  None
@@ -189,11 +191,11 @@ static void ClkInit(void)
     CLK_HrcCmd(Enable);      /* Enable HRC */
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2;   /* HRC 16M / 2 */
-    stcMpllCfg.plln = 42;     /* 8M*42 = 336M */
-    stcMpllCfg.PllpDiv = 2;   /* MLLP = 168M */
-    stcMpllCfg.PllqDiv = 2;   /* MLLQ = 168M */
-    stcMpllCfg.PllrDiv = 2;   /* MLLR = 168M */
+    stcMpllCfg.pllmDiv = 2ul;   /* HRC 16M / 2 */
+    stcMpllCfg.plln = 42ul;     /* 8M*42 = 336M */
+    stcMpllCfg.PllpDiv = 2ul;   /* MLLP = 168M */
+    stcMpllCfg.PllqDiv = 2ul;   /* MLLQ = 168M */
+    stcMpllCfg.PllrDiv = 2ul;   /* MLLR = 168M */
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -222,9 +224,8 @@ static void ClkInit(void)
  **
  ** \return None
  ******************************************************************************/
-void Timer4PwmConfig(void)
+static void Timer4PwmConfig(void)
 {
-    en_timer4_pwm_ch_t enPwmCh;
     stc_timer4_cnt_init_t stcCntInit;
     stc_timer4_oco_init_t stcOcoInit;
     stc_timer4_pwm_init_t stcPwmInit;
@@ -260,7 +261,7 @@ void Timer4PwmConfig(void)
     stcOcoInit.enOcoIntCmd = Disable;
     TIMER4_OCO_Init(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, &stcOcoInit); /* Initialize OCO high channel */
 
-    if ((Timer4OcoOuh == TIMER4_OCO_HIGH_CH) || (Timer4OcoOvh == TIMER4_OCO_HIGH_CH) || (Timer4OcoOwh == TIMER4_OCO_HIGH_CH))
+    if (!(TIMER4_OCO_HIGH_CH %2))
     {
         /* ocmr[15:0] = 0x0FFF */
         stcHighChCmpMode.enCntZeroMatchOpState = OcoOpOutputReverse;
@@ -279,32 +280,12 @@ void Timer4PwmConfig(void)
 
         TIMER4_OCO_SetHighChCompareMode(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, &stcHighChCmpMode);  /* Set OCO high channel compare mode */
     }
-    else
-    {
-    }
 
     /* Set OCO compare value */
-    TIMER4_OCO_WriteOccr(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, TIMER4_CNT_CYCLE_VAL/2);
+    TIMER4_OCO_WriteOccr(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, TIMER4_CNT_CYCLE_VAL/2u);
 
     /* Enable OCO */
     TIMER4_OCO_OutputCompareCmd(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, Enable);
-
-    /* Timer4 PWM: Get pwm couple channel */
-    if (Timer4OcoOuh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmU;
-    }
-    else if (Timer4OcoOvh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmV;
-    }
-    else if (Timer4OcoOwh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmW;
-    }
-    else
-    {
-    }
 
     /* Initialize PWM I/O */
     PORT_SetFunc(TIMER4_PWM_H_PORT, TIMER4_PWM_H_PIN, Func_Tim4, Disable);
@@ -314,7 +295,7 @@ void Timer4PwmConfig(void)
     stcPwmInit.enClkDiv = PwmPlckDiv1;
     stcPwmInit.enOutputState = PwmHPwmLHold;
     stcPwmInit.enMode = PwmThroughMode;
-    TIMER4_PWM_Init(TIMER4_UNIT, enPwmCh, &stcPwmInit); /* Initialize timer4 pwm */
+    TIMER4_PWM_Init(TIMER4_UNIT, TIMER4_PWM_CH, &stcPwmInit); /* Initialize timer4 pwm */
 
     /* Timer4 EMB: Initialize EMB configuration structure */
     stcEmbInit.enPwmHold = EmbChangePwm;
@@ -330,7 +311,7 @@ void Timer4PwmConfig(void)
  ** \retval None
  **
  ******************************************************************************/
-void M4_CMP_Init(void)
+static void M4_CMP_Init(void)
 {
     stc_cmp_init_t         stcCmpConfig;
     stc_irq_regi_conf_t    stcIrqRegiConf;
@@ -351,7 +332,7 @@ void M4_CMP_Init(void)
 #ifdef DAC_Enable
     /* Set DAC */
     //DAC1 for CMP1(INM3); DAC2 for CMP2(INM3); DAC1 for CMP3(INM3) / DAC2 for CMP3(INM4)
-    stcDacInitCfg.u8DacData = 0x80;
+    stcDacInitCfg.u8DacData = 0x80u;
     stcDacInitCfg.enCmpDacEN = Enable;
     CMP_DAC_Init(CmpDac1, &stcDacInitCfg);
     CMP_DAC_Init(CmpDac2, &stcDacInitCfg);
@@ -511,7 +492,7 @@ int32_t main(void)
     /* Configure EMB interrupt */
     stcIrqRegiConf.enIRQn = Int000_IRQn;                    /* Register INT_TMR61_GUDF Int to Vect.No.002 */
     stcIrqRegiConf.enIntSrc = EMB_INT_NUM;                  /* Select Event interrupt function */
-    stcIrqRegiConf.pfnCallback = EmbCallBack;               /* Callback function */
+    stcIrqRegiConf.pfnCallback = &EmbCallBack;              /* Callback function */
     enIrqRegistration(&stcIrqRegiConf);                     /* Registration IRQ */
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            /* Clear Pending */
     NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_01); /* Set priority */
@@ -527,7 +508,7 @@ int32_t main(void)
         {
             /* Add brake process code */
 
-            Ddl_Delay1ms(3000);  /* only for demo using */
+            Ddl_Delay1ms(3000ul);  /* only for demo using */
 
             EMB_SwBrake(EMB_UNIT, false); /* Disable software brake, Enable PWM output */
 

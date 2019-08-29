@@ -58,6 +58,10 @@
 #include "usbh_usr.h"
 #include "usbh_msc_core.h"
 
+
+
+extern void USB_OTG_PRTSUSP(USB_OTG_CORE_HANDLE *pdev);
+
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
@@ -86,10 +90,10 @@ __USB_ALIGN_BEGIN USBH_HOST                USB_Host __USB_ALIGN_END;
  ******************************************************************************/
 int main (void)
 {
-    __IO uint32_t i = 0;
-    __IO uint32_t test = 0;
+    __IO uint32_t i = 0ul;
+    __IO uint32_t test = 0ul;
 
-  /* Init Host Library */
+    /* Init Host Library */
     USBH_Init(&USB_OTG_Core,
 #ifdef USE_USB_OTG_FS
               USB_OTG_FS_CORE_ID,
@@ -104,16 +108,16 @@ int main (void)
     {
     /* Host Task handler */
         USBH_Process(&USB_OTG_Core, &USB_Host);
-        if (i++ == 0x50000)
+        if (i++ == 0x50000ul)
         {
-            i = 0;
+            i = 0ul;
 //          led_toggle(1);
 //          led_toggle(2);
         }
-        extern void USB_OTG_PRTSUSP(USB_OTG_CORE_HANDLE *pdev);
-        if (test == 1){
+
+        if (test == 1ul){
             USB_OTG_PRTSUSP(&USB_OTG_Core);
-            test =0;
+            test =0ul;
         }
     }
 

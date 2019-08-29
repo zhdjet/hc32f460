@@ -141,7 +141,10 @@ int32_t main(void)
     }
     /* de-init event port if necessary */
 //    EVENTPORT_DeInit();
-    while (1);
+    while (1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

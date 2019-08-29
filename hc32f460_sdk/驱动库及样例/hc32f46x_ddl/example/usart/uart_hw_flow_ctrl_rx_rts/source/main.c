@@ -62,24 +62,24 @@
  ******************************************************************************/
 
 /* USART channel definition */
-#define USART_CH                        M4_USART2
+#define USART_CH                        (M4_USART2)
 
 /* USART baudrate definition */
-#define USART_BAUDRATE                  (3000000)
+#define USART_BAUDRATE                  (3000000ul)
 
 /* USART RX Port/Pin definition */
-#define USART_RX_PORT                   PortA
-#define USART_RX_PIN                    Pin03
-#define USART_RX_FUNC                   Func_Usart2_Rx
+#define USART_RX_PORT                   (PortA)
+#define USART_RX_PIN                    (Pin03)
+#define USART_RX_FUNC                   (Func_Usart2_Rx)
 
 /* USART RTS Port/Pin definition */
-#define USART_RTS_PORT                  PortA
-#define USART_RTS_PIN                   Pin01
-#define USART_RTS_FUNC                  Func_Usart2_Rts
+#define USART_RTS_PORT                  (PortA)
+#define USART_RTS_PIN                   (Pin01)
+#define USART_RTS_FUNC                  (Func_Usart2_Rts)
 
 /* USART interrupt  */
-#define USART_EI_NUM                    INT_USART2_EI
-#define USART_EI_IRQn                   Int001_IRQn
+#define USART_EI_NUM                    (INT_USART2_EI)
+#define USART_EI_IRQn                   (Int001_IRQn)
 
 /* USART delay time for reading */
 #define USART_DELAY                     (10u)
@@ -88,18 +88,18 @@
 #define USART_RX_TIMES                  (50u)
 
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED operation */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -115,17 +115,6 @@ static void UsartErrIrqCallback(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static const stc_usart_uart_init_t m_stcInitCfg = {
-    UsartIntClkCkNoOutput,
-    UsartClkDiv_1,
-    UsartDataBits8,
-    UsartDataLsbFirst,
-    UsartOneStopBit,
-    UsartParityNone,
-    UsartSamleBit8,
-    UsartStartBitFallEdge,
-    UsartRtsEnable,
-};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -170,11 +159,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -235,24 +224,15 @@ static void UsartErrIrqCallback(void)
     {
         USART_ClearStatus(USART_CH, UsartFrameErr);
     }
-    else
-    {
-    }
 
     if (Set == USART_GetStatus(USART_CH, UsartParityErr))
     {
         USART_ClearStatus(USART_CH, UsartParityErr);
     }
-    else
-    {
-    }
 
     if (Set == USART_GetStatus(USART_CH, UsartOverrunErr))
     {
         USART_ClearStatus(USART_CH, UsartOverrunErr);
-    }
-    else
-    {
     }
 }
 
@@ -267,11 +247,23 @@ static void UsartErrIrqCallback(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint8_t i = 0;
-    uint8_t u8RecData = 0;
+    uint8_t i = 0u;
+    uint8_t u8RecData = 0u;
     en_result_t enTestResult = Ok;
     stc_irq_regi_conf_t stcIrqRegiCfg;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_uart_init_t stcInitCfg = {
+        UsartIntClkCkNoOutput,
+        UsartClkDiv_1,
+        UsartDataBits8,
+        UsartDataLsbFirst,
+        UsartOneStopBit,
+        UsartParityNone,
+        UsartSamleBit8,
+        UsartStartBitFallEdge,
+        UsartRtsEnable,
+    };
 
     /* Initialize Clock */
     ClkInit();
@@ -287,14 +279,14 @@ int32_t main(void)
     PORT_SetFunc(USART_RTS_PORT, USART_RTS_PIN, USART_RTS_FUNC, Disable);
 
     /* Initialize USART */
-    USART_UART_Init(USART_CH, &m_stcInitCfg);
+    USART_UART_Init(USART_CH, &stcInitCfg);
 
     /* Set baudrate */
     USART_SetBaudrate(USART_CH, USART_BAUDRATE);
 
     /* Set USART RX error IRQ */
     stcIrqRegiCfg.enIRQn = USART_EI_IRQn;
-    stcIrqRegiCfg.pfnCallback = UsartErrIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &UsartErrIrqCallback;
     stcIrqRegiCfg.enIntSrc = USART_EI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -304,32 +296,20 @@ int32_t main(void)
     /*Enable RX && RX interupt function*/
     USART_FuncCmd(USART_CH, UsartRx, Enable);
 
-    while (1)
+    while (i < USART_RX_TIMES)
     {
         if (Set == USART_GetStatus(USART_CH, UsartRxNoEmpty))
         {
             Ddl_Delay1ms(USART_DELAY);
-            u8RecData = USART_RecData(USART_CH);
+            u8RecData = (uint8_t)USART_RecData(USART_CH);
 
             if (u8RecData != i)
             {
                 enTestResult = Error;
                 break;
             }
-            else
-            {
-            }
 
-            if (USART_RX_TIMES == ++i)
-            {
-                break;
-            }
-            else
-            {
-            }
-        }
-        else
-        {
+            ++i;
         }
     }
 

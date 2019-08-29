@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file provides the USBD bulk only transfer functions.
-	@endlink
+        This file provides the USBD bulk only transfer functions.
+    @endlink
  **
  **   - 2019-05-15  1.0  zhangxl First version for USB bulk only transfer.
  **
@@ -242,9 +242,9 @@ static void  MSC_BOT_CBW_Decode(USB_OTG_CORE_HANDLE  *pdev)
 
     if ((USBD_GetRxCount(pdev, MSC_OUT_EP) != BOT_CBW_LENGTH) ||
         (MSC_BOT_cbw.dSignature != BOT_CBW_SIGNATURE) ||
-        (MSC_BOT_cbw.bLUN > 1) ||
-        (MSC_BOT_cbw.bCBLength < 1) ||
-        (MSC_BOT_cbw.bCBLength > 16))
+        (MSC_BOT_cbw.bLUN > 1u) ||
+        (MSC_BOT_cbw.bCBLength < 1u) ||
+        (MSC_BOT_cbw.bCBLength > 16u))
     {
 
         SCSI_SenseCode(MSC_BOT_cbw.bLUN,
@@ -266,16 +266,22 @@ static void  MSC_BOT_CBW_Decode(USB_OTG_CORE_HANDLE  *pdev)
                  (MSC_BOT_State != BOT_DATA_OUT) &&
                  (MSC_BOT_State != BOT_LAST_DATA_IN))
         {
-            if (MSC_BOT_DataLen > 0)
+            if (MSC_BOT_DataLen > (uint16_t)0)
             {
                 MSC_BOT_SendData(pdev,
                                  MSC_BOT_Data,
                                  MSC_BOT_DataLen);
-            }else if (MSC_BOT_DataLen == 0)
+            }
+            //else if (MSC_BOT_DataLen == (uint16_t)0)  /* MISRAC */
+            else
             {
                 MSC_BOT_SendCSW(pdev,
                                 CSW_CMD_PASSED);
             }
+        }
+        else
+        {
+            //
         }
     }
 }
@@ -293,12 +299,12 @@ static void  MSC_BOT_SendData(USB_OTG_CORE_HANDLE  *pdev,
                               uint16_t len)
 {
 
-    len                       = MIN(MSC_BOT_cbw.dDataLength, len);
+    len                       = (uint16_t)MIN(MSC_BOT_cbw.dDataLength, len);
     MSC_BOT_csw.dDataResidue -= len;
     MSC_BOT_csw.bStatus       = CSW_CMD_PASSED;
     MSC_BOT_State             = BOT_SEND_DATA;
 
-    DCD_EP_Tx(pdev, MSC_IN_EP, buf, len);
+    DCD_EP_Tx(pdev, MSC_IN_EP, buf, (uint32_t)len);
 }
 
 /**
@@ -337,8 +343,8 @@ void  MSC_BOT_SendCSW(USB_OTG_CORE_HANDLE  *pdev,
 static void  MSC_BOT_Abort(USB_OTG_CORE_HANDLE  *pdev)
 {
 
-    if ((MSC_BOT_cbw.bmFlags == 0) &&
-        (MSC_BOT_cbw.dDataLength != 0) &&
+    if ((MSC_BOT_cbw.bmFlags == (uint8_t)0) &&
+        (MSC_BOT_cbw.dDataLength != (uint32_t)0) &&
         (MSC_BOT_Status == BOT_STATE_NORMAL))
     {
         DCD_EP_Stall(pdev, MSC_OUT_EP);
@@ -367,9 +373,13 @@ void  MSC_BOT_CplClrFeature(USB_OTG_CORE_HANDLE  *pdev, uint8_t epnum)
     {
         DCD_EP_Stall(pdev, MSC_IN_EP);
         MSC_BOT_Status = BOT_STATE_NORMAL;
-    }else if (((epnum & 0x80) == 0x80) && (MSC_BOT_Status != BOT_STATE_RECOVERY))
+    }else if (((epnum & (uint8_t)0x80) == (uint8_t)0x80) && (MSC_BOT_Status != BOT_STATE_RECOVERY))
     {
         MSC_BOT_SendCSW(pdev, CSW_CMD_FAILED);
+    }
+    else
+    {
+        //
     }
 }
 

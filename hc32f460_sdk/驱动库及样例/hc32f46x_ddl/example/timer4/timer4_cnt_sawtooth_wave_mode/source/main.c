@@ -63,22 +63,17 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Timer4 counter */
-#define TIMER4_UNIT                     M4_TMR41
+#define TIMER4_UNIT                     (M4_TMR41)
+#define TIMER4_CNT_ZERO_INT_NUM         (INT_TMR41_GUDF)
 #define TIMER4_CNT_CYCLE_VAL            (50000u)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED_PORT                        PortA
-#define LED_PIN                         Pin07
+#define LED_PORT                        (PortA)
+#define LED_PIN                         (Pin07)
 
 /* LED1 */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
-
-/* Parameter validity check for timer4 unit */
-#define IS_VALID_TIMER4(__TMRx__)                                              \
-(   (M4_TMR41 == (__TMRx__))            ||                                     \
-    (M4_TMR42 == (__TMRx__))            ||                                     \
-    (M4_TMR43 == (__TMRx__)))
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -89,7 +84,6 @@
  ******************************************************************************/
 static void LedInit(void);
 static void ZeroMatchIrqCb(void);
-static en_int_src_t GetTimer4CntZeroIntNum(M4_TMR4_TypeDef *TMR4x);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -123,52 +117,15 @@ static void LedInit(void)
 
 /**
  *******************************************************************************
- ** \brief Get Timer4-CNT zero interrupt number.
- **
- ** \param [in] TMR4x                   Pointer to Timer4 instance register base
- ** \arg M4_TMR41                       Timer4 unit 1 instance register base
- ** \arg M4_TMR42                       Timer4 unit 2 instance register base
- ** \arg M4_TMR43                       Timer4 unit 3 instance register base
- **
- ** \retval                             Timer4-CNT zero interrupt number
- **
- ******************************************************************************/
-static en_int_src_t GetTimer4CntZeroIntNum(M4_TMR4_TypeDef *TMR4x)
-{
-    en_int_src_t enIntSrc;
-
-    DDL_ASSERT(IS_VALID_TIMER4(TMR4x));
-
-    if (M4_TMR41 == TMR4x)
-    {
-        enIntSrc = INT_TMR41_GUDF;
-    }
-    else if (M4_TMR42 == TMR4x)
-    {
-        enIntSrc = INT_TMR42_GUDF;
-    }
-    else if (M4_TMR43 == TMR4x)
-    {
-        enIntSrc = INT_TMR43_GUDF;
-    }
-    else
-    {
-    }
-
-    return enIntSrc;
-}
-
-/**
- *******************************************************************************
  ** \brief Zero match interrupt handler
  **
  ******************************************************************************/
 static void ZeroMatchIrqCb(void)
 {
-    static uint32_t u32IrqCnt = 0;
+    static uint32_t u32IrqCnt = 0ul;
 
     /* Set LED status */
-    (++u32IrqCnt & 0x00000001) ? LED_ON() : LED_OFF();
+    (++u32IrqCnt & 0x00000001ul) ? LED_ON() : LED_OFF();
 
     /* Clear Timer4-CNT zero interrupt flag */
     TIMER4_CNT_ClearIrqFlag(TIMER4_UNIT, Timer4CntZeroMatchInt);
@@ -212,8 +169,8 @@ int32_t main(void)
 
     /* Set Timer4-CNT IRQ */
     stcIrqRegiCfg.enIRQn = Int000_IRQn;
-    stcIrqRegiCfg.pfnCallback = ZeroMatchIrqCb;
-    stcIrqRegiCfg.enIntSrc = GetTimer4CntZeroIntNum(TIMER4_UNIT);
+    stcIrqRegiCfg.pfnCallback = &ZeroMatchIrqCb;
+    stcIrqRegiCfg.enIntSrc = TIMER4_CNT_ZERO_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);

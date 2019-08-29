@@ -66,13 +66,13 @@
 /* User callback functions */
 USBD_Usr_cb_TypeDef USR_cb =
 {
-    USBD_USR_Init,
-    USBD_USR_DeviceReset,
-    USBD_USR_DeviceConfigured,
-    USBD_USR_DeviceSuspended,
-    USBD_USR_DeviceResumed,
-    USBD_USR_DeviceConnected,
-    USBD_USR_DeviceDisconnected,
+    &USBD_USR_Init,
+    &USBD_USR_DeviceReset,
+    &USBD_USR_DeviceConfigured,
+    &USBD_USR_DeviceSuspended,
+    &USBD_USR_DeviceResumed,
+    &USBD_USR_DeviceConnected,
+    &USBD_USR_DeviceDisconnected,
 };
 
 /*******************************************************************************
@@ -83,7 +83,7 @@ USBD_Usr_cb_TypeDef USR_cb =
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
 /* Disconnected in default */
-volatile uint8_t bDeviceState = 0;
+volatile uint8_t bDeviceState = 0u;
 
 /*******************************************************************************
  * Local function prototypes ('static')
@@ -171,7 +171,7 @@ void USBD_USR_DeviceResumed(void)
  ******************************************************************************/
 void USBD_USR_DeviceConnected(void)
 {
-    bDeviceState = 1;
+    bDeviceState = 1u;
     printf("USB Device Connected.\r\n");
 }
 
@@ -183,7 +183,7 @@ void USBD_USR_DeviceConnected(void)
  ******************************************************************************/
 void USBD_USR_DeviceDisconnected(void)
 {
-    bDeviceState = 0;
+    bDeviceState = 0u;
     printf("USB Device Disconnected.\r\n");
 }
 

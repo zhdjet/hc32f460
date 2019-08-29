@@ -169,116 +169,116 @@ typedef struct _EndpointDescriptor
  ******************************************************************************/
 
 #ifndef USBH_NULL
-#define USBH_NULL ((void *)0)
+#define USBH_NULL ((void *)0u)
 #endif
 
 #ifndef FALSE
-#define FALSE 0
+#define FALSE 0u
 #endif
 
 #ifndef TRUE
-#define TRUE 1
+#define TRUE 1u
 #endif
 
-#define ValBit(VAR,POS)                               (VAR & (1 << POS))
-#define SetBit(VAR,POS)                               (VAR |= (1 << POS))
-#define ClrBit(VAR,POS)                               (VAR &= ((1 << POS)^255))
+#define ValBit(VAR,POS)                               ((VAR) & (1u << (POS)))
+#define SetBit(VAR,POS)                               ((VAR) |= (1u << (POS)))
+#define ClrBit(VAR,POS)                               ((VAR) &= ((1u << (POS))^255u))
 
-#define  LE16(addr)   (((uint16_t)(*((uint8_t *)(addr)))) + (((uint16_t)(*(((uint8_t *)(addr)) + 1))) << 8))
+#define  LE16(addr)   (((uint16_t)(*((uint8_t *)(addr)))) + (((uint16_t)(*(((uint8_t *)(addr)) + 1u))) << 8u))
 
-#define  USB_LEN_DESC_HDR                               0x02
-#define  USB_LEN_DEV_DESC                               0x12
-#define  USB_LEN_CFG_DESC                               0x09
-#define  USB_LEN_IF_DESC                                0x09
-#define  USB_LEN_EP_DESC                                0x07
-#define  USB_LEN_OTG_DESC                               0x03
-#define  USB_LEN_SETUP_PKT                              0x08
+#define  USB_LEN_DESC_HDR                               (0x02u)
+#define  USB_LEN_DEV_DESC                               (0x12u)
+#define  USB_LEN_CFG_DESC                               (0x09u)
+#define  USB_LEN_IF_DESC                                (0x09u)
+#define  USB_LEN_EP_DESC                                (0x07u)
+#define  USB_LEN_OTG_DESC                               (0x03u)
+#define  USB_LEN_SETUP_PKT                              (0x08u)
 
 /* bmRequestType :D7 Data Phase Transfer Direction  */
-#define  USB_REQ_DIR_MASK                               0x80
-#define  USB_H2D                                        0x00
-#define  USB_D2H                                        0x80
+#define  USB_REQ_DIR_MASK                               (0x80u)
+#define  USB_H2D                                        (0x00u)
+#define  USB_D2H                                        (0x80u)
 
 /* bmRequestType D6..5 Type */
-#define  USB_REQ_TYPE_STANDARD                          0x00
-#define  USB_REQ_TYPE_CLASS                             0x20
-#define  USB_REQ_TYPE_VENDOR                            0x40
-#define  USB_REQ_TYPE_RESERVED                          0x60
+#define  USB_REQ_TYPE_STANDARD                          (0x00u)
+#define  USB_REQ_TYPE_CLASS                             (0x20u)
+#define  USB_REQ_TYPE_VENDOR                            (0x40u)
+#define  USB_REQ_TYPE_RESERVED                          (0x60u)
 
 /* bmRequestType D4..0 Recipient */
-#define  USB_REQ_RECIPIENT_DEVICE                       0x00
-#define  USB_REQ_RECIPIENT_INTERFACE                    0x01
-#define  USB_REQ_RECIPIENT_ENDPOINT                     0x02
-#define  USB_REQ_RECIPIENT_OTHER                        0x03
+#define  USB_REQ_RECIPIENT_DEVICE                       (0x00u)
+#define  USB_REQ_RECIPIENT_INTERFACE                    (0x01u)
+#define  USB_REQ_RECIPIENT_ENDPOINT                     (0x02u)
+#define  USB_REQ_RECIPIENT_OTHER                        (0x03u)
 
 /* Table 9-4. Standard Request Codes  */
 /* bRequest , Value */
-#define  USB_REQ_GET_STATUS                             0x00
-#define  USB_REQ_CLEAR_FEATURE                          0x01
-#define  USB_REQ_SET_FEATURE                            0x03
-#define  USB_REQ_SET_ADDRESS                            0x05
-#define  USB_REQ_GET_DESCRIPTOR                         0x06
-#define  USB_REQ_SET_DESCRIPTOR                         0x07
-#define  USB_REQ_GET_CONFIGURATION                      0x08
-#define  USB_REQ_SET_CONFIGURATION                      0x09
-#define  USB_REQ_GET_INTERFACE                          0x0A
-#define  USB_REQ_SET_INTERFACE                          0x0B
-#define  USB_REQ_SYNCH_FRAME                            0x0C
+#define  USB_REQ_GET_STATUS                             (0x00u)
+#define  USB_REQ_CLEAR_FEATURE                          (0x01u)
+#define  USB_REQ_SET_FEATURE                            (0x03u)
+#define  USB_REQ_SET_ADDRESS                            (0x05u)
+#define  USB_REQ_GET_DESCRIPTOR                         (0x06u)
+#define  USB_REQ_SET_DESCRIPTOR                         (0x07u)
+#define  USB_REQ_GET_CONFIGURATION                      (0x08u)
+#define  USB_REQ_SET_CONFIGURATION                      (0x09u)
+#define  USB_REQ_GET_INTERFACE                          (0x0Au)
+#define  USB_REQ_SET_INTERFACE                          (0x0Bu)
+#define  USB_REQ_SYNCH_FRAME                            (0x0Cu)
 
 /* Table 9-5. Descriptor Types of USB Specifications */
-#define  USB_DESC_TYPE_DEVICE                              1
-#define  USB_DESC_TYPE_CONFIGURATION                       2
-#define  USB_DESC_TYPE_STRING                              3
-#define  USB_DESC_TYPE_INTERFACE                           4
-#define  USB_DESC_TYPE_ENDPOINT                            5
-#define  USB_DESC_TYPE_DEVICE_QUALIFIER                    6
-#define  USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION           7
-#define  USB_DESC_TYPE_INTERFACE_POWER                     8
-#define  USB_DESC_TYPE_HID                                 0x21
-#define  USB_DESC_TYPE_HID_REPORT                          0x22
+#define  USB_DESC_TYPE_DEVICE                              (1u)
+#define  USB_DESC_TYPE_CONFIGURATION                       (2u)
+#define  USB_DESC_TYPE_STRING                              (3u)
+#define  USB_DESC_TYPE_INTERFACE                           (4u)
+#define  USB_DESC_TYPE_ENDPOINT                            (5u)
+#define  USB_DESC_TYPE_DEVICE_QUALIFIER                    (6u)
+#define  USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION           (7u)
+#define  USB_DESC_TYPE_INTERFACE_POWER                     (8u)
+#define  USB_DESC_TYPE_HID                                 (0x21u)
+#define  USB_DESC_TYPE_HID_REPORT                          (0x22u)
 
-#define USB_DEVICE_DESC_SIZE                               18
-#define USB_CONFIGURATION_DESC_SIZE                        9
-#define USB_HID_DESC_SIZE                                  9
-#define USB_INTERFACE_DESC_SIZE                            9
-#define USB_ENDPOINT_DESC_SIZE                             7
+#define USB_DEVICE_DESC_SIZE                               (18u)
+#define USB_CONFIGURATION_DESC_SIZE                        (9u)
+#define USB_HID_DESC_SIZE                                  (9u)
+#define USB_INTERFACE_DESC_SIZE                            (9u)
+#define USB_ENDPOINT_DESC_SIZE                             (7u)
 
 /* Descriptor Type and Descriptor Index  */
 /* Use the following values when calling the function USBH_GetDescriptor  */
-#define  USB_DESC_DEVICE                    ((USB_DESC_TYPE_DEVICE << 8) & 0xFF00)
-#define  USB_DESC_CONFIGURATION             ((USB_DESC_TYPE_CONFIGURATION << 8) & 0xFF00)
-#define  USB_DESC_STRING                    ((USB_DESC_TYPE_STRING << 8) & 0xFF00)
-#define  USB_DESC_INTERFACE                 ((USB_DESC_TYPE_INTERFACE << 8) & 0xFF00)
-#define  USB_DESC_ENDPOINT                  ((USB_DESC_TYPE_INTERFACE << 8) & 0xFF00)
-#define  USB_DESC_DEVICE_QUALIFIER          ((USB_DESC_TYPE_DEVICE_QUALIFIER << 8) & 0xFF00)
-#define  USB_DESC_OTHER_SPEED_CONFIGURATION ((USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION << 8) & 0xFF00)
-#define  USB_DESC_INTERFACE_POWER           ((USB_DESC_TYPE_INTERFACE_POWER << 8) & 0xFF00)
-#define  USB_DESC_HID_REPORT                ((USB_DESC_TYPE_HID_REPORT << 8) & 0xFF00)
-#define  USB_DESC_HID                       ((USB_DESC_TYPE_HID << 8) & 0xFF00)
+#define  USB_DESC_DEVICE                    (((uint16_t)USB_DESC_TYPE_DEVICE << 8u) & 0xFF00u)
+#define  USB_DESC_CONFIGURATION             (((uint16_t)USB_DESC_TYPE_CONFIGURATION << 8u) & 0xFF00u)
+#define  USB_DESC_STRING                    (((uint16_t)USB_DESC_TYPE_STRING << 8u) & 0xFF00u)
+#define  USB_DESC_INTERFACE                 (((uint16_t)USB_DESC_TYPE_INTERFACE << 8u) & 0xFF00u)
+#define  USB_DESC_ENDPOINT                  (((uint16_t)USB_DESC_TYPE_INTERFACE << 8u) & 0xFF00u)
+#define  USB_DESC_DEVICE_QUALIFIER          (((uint16_t)USB_DESC_TYPE_DEVICE_QUALIFIER << 8u) & 0xFF00u)
+#define  USB_DESC_OTHER_SPEED_CONFIGURATION (((uint16_t)USB_DESC_TYPE_OTHER_SPEED_CONFIGURATION << 8u) & 0xFF00u)
+#define  USB_DESC_INTERFACE_POWER           (((uint16_t)USB_DESC_TYPE_INTERFACE_POWER << 8u) & 0xFF00u)
+#define  USB_DESC_HID_REPORT                (((uint16_t)USB_DESC_TYPE_HID_REPORT << 8u) & 0xFF00u)
+#define  USB_DESC_HID                       (((uint16_t)USB_DESC_TYPE_HID << 8u) & 0xFF00u)
 
 
-#define  USB_EP_TYPE_CTRL                               0x00
-#define  USB_EP_TYPE_ISOC                               0x01
-#define  USB_EP_TYPE_BULK                               0x02
-#define  USB_EP_TYPE_INTR                               0x03
+#define  USB_EP_TYPE_CTRL                               (0x00u)
+#define  USB_EP_TYPE_ISOC                               (0x01u)
+#define  USB_EP_TYPE_BULK                               (0x02u)
+#define  USB_EP_TYPE_INTR                               (0x03u)
 
-#define  USB_EP_DIR_OUT                                 0x00
-#define  USB_EP_DIR_IN                                  0x80
-#define  USB_EP_DIR_MSK                                 0x80
+#define  USB_EP_DIR_OUT                                 (0x00u)
+#define  USB_EP_DIR_IN                                  (0x80u)
+#define  USB_EP_DIR_MSK                                 (0x80u)
 
 /* supported classes */
-#define USB_MSC_CLASS                                   0x08
-#define USB_HID_CLASS                                   0x03
+#define USB_MSC_CLASS                                   (0x08u)
+#define USB_HID_CLASS                                   (0x03u)
 
 /* Interface Descriptor field values for HID Boot Protocol */
-#define HID_BOOT_CODE                                  0x01
-#define HID_KEYBRD_BOOT_CODE                           0x01
-#define HID_MOUSE_BOOT_CODE                            0x02
+#define HID_BOOT_CODE                                  (0x01u)
+#define HID_KEYBRD_BOOT_CODE                           (0x01u)
+#define HID_MOUSE_BOOT_CODE                            (0x02u)
 
 /* As per USB specs 9.2.6.4 :Standard request with data request timeout: 5sec
    Standard request with no data stage timeout : 50ms */
-#define DATA_STAGE_TIMEOUT                              5000
-#define NODATA_STAGE_TIMEOUT                            50
+#define DATA_STAGE_TIMEOUT                              (5000u)
+#define NODATA_STAGE_TIMEOUT                            (50u)
 
 #define USBH_CONFIGURATION_DESCRIPTOR_SIZE (USB_CONFIGURATION_DESC_SIZE \
                                            + USB_INTERFACE_DESC_SIZE\

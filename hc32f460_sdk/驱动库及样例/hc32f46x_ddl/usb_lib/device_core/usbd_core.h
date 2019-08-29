@@ -62,7 +62,7 @@
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
 typedef enum {
-    USBD_OK   = 0,
+    USBD_OK   = 0u,
     USBD_BUSY,
     USBD_FAIL,
 }USBD_Status;

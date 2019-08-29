@@ -61,44 +61,44 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 (SW2)*/
-#define  SW2_PORT   PortD
-#define  SW2_PIN    Pin03
+#define  SW2_PORT           (PortD)
+#define  SW2_PIN            (Pin03)
 /* KEY1 (SW4)*/
-#define  SW4_PORT   PortD
-#define  SW4_PIN    Pin04
+#define  SW4_PORT           (PortD)
+#define  SW4_PIN            (Pin04)
 /* KEY2 (SW3)*/
-#define  SW3_PORT   PortD
-#define  SW3_PIN    Pin05
+#define  SW3_PORT           (PortD)
+#define  SW3_PIN            (Pin05)
 /* KEY3 (SW5)*/
-#define  SW5_PORT   PortD
-#define  SW5_PIN    Pin06
+#define  SW5_PORT           (PortD)
+#define  SW5_PIN            (Pin06)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortD
-#define  LED1_PIN         Pin07
+#define  LED1_PORT          (PortD)
+#define  LED1_PIN           (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT          (PortB)
+#define  LED2_PIN           (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT        PortB
-#define  LED3_PIN         Pin09
+#define  LED3_PORT          (PortB)
+#define  LED3_PIN           (Pin09)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()    PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()    PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()      (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()      (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
-uint16_t u16Timer6Cnt0;
+//uint16_t u16Timer6Cnt0 = 0u;
 
 /*******************************************************************************
  * Local function prototypes ('static')
@@ -154,11 +154,11 @@ static void SysClkIni(void)
     CLK_HrcCmd(Enable);       //Enable HRC
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2;   //HRC 16M / 2
-    stcMpllCfg.plln =42;      //8M*42 = 336M
-    stcMpllCfg.PllpDiv = 2;   //MLLP = 168M
-    stcMpllCfg.PllqDiv = 2;   //MLLQ = 168M
-    stcMpllCfg.PllrDiv = 2;   //MLLR = 168M
+    stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
+    stcMpllCfg.plln    =42ul;   //8M*42 = 336M
+    stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
+    stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
+    stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -171,7 +171,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -180,19 +183,20 @@ static void SysClkIni(void)
 static void genClkIn(void)
 {
     uint32_t i;
+    static volatile uint16_t u16Timer6Cnt0 = 0u;
 
     uint8_t bAin[17] = {0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1};
     uint8_t bBin[17] = {1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1};
 
 
-    for (i = 0; i < 17; i++)
+    for (i = 0ul; i < 17ul; i++)
     {
         u16Timer6Cnt0 = Timer6_GetCount(M4_TMR61);//M4_TMR61->CNTER;
 
         M4_PORT->PODRE_f.POUT06 = bAin[i];
         M4_PORT->PODRD_f.POUT07 = bBin[i];
 
-        Ddl_Delay1ms(1000);
+        Ddl_Delay1ms(1000ul);
     }
 
     u16Timer6Cnt0 = Timer6_GetCount(M4_TMR61);//M4_TMR60->CNTER;
@@ -231,8 +235,8 @@ int32_t main(void)
     PORT_Init(LED1_PORT, LED1_PIN, &stcPortInit);      //LED1 --> PWMB
     //PORT_Init(LED2_PORT, LED2_PIN, &stcPortInit);
 
-    M4_PORT->PODRE_f.POUT06 = 0;
-    M4_PORT->PODRD_f.POUT07 = 0;
+    M4_PORT->PODRE_f.POUT06 = 0u;
+    M4_PORT->PODRD_f.POUT07 = 0u;
 
     PORT_SetFunc(PortE, Pin09, Func_Tim6, Disable);    //Timer61 PWMA
     PORT_SetFunc(PortE, Pin08, Func_Tim6, Disable);    //Timer61 PWMB
@@ -256,10 +260,10 @@ int32_t main(void)
 
     while(1)
     {
-        M4_PORT->PODRE_f.POUT06 = 0;
-        M4_PORT->PODRD_f.POUT07 = 1;
+        M4_PORT->PODRE_f.POUT06 = 0u;
+        M4_PORT->PODRD_f.POUT07 = 1u;
 
-        Ddl_Delay1ms(1000);
+        Ddl_Delay1ms(1000ul);
 
         Timer6_ClearHwCntUp(M4_TMR61);
         Timer6_ClearHwCntDwn(M4_TMR61);
@@ -276,10 +280,10 @@ int32_t main(void)
 
         Timer6_ClearCount(M4_TMR61);
 
-        M4_PORT->PODRE_f.POUT06 = 0;
-        M4_PORT->PODRD_f.POUT07 = 1;
+        M4_PORT->PODRE_f.POUT06 = 0u;
+        M4_PORT->PODRD_f.POUT07 = 1u;
 
-        Ddl_Delay1ms(2000);
+        Ddl_Delay1ms(2000ul);
 
         Timer6_ClearHwCntUp(M4_TMR61);
         Timer6_ClearHwCntDwn(M4_TMR61);

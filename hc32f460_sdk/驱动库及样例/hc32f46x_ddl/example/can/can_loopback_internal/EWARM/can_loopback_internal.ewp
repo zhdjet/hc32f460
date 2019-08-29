@@ -3,7 +3,7 @@
 <project>
   <fileVersion>2</fileVersion>
   <configuration>
-    <name>Release</name>
+    <name>Debug</name>
     <toolchain>
       <name>ARM</name>
     </toolchain>
@@ -968,7 +968,7 @@
     </settings>
   </configuration>
   <configuration>
-    <name>debug</name>
+    <name>Release</name>
     <toolchain>
       <name>ARM</name>
     </toolchain>
@@ -1093,7 +1093,7 @@
         <option>
           <name>GBECoreSlave</name>
           <version>24</version>
-          <state>35</state>
+            <state>39</state>
         </option>
         <option>
           <name>OGUseCmsis</name>
@@ -1110,7 +1110,7 @@
         <option>
           <name>CoreVariant</name>
           <version>24</version>
-          <state>35</state>
+          <state>39</state>
         </option>
         <option>
           <name>GFPUDeviceSlave</name>
@@ -1133,7 +1133,7 @@
         <option>
           <name>GFPUCoreSlave2</name>
           <version>24</version>
-          <state>35</state>
+          <state>39</state>
         </option>
       </data>
     </settings>
@@ -1146,7 +1146,8 @@
         <debug>0</debug>
         <option>
           <name>CCDefines</name>
-          <state>__DEBUG</state>
+          <state>HC32F46x</state>
+          <state>USE_DEVICE_DRIVER_LIB</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -1211,7 +1212,7 @@
         </option>
         <option>
           <name>CCDebugInfo</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>IEndianMode</name>

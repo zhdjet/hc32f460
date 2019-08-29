@@ -68,10 +68,10 @@
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* State Machine for the USBH_USR_ApplicationState */
-#define USH_USR_FS_INIT       0
-#define USH_USR_FS_READLIST   1
-#define USH_USR_FS_WRITEFILE  2
-#define USH_USR_FS_DRAW       3
+#define USH_USR_FS_INIT       0u
+#define USH_USR_FS_READLIST   1u
+#define USH_USR_FS_WRITEFILE  2u
+#define USH_USR_FS_DRAW       3u
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/
@@ -88,17 +88,16 @@ void USBH_USR_ResetDevice(void);
 void USBH_USR_DeviceDisconnected (void);
 void USBH_USR_OverCurrentDetected (void);
 void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed);
-void USBH_USR_Device_DescAvailable(void *);
+void USBH_USR_Device_DescAvailable(void *DeviceDesc);
 void USBH_USR_DeviceAddressAssigned(void);
 void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
                                           USBH_InterfaceDesc_TypeDef *itfDesc,
                                           USBH_EpDesc_TypeDef *epDesc);
-void USBH_USR_Manufacturer_String(void *);
-void USBH_USR_Product_String(void *);
-void USBH_USR_SerialNum_String(void *);
+void USBH_USR_Manufacturer_String(void *ManufacturerString);
+void USBH_USR_Product_String(void *ProductString);
+void USBH_USR_SerialNum_String(void *SerialNumString);
 void USBH_USR_EnumerationDone(void);
 USBH_USR_Status USBH_USR_UserInput(void);
-void USBH_USR_DeInit(void);
 void USBH_USR_DeviceNotSupported(void);
 void USBH_USR_UnrecoveredError(void);
 int USBH_USR_MSC_Application(void);

@@ -61,24 +61,24 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* LED1 Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
-#define LED1_TOGGLE()                   PORT_Toggle(LED1_PORT, LED1_PIN)
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
+#define LED1_TOGGLE()                   (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -91,7 +91,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8ExIntCnt = 0;
+static uint8_t u8ExIntCnt = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -105,11 +105,11 @@ static uint8_t u8ExIntCnt = 0;
  ** \retval None
  **
  ******************************************************************************/
-void Wdt_IrqCallback(void)
+static void Wdt_IrqCallback(void)
 {
     en_flag_status_t enFlagSta;
 
-    Ddl_Delay1ms(2);
+    Ddl_Delay1ms(2u);
     enFlagSta = WDT_GetFlag(WdtFlagCountUnderflow);
     /* WDT underflow interrupt */
     if (Set == enFlagSta)
@@ -138,12 +138,12 @@ void Wdt_IrqCallback(void)
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
         u8ExIntCnt++;
-        if (u8ExIntCnt >= 2)
+        if (u8ExIntCnt >= 2u)
         {
             u8ExIntCnt = 0u;
         }
@@ -162,7 +162,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -190,7 +190,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -211,7 +211,7 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Wdt_Config(void)
+static void Wdt_Config(void)
 {
     stc_wdt_init_t stcWdtInit;
     stc_irq_regi_conf_t stcIrqRegiConf;
@@ -233,7 +233,7 @@ void Wdt_Config(void)
     /* Register WDT Int to Vect.No.006 */
     stcIrqRegiConf.enIRQn = Int006_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = Wdt_IrqCallback;
+    stcIrqRegiConf.pfnCallback = &Wdt_IrqCallback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 

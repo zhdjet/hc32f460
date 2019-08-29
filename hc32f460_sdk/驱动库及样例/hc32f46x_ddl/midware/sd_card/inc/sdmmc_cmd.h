@@ -260,42 +260,42 @@ typedef struct stc_sdmmc_resp_card_status
 #define SDMMC_SD_VOLT_3_6                       (0x00800000ul)
 
 
-#define SDMMC_ERROR_NONE                        0x00000000u   /*!< No error                                                      */
-#define SDMMC_ERROR_CMD_CRC_FAIL                0x00000001u   /*!< Command response received (but CRC check failed)              */
-#define SDMMC_ERROR_DATA_CRC_FAIL               0x00000002u   /*!< Data block sent/received (CRC check failed)                   */
-#define SDMMC_ERROR_CMD_RSP_TIMEOUT             0x00000004u   /*!< Command response timeout                                      */
-#define SDMMC_ERROR_DATA_TIMEOUT                0x00000008u   /*!< Data timeout                                                  */
-#define SDMMC_ERROR_TX_UNDERRUN                 0x00000010u   /*!< Transmit FIFO underrun                                        */
-#define SDMMC_ERROR_RX_OVERRUN                  0x00000020u   /*!< Receive FIFO overrun                                          */
-#define SDMMC_ERROR_ADDR_MISALIGNED             0x00000040u   /*!< Misaligned address                                            */
-#define SDMMC_ERROR_BLOCK_LEN_ERR               0x00000080u   /*!< Transferred block length is not allowed for the card or the
-                                                                   number of transferred bytes does not match the block length   */
-#define SDMMC_ERROR_ERASE_SEQ_ERR               0x00000100u   /*!< An error in the sequence of erase command occurs              */
-#define SDMMC_ERROR_BAD_ERASE_PARAM             0x00000200u   /*!< An invalid selection for erase groups                         */
-#define SDMMC_ERROR_WRITE_PROT_VIOLATION        0x00000400u   /*!< Attempt to program a write protect block                      */
-#define SDMMC_ERROR_LOCK_UNLOCK_FAILED          0x00000800u   /*!< Sequence or password error has been detected in unlock
-                                                                   command or if there was an attempt to access a locked card    */
-#define SDMMC_ERROR_COM_CRC_FAILED              0x00001000u   /*!< CRC check of the previous command failed                      */
-#define SDMMC_ERROR_ILLEGAL_CMD                 0x00002000u   /*!< Command is not legal for the card state                       */
-#define SDMMC_ERROR_CARD_ECC_FAILED             0x00004000u   /*!< Card internal ECC was applied but failed to correct the data  */
-#define SDMMC_ERROR_CC_ERR                      0x00008000u   /*!< Internal card controller error                                */
-#define SDMMC_ERROR_GENERAL_UNKNOWN_ERR         0x00010000u   /*!< General or unknown error                                      */
-#define SDMMC_ERROR_STREAM_READ_UNDERRUN        0x00020000u   /*!< The card could not sustain data reading in stream rmode       */
-#define SDMMC_ERROR_STREAM_WRITE_OVERRUN        0x00040000u   /*!< The card could not sustain data programming in stream mode    */
-#define SDMMC_ERROR_CID_CSD_OVERWRITE           0x00080000u   /*!< CID/CSD overwrite error                                       */
-#define SDMMC_ERROR_WP_ERASE_SKIP               0x00100000u   /*!< Only partial address space was erased                         */
-#define SDMMC_ERROR_CARD_ECC_DISABLED           0x00200000u   /*!< Command has been executed without using internal ECC          */
-#define SDMMC_ERROR_ERASE_RESET                 0x00400000u   /*!< Erase sequence was cleared before executing because an out
-                                                                   of erase sequence command was received                        */
-#define SDMMC_ERROR_AKE_SEQ_ERR                 0x00800000u   /*!< Error in sequence of authentication                           */
-#define SDMMC_ERROR_INVALID_VOLTRANGE           0x01000000u   /*!< Error in case of invalid voltage range                        */
-#define SDMMC_ERROR_ADDR_OUT_OF_RANGE           0x02000000u   /*!< Error when addressed block is out of range                    */
-#define SDMMC_ERROR_REQUEST_NOT_APPLICABLE      0x04000000u   /*!< Error when command request is not applicable                  */
-#define SDMMC_ERROR_INVALID_PARAMETER           0x08000000u   /*!< the used parameter is not valid                               */
-#define SDMMC_ERROR_UNSUPPORTED_FEATURE         0x10000000u   /*!< Error when feature is not insupported                         */
-#define SDMMC_ERROR_BUSY                        0x20000000u   /*!< Error when transfer process is busy                           */
-#define SDMMC_ERROR_DMA                         0x40000000u   /*!< Error while DMA transfer                                      */
-#define SDMMC_ERROR_TIMEOUT                     0x80000000u   /*!< Timeout error                                                 */
+#define SDMMC_ERROR_NONE                        (0x00000000ul)   /*!< No error                                                      */
+#define SDMMC_ERROR_CMD_CRC_FAIL                (0x00000001ul)   /*!< Command response received (but CRC check failed)              */
+#define SDMMC_ERROR_DATA_CRC_FAIL               (0x00000002ul)   /*!< Data block sent/received (CRC check failed)                   */
+#define SDMMC_ERROR_CMD_RSP_TIMEOUT             (0x00000004ul)   /*!< Command response timeout                                      */
+#define SDMMC_ERROR_DATA_TIMEOUT                (0x00000008ul)   /*!< Data timeout                                                  */
+#define SDMMC_ERROR_TX_UNDERRUN                 (0x00000010ul)   /*!< Transmit FIFO underrun                                        */
+#define SDMMC_ERROR_RX_OVERRUN                  (0x00000020ul)   /*!< Receive FIFO overrun                                          */
+#define SDMMC_ERROR_ADDR_MISALIGNED             (0x00000040ul)   /*!< Misaligned address                                            */
+#define SDMMC_ERROR_BLOCK_LEN_ERR               (0x00000080ul)   /*!< Transferred block length is not allowed for the card or the
+                                                                      number of transferred bytes does not match the block length   */
+#define SDMMC_ERROR_ERASE_SEQ_ERR               (0x00000100ul)   /*!< An error in the sequence of erase command occurs              */
+#define SDMMC_ERROR_BAD_ERASE_PARAM             (0x00000200ul)   /*!< An invalid selection for erase groups                         */
+#define SDMMC_ERROR_WRITE_PROT_VIOLATION        (0x00000400ul)   /*!< Attempt to program a write protect block                      */
+#define SDMMC_ERROR_LOCK_UNLOCK_FAILED          (0x00000800ul)   /*!< Sequence or password error has been detected in unlock
+                                                                      command or if there was an attempt to access a locked card    */
+#define SDMMC_ERROR_COM_CRC_FAILED              (0x00001000ul)   /*!< CRC check of the previous command failed                      */
+#define SDMMC_ERROR_ILLEGAL_CMD                 (0x00002000ul)   /*!< Command is not legal for the card state                       */
+#define SDMMC_ERROR_CARD_ECC_FAILED             (0x00004000ul)   /*!< Card internal ECC was applied but failed to correct the data  */
+#define SDMMC_ERROR_CC_ERR                      (0x00008000ul)   /*!< Internal card controller error                                */
+#define SDMMC_ERROR_GENERAL_UNKNOWN_ERR         (0x00010000ul)   /*!< General or unknown error                                      */
+#define SDMMC_ERROR_STREAM_READ_UNDERRUN        (0x00020000ul)   /*!< The card could not sustain data reading in stream rmode       */
+#define SDMMC_ERROR_STREAM_WRITE_OVERRUN        (0x00040000ul)   /*!< The card could not sustain data programming in stream mode    */
+#define SDMMC_ERROR_CID_CSD_OVERWRITE           (0x00080000ul)   /*!< CID/CSD overwrite error                                       */
+#define SDMMC_ERROR_WP_ERASE_SKIP               (0x00100000ul)   /*!< Only partial address space was erased                         */
+#define SDMMC_ERROR_CARD_ECC_DISABLED           (0x00200000ul)   /*!< Command has been executed without using internal ECC          */
+#define SDMMC_ERROR_ERASE_RESET                 (0x00400000ul)   /*!< Erase sequence was cleared before executing because an out
+                                                                      of erase sequence command was received                        */
+#define SDMMC_ERROR_AKE_SEQ_ERR                 (0x00800000ul)   /*!< Error in sequence of authentication                           */
+#define SDMMC_ERROR_INVALID_VOLTRANGE           (0x01000000ul)   /*!< Error in case of invalid voltage range                        */
+#define SDMMC_ERROR_ADDR_OUT_OF_RANGE           (0x02000000ul)   /*!< Error when addressed block is out of range                    */
+#define SDMMC_ERROR_REQUEST_NOT_APPLICABLE      (0x04000000ul)   /*!< Error when command request is not applicable                  */
+#define SDMMC_ERROR_INVALID_PARAMETER           (0x08000000ul)   /*!< the used parameter is not valid                               */
+#define SDMMC_ERROR_UNSUPPORTED_FEATURE         (0x10000000ul)   /*!< Error when feature is not insupported                         */
+#define SDMMC_ERROR_BUSY                        (0x20000000ul)   /*!< Error when transfer process is busy                           */
+#define SDMMC_ERROR_DMA                         (0x40000000ul)   /*!< Error while DMA transfer                                      */
+#define SDMMC_ERROR_TIMEOUT                     (0x80000000ul)   /*!< Timeout error                                                 */
 
 /*******************************************************************************
  * Global variable definitions ('extern')

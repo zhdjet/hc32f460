@@ -62,24 +62,27 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* SW4 */
-#define KEY1_PORT               PortD
-#define KEY1_PIN                Pin04
+#define KEY1_PORT               (PortD)
+#define KEY1_PIN                (Pin04)
 
 /* LED */
-#define LED0_PORT               PortE
-#define LED0_PIN                Pin06
-#define LED1_PORT               PortA
-#define LED1_PIN                Pin07
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_PORT               (PortE)
+#define LED0_PIN                (Pin06)
+#define LED1_PORT               (PortA)
+#define LED1_PIN                (Pin07)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /* DMAC */
+/* DMA_UNIT_NUM = 1 means M4_DMA1, DMA_UNIT_NUM = 2 means  M4_DMA2. */
+#define DMA_UNIT_INDEX          (1u)
+
 #define DMA_UNIT                (M4_DMA1)
 #define DMA_CH                  (DmaCh3)
 #define DMA_TRG_SEL             (INT_PORT_EIRQ4)  /* External Int Ch.4 trigger request number */
-#define DMA_TRNCNT              (1)
+#define DMA_TRNCNT              (1u)
 #define DMA_BLKSIZE             (ARRAY_SZ(u16SrcBuf))
 #define DMA_LLP_MODE            (LlpRunNow)
 #define DMA_INC_MODE            (AddressIncrease)
@@ -158,7 +161,7 @@ void ExtInt04_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void SW4_Init(void)
+static void SW4_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -188,7 +191,7 @@ void SW4_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt04_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt04_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -210,7 +213,7 @@ void SW4_Init(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint32_t u32CmpRet = 0;
+    uint32_t u32CmpRet = 0ul;
     stc_dma_config_t stcDmaCfg;
 
     MEM_ZERO_STRUCT(stcDmaCfg);
@@ -241,7 +244,7 @@ int32_t main(void)
     stcLlpDesc[1].CHxCTL_f.LLPEN = Disable;
 
     /* Set data block size. */
-    stcDmaCfg.u16BlockSize = DMA_BLKSIZE;
+    stcDmaCfg.u16BlockSize = (uint16_t)DMA_BLKSIZE;
     /* Set transfer count. */
     stcDmaCfg.u16TransferCnt = DMA_TRNCNT;
     /* Set source & destination address. */
@@ -260,14 +263,12 @@ int32_t main(void)
     stcDmaCfg.stcDmaChCfg.enTrnWidth = Dma8Bit;
 
     /* Enable DMA clock. */
-    if(DMA_UNIT == M4_DMA1)
-    {
+#if (DMA_UNIT_INDEX == 1u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA1,Enable);
-    }
-    else if(DMA_UNIT == M4_DMA2)
-    {
+#endif
+#if (DMA_UNIT_INDEX == 2u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA2,Enable);
-    }
+#endif
 
     /* Init Dma channel. */
     DMA_InitChannel(DMA_UNIT, DMA_CH, &stcDmaCfg);
@@ -285,25 +286,28 @@ int32_t main(void)
     DMA_ChannelCmd(DMA_UNIT, DMA_CH,Enable);
 
     /*  Wait transfter completion  */
-    while(Set != DMA_GetIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq));
+    while(Set != DMA_GetIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq))
+    {
+        ;
+    }
 
     /* Verify destination buffer data && expeted data */
     if(0 != memcmp(u8DstBuf, u8SrcBuf, sizeof(u8SrcBuf)))
     {
-        u32CmpRet += 1;
+        u32CmpRet += 1ul;
     }
 
     if(0 != memcmp(u16DstBuf, u16SrcBuf, sizeof(u16SrcBuf)))
     {
-        u32CmpRet += 1;
+        u32CmpRet += 1ul;
     }
 
     if(0 != memcmp(u32DstBuf, u32SrcBuf, sizeof(u32SrcBuf)))
     {
-        u32CmpRet += 1;
+        u32CmpRet += 1ul;
     }
 
-    if(u32CmpRet == 0)
+    if(u32CmpRet == 0ul)
     {
         LED1_ON();      /* Meet the expected */
     }
@@ -312,7 +316,10 @@ int32_t main(void)
         LED0_ON();      /* Don't meet the expected */
     }
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

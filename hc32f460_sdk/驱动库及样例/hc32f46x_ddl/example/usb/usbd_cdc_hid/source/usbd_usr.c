@@ -66,13 +66,13 @@
 /* User callback functions */
 USBD_Usr_cb_TypeDef USR_cb =
 {
-    USBD_USR_Init,
-    USBD_USR_DeviceReset,
-    USBD_USR_DeviceConfigured,
-    USBD_USR_DeviceSuspended,
-    USBD_USR_DeviceResumed,
-    USBD_USR_DeviceConnected,
-    USBD_USR_DeviceDisconnected,
+    &USBD_USR_Init,
+    &USBD_USR_DeviceReset,
+    &USBD_USR_DeviceConfigured,
+    &USBD_USR_DeviceSuspended,
+    &USBD_USR_DeviceResumed,
+    &USBD_USR_DeviceConnected,
+    &USBD_USR_DeviceDisconnected,
 };
 
 /*******************************************************************************
@@ -103,10 +103,13 @@ USBD_Usr_cb_TypeDef USR_cb =
 void USBD_USR_Init(void)
 {
     /* Setup SysTick Timer for 20 msec interrupts This interrupt is used to probe the joystick */
-    if (SysTick_Config(SystemCoreClock / 50))
+    if (SysTick_Config(SystemCoreClock / 50u))
     {
         /* Capture error */
-        while (1);
+        while (1)
+        {
+            ;
+        }
     }
 }
 

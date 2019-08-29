@@ -61,27 +61,27 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 */
-#define  SW2_PORT           PortD
-#define  SW2_PIN            Pin03
+#define  SW2_PORT           (PortD)
+#define  SW2_PIN            (Pin03)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT          PortE
-#define  LED0_PIN           Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT          PortA
-#define  LED1_PIN           Pin07
+#define  LED1_PORT          (PortA)
+#define  LED1_PIN           (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* Define Timer Unit for example */
-#define TMR_UNIT            M4_TMR02
-#define TMR_INI_GCMA        INT_TMR02_GCMA
-#define TMR_INI_GCMB        INT_TMR02_GCMB
+#define TMR_UNIT            (M4_TMR02)
+#define TMR_INI_GCMA        (INT_TMR02_GCMA)
+#define TMR_INI_GCMB        (INT_TMR02_GCMB)
 
-#define ENABLE_TMR0()       PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable)
+#define ENABLE_TMR0()       (PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable))
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -93,8 +93,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint16_t u16CmpLast = 0;
-static __IO uint16_t u16Campture = 0;
+static uint16_t u16CmpLast = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -107,22 +106,13 @@ static __IO uint16_t u16Campture = 0;
 void Timer0_TriggerCallBack(void)
 {
     uint16_t tmp;
+    __IO uint16_t u16Campture = 0u;
     tmp = TIMER0_GetCmpReg(TMR_UNIT,Tim0_ChannelB);
 
     u16Campture = tmp - u16CmpLast;
     u16CmpLast = tmp;
 
     LED0_TOGGLE();
-}
-
-/**
- *******************************************************************************
- ** \brief Callback function of external interrupt ch.0
- **
- ******************************************************************************/
-void ExtInt03_Callback(void)
-{
-    __asm("nop");
 }
 
  /*******************************************************************************
@@ -136,12 +126,10 @@ void ExtInt03_Callback(void)
 void Sw2_Init(void)
 {
     stc_exint_config_t stcExtiConfig;
-    stc_irq_regi_conf_t stcIrqRegiConf;
     stc_port_init_t stcPortInit;
 
     /* configuration structure initialization */
     MEM_ZERO_STRUCT(stcExtiConfig);
-    MEM_ZERO_STRUCT(stcIrqRegiConf);
     MEM_ZERO_STRUCT(stcPortInit);
 
     /* External Int Ch.3 */
@@ -155,7 +143,6 @@ void Sw2_Init(void)
     EXINT_Init(&stcExtiConfig);
 
     /* Set PD03 as External Int Ch.3 input */
-    MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
     PORT_Init(SW2_PORT, SW2_PIN, &stcPortInit);
 }
@@ -200,11 +187,11 @@ static void SysClkIni(void)
 
     /* MPLL config. */
     /*system clk = 21M, pclk1 = 10.5M, pclk3 = 5.25M*/
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 16;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =42u;
+    stcMpllCfg.PllpDiv = 16u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
 
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
@@ -218,7 +205,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -284,7 +274,7 @@ int32_t main(void)
     /* Select TIMER channalB interrupt as source */
     stcIrqRegiConf.enIntSrc = TMR_INI_GCMB;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = Timer0_TriggerCallBack;
+    stcIrqRegiConf.pfnCallback = &Timer0_TriggerCallBack;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -296,7 +286,7 @@ int32_t main(void)
 
     while(1)
     {
-        if(u16CmpLast != 0)
+        if(u16CmpLast != 0u)
         {
             LED1_TOGGLE();
         }

@@ -122,11 +122,11 @@ int32_t main(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 168M). */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln =50ul;
+    stcMpllCfg.PllpDiv = 8ul;
+    stcMpllCfg.PllqDiv = 2ul;
+    stcMpllCfg.PllrDiv = 2ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -148,10 +148,13 @@ int32_t main(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
-    CLK_SetSysClkSource(CLKSysSrcMPLL);
+    CLK_SetSysClkSource(ClkSysSrcHRC);
 
     /* Check source and frequence. */
     enSysClkSrc = CLK_GetSysClkSource();
@@ -159,13 +162,32 @@ int32_t main(void)
 
     /* Clk output.*/
     stcOutputClkCfg.enOutputSrc = ClkOutputSrcSysclk;
-    stcOutputClkCfg.enOutputDiv = ClkOutputDiv8;
+    stcOutputClkCfg.enOutputDiv = ClkOutputDiv1;
     CLK_OutputClkConfig(ClkOutputCh1,&stcOutputClkCfg);
     CLK_OutputClkCmd(ClkOutputCh1,Enable);
 
     PORT_SetFunc(PortA, Pin08, Func_Mclkout, Disable);
 
-    while(1);
+    /* SW2 */
+    while(0 != PORT_GetBit(PortD, Pin03))
+    {
+        ;
+    }
+
+    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 168M). */
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln =50ul;
+    stcMpllCfg.PllpDiv = 2ul;
+    stcMpllCfg.PllqDiv = 2ul;
+    stcMpllCfg.PllrDiv = 2ul;
+    CLK_SetPllSource(ClkPllSrcXTAL);
+    CLK_MpllConfig(&stcMpllCfg);
+
+
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

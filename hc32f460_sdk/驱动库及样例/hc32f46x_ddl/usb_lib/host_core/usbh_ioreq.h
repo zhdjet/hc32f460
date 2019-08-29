@@ -71,9 +71,9 @@
  ** \brief USBH_IOREQ_Exported_Defines
  **
  ******************************************************************************/
-#define USBH_SETUP_PKT_SIZE   8
-#define USBH_EP0_EP_NUM       0
-#define USBH_MAX_PACKET_SIZE  0x40
+#define USBH_SETUP_PKT_SIZE   (8u)
+#define USBH_EP0_EP_NUM       (0u)
+#define USBH_MAX_PACKET_SIZE  (0x40u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

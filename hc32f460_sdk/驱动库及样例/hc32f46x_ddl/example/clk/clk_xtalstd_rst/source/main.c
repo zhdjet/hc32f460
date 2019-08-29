@@ -62,21 +62,21 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
-#define EFM_FLASH_TRIMLOAD()    *((volatile unsigned int*)(0x40010490UL)) = 2
+#define EFM_FLASH_TRIMLOAD()    (*((volatile unsigned int*)(0x40010490UL)) = 2ul)
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -101,7 +101,7 @@
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 

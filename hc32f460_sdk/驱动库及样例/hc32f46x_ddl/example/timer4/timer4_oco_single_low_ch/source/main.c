@@ -63,26 +63,14 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Timer4 CNT */
-#define TIMER4_UNIT                     M4_TMR41
-#define TIMER4_CNT_CYCLE_VAL            (50000u)       /* Timer4 counter cycle value */
+#define TIMER4_UNIT                     (M4_TMR41)
+#define TIMER4_CNT_CYCLE_VAL            (50000u)        /* Timer4 counter cycle value */
 
 /* Timer4 OCO */
-#define TIMER4_OCO_LOW_CH               Timer4OcoOul   /* only Timer4OcoOul  Timer4OcoOvl  Timer4OcoOwl */
+#define TIMER4_OCO_LOW_CH               (Timer4OcoOul)  /* only Timer4OcoOul  Timer4OcoOvl  Timer4OcoOwl */
 
-/* Parameter validity check for oco channel */
-#define IS_VALID_OCO_CH(x)                                                     \
-(   (Timer4OcoOuh == (x))               ||                                     \
-    (Timer4OcoOul == (x))               ||                                     \
-    (Timer4OcoOvh == (x))               ||                                     \
-    (Timer4OcoOvl == (x))               ||                                     \
-    (Timer4OcoOwh == (x))               ||                                     \
-    (Timer4OcoOwl == (x)))
-
-/* Parameter validity check for timer4 unit */
-#define IS_VALID_TIMER4(__TMRx__)                                              \
-(   (M4_TMR41 == (__TMRx__))            ||                                     \
-    (M4_TMR42 == (__TMRx__))            ||                                     \
-    (M4_TMR43 == (__TMRx__)))
+/* Timer4 OCO interrupt number */
+#define TIMER4_OCO_LOW_CH_INT_NUM       (INT_TMR41_GCMUL)
 
 /* Wave I/O */
 #define WAVE_IO_PORT                    (PortE)
@@ -97,8 +85,6 @@
  ******************************************************************************/
 static void ToggleIo(void);
 static void OcoIrqCallback(void);
-static en_int_src_t GetTimer4OcoIntNum(M4_TMR4_TypeDef *TMR4x,
-                                  en_timer4_oco_ch_t enCh);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -120,6 +106,7 @@ static en_int_src_t GetTimer4OcoIntNum(M4_TMR4_TypeDef *TMR4x,
 static void ToggleIo(void)
 {
     PORT_Toggle(WAVE_IO_PORT, WAVE_IO_PIN);
+    Ddl_Delay1ms(5ul);
     PORT_Toggle(WAVE_IO_PORT, WAVE_IO_PIN);
 }
 
@@ -133,57 +120,6 @@ static void OcoIrqCallback(void)
     ToggleIo();
 
     TIMER4_OCO_ClearIrqFlag(TIMER4_UNIT, TIMER4_OCO_LOW_CH);
-}
-
-/**
- *******************************************************************************
- ** \brief Get Timer4 OCO interrupt number.
- **
- ** \param [in] TMR4x                   Pointer to Timer4 instance register base
- ** \arg M4_TMR41                       Timer4 unit 1 instance register base
- ** \arg M4_TMR42                       Timer4 unit 2 instance register base
- ** \arg M4_TMR43                       Timer4 unit 3 instance register base
- ** \param [in] enCh                    Channel of Timer4 OCO
- ** \arg Timer4OcoOuh                   Timer4 OCO channel:OUH
- ** \arg Timer4OcoOul                   Timer4 OCO channel:OUL
- ** \arg Timer4OcoOvh                   Timer4 OCO channel:OVH
- ** \arg Timer4OcoOvl                   Timer4 OCO channel:OVL
- ** \arg Timer4OcoOwh                   Timer4 OCO channel:OWH
- ** \arg Timer4OcoOwl                   Timer4 OCO channel:OWL
- **
- ** \retval                             Timer4 OCO interrupt number
- **
- ******************************************************************************/
-static en_int_src_t GetTimer4OcoIntNum(M4_TMR4_TypeDef *TMR4x,
-                                  en_timer4_oco_ch_t enCh)
-{
-    uint8_t u8Timer4Unit = 0u;
-    uint8_t u8Timer4OcoCh = (uint8_t)enCh;
-    static const en_int_src_t aenOcoIntNum[3][6] = {
-    {INT_TMR41_GCMUH, INT_TMR41_GCMUL, INT_TMR41_GCMVH, INT_TMR41_GCMVL, INT_TMR41_GCMWH, INT_TMR41_GCMWL},
-    {INT_TMR42_GCMUH, INT_TMR42_GCMUL, INT_TMR42_GCMVH, INT_TMR42_GCMVL, INT_TMR42_GCMWH, INT_TMR42_GCMWL},
-    {INT_TMR43_GCMUH, INT_TMR43_GCMUL, INT_TMR43_GCMVH, INT_TMR43_GCMVL, INT_TMR43_GCMWH, INT_TMR43_GCMWL}};
-
-    DDL_ASSERT(IS_VALID_OCO_CH(enCh));
-    DDL_ASSERT(IS_VALID_TIMER4(TMR4x));
-
-    if (M4_TMR41 == TMR4x)
-    {
-        u8Timer4Unit = 0u;
-    }
-    else if (M4_TMR42 == TMR4x)
-    {
-        u8Timer4Unit = 1u;
-    }
-    else if (M4_TMR43 == TMR4x)
-    {
-        u8Timer4Unit = 2u;
-    }
-    else
-    {
-    }
-
-    return aenOcoIntNum[u8Timer4Unit][u8Timer4OcoCh];
 }
 
 /**
@@ -202,7 +138,7 @@ int32_t main(void)
     stc_timer4_cnt_init_t stcCntInit;
     stc_timer4_oco_init_t stcOcoInit;
     stc_oco_low_ch_compare_mode_t stcLowChCmpMode;
-    uint16_t OcoLowChOccrVal  = TIMER4_CNT_CYCLE_VAL / 2;
+    uint16_t u16OcoLowChOccrVal  = TIMER4_CNT_CYCLE_VAL / 2u;
 
     /* Clear structures */
     MEM_ZERO_STRUCT(stcCntInit);
@@ -236,7 +172,7 @@ int32_t main(void)
     stcOcoInit.enOccrBufMode = OccrBufDisable;
     TIMER4_OCO_Init(TIMER4_UNIT, TIMER4_OCO_LOW_CH, &stcOcoInit);  /* Initialize OCO low channel */
 
-    if ((Timer4OcoOul == TIMER4_OCO_LOW_CH) || (Timer4OcoOvl == TIMER4_OCO_LOW_CH) || (Timer4OcoOwl == TIMER4_OCO_LOW_CH))
+    if (TIMER4_OCO_LOW_CH % 2)
     {
         /* OCMR[31:0] Ox 0FF0 0FFF    0000 1111 1111 0000   0000 1111 1111 1111 */
         stcLowChCmpMode.enCntZeroLowMatchHighMatchLowChOpState = OcoOpOutputReverse;         /* bit[27:26]  11  */
@@ -269,7 +205,7 @@ int32_t main(void)
     }
 
     /* Set OCO compare value */
-    TIMER4_OCO_WriteOccr(TIMER4_UNIT, TIMER4_OCO_LOW_CH, OcoLowChOccrVal);
+    TIMER4_OCO_WriteOccr(TIMER4_UNIT, TIMER4_OCO_LOW_CH, u16OcoLowChOccrVal);
 
     /* Enable OCO */
     TIMER4_OCO_OutputCompareCmd(TIMER4_UNIT, TIMER4_OCO_LOW_CH, Enable);
@@ -277,8 +213,8 @@ int32_t main(void)
     /* Set Timer4 OCO IRQ */
     MEM_ZERO_STRUCT(stcIrqRegiCfg);
     stcIrqRegiCfg.enIRQn = Int000_IRQn;
-    stcIrqRegiCfg.pfnCallback = OcoIrqCallback;
-    stcIrqRegiCfg.enIntSrc = GetTimer4OcoIntNum(TIMER4_UNIT, TIMER4_OCO_LOW_CH);
+    stcIrqRegiCfg.pfnCallback = &OcoIrqCallback;
+    stcIrqRegiCfg.enIntSrc = TIMER4_OCO_LOW_CH_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);

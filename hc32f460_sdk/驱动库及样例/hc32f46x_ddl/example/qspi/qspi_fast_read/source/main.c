@@ -61,48 +61,47 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* LED1 Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
-#define LED1_TOGGLE()                   PORT_Toggle(LED1_PORT, LED1_PIN)
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
+#define LED1_TOGGLE()                   (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /* QSPCK Port/Pin definition */
-#define QSPCK_PORT                      PortC
-#define QSPCK_PIN                       Pin06
+#define QSPCK_PORT                      (PortC)
+#define QSPCK_PIN                       (Pin06)
 
 /* QSNSS Port/Pin definition */
-#define QSNSS_PORT                      PortC
-#define QSNSS_PIN                       Pin07
+#define QSNSS_PORT                      (PortC)
+#define QSNSS_PIN                       (Pin07)
 
 /* QSIO0 Port/Pin definition */
-#define QSIO0_PORT                      PortD
-#define QSIO0_PIN                       Pin08
+#define QSIO0_PORT                      (PortD)
+#define QSIO0_PIN                       (Pin08)
 
 /* QSIO1 Port/Pin definition */
-#define QSIO1_PORT                      PortD
-#define QSIO1_PIN                       Pin09
+#define QSIO1_PORT                      (PortD)
+#define QSIO1_PIN                       (Pin09)
 
 /* QSPI memory bus address definition */
-#define QSPI_BUS_ADDRESS                (0x98000000U)
-
+#define QSPI_BUS_ADDRESS                (0x98000000ul)
 /* FLASH parameters definition */
 #define FLASH_PAGE_SIZE                 (0x100u)
 #define FLASH_SRCTOR_SIZE               (0x1000u)
-#define FALSH_MAX_ADDR                  (0x800000u)
+#define FALSH_MAX_ADDR                  (0x800000ul)
 #define FLASH_DUMMY_BYTE_VALUE          (0xffu)
 #define FLASH_BUSY_BIT_MASK             (0x01u)
 
@@ -126,7 +125,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8ExIntFlag = 0;
+static uint8_t u8ExIntFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -140,7 +139,7 @@ static uint8_t u8ExIntFlag = 0;
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
@@ -158,7 +157,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -186,7 +185,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -207,7 +206,7 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void QspiFlash_Init(void)
+static void QspiFlash_Init(void)
 {
     stc_qspi_init_t stcQspiInit;
 
@@ -275,19 +274,19 @@ void QspiFlash_WriteEnable(void)
 en_result_t QspiFlash_WaitForWriteEnd(void)
 {
     en_result_t enRet = Ok;
-    uint8_t u8Status = 0;
+    uint8_t u8Status = 0u;
     uint32_t u32Timeout;
     stc_clk_freq_t stcClkFreq;
 
     CLK_GetClockFreq(&stcClkFreq);
-    u32Timeout = stcClkFreq.sysclkFreq / 1000;
+    u32Timeout = stcClkFreq.sysclkFreq / 1000u;
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(FLASH_INSTR_READ_SR1);
     do
     {
         u8Status = QSPI_ReadDirectCommValue();
         u32Timeout--;
-    } while ((u32Timeout != 0) &&
+    } while ((u32Timeout != 0u) &&
              ((u8Status & FLASH_BUSY_BIT_MASK) == FLASH_BUSY_BIT_MASK));
 
     if (FLASH_BUSY_BIT_MASK == u8Status)
@@ -313,30 +312,34 @@ en_result_t QspiFlash_WaitForWriteEnd(void)
  ** \retval Ok                              Page write program success
  **
  ******************************************************************************/
-en_result_t QspiFlash_WritePage(uint32_t u32Addr, uint8_t *pData, uint16_t len)
+en_result_t QspiFlash_WritePage(uint32_t u32Addr, const uint8_t pData[], uint16_t len)
 {
-    en_result_t enRet;
+    en_result_t enRet = Ok;
+    uint16_t u16Index = 0u;
 
     if ((u32Addr > FALSH_MAX_ADDR) || (NULL == pData) ||
         (len > FLASH_PAGE_SIZE))
     {
-        return Error;
+        enRet = Error;
     }
-
-    QspiFlash_WriteEnable();
-    /* Send data to flash */
-    QSPI_EnterDirectCommMode();
-    QSPI_WriteDirectCommValue(FLASH_INSTR_PAGE_PROGRAM);
-    QSPI_WriteDirectCommValue((u32Addr & 0xFF0000) >> 16);
-    QSPI_WriteDirectCommValue((u32Addr & 0xFF00) >> 8);
-    QSPI_WriteDirectCommValue(u32Addr & 0xFF);
-    while (len--)
+    else
     {
-        QSPI_WriteDirectCommValue(*pData++);
+        QspiFlash_WriteEnable();
+        /* Send data to flash */
+        QSPI_EnterDirectCommMode();
+        QSPI_WriteDirectCommValue(FLASH_INSTR_PAGE_PROGRAM);
+        QSPI_WriteDirectCommValue((uint8_t)((u32Addr & 0xFF0000ul) >> 16));
+        QSPI_WriteDirectCommValue((uint8_t)((u32Addr & 0xFF00u) >> 8));
+        QSPI_WriteDirectCommValue((uint8_t)(u32Addr & 0xFFu));
+        while (len--)
+        {
+           QSPI_WriteDirectCommValue(pData[u16Index]);
+           u16Index++;
+        }
+        QSPI_ExitDirectCommMode();
+        /* Wait for flash idle */
+        enRet = QspiFlash_WaitForWriteEnd();
     }
-    QSPI_ExitDirectCommMode();
-    /* Wait for flash idle */
-    enRet = QspiFlash_WaitForWriteEnd();
 
     return enRet;
 }
@@ -353,23 +356,25 @@ en_result_t QspiFlash_WritePage(uint32_t u32Addr, uint8_t *pData, uint16_t len)
  ******************************************************************************/
 en_result_t QspiFlash_Erase4KbSector(uint32_t u32Addr)
 {
-    en_result_t enRet;
+    en_result_t enRet = Ok;
 
     if (u32Addr >= FALSH_MAX_ADDR)
     {
-        return Error;
+        enRet = Error;
     }
-
-    QspiFlash_WriteEnable();
-    /* Send instruction to flash */
-    QSPI_EnterDirectCommMode();
-    QSPI_WriteDirectCommValue(FLASH_INSTR_ERASE_4KB_SECTOR);
-    QSPI_WriteDirectCommValue((u32Addr & 0xFF0000) >> 16);
-    QSPI_WriteDirectCommValue((u32Addr & 0xFF00) >> 8);
-    QSPI_WriteDirectCommValue(u32Addr & 0xFF);
-    QSPI_ExitDirectCommMode();
-    /* Wait for flash idle */
-    enRet = QspiFlash_WaitForWriteEnd();
+    else
+    {
+        QspiFlash_WriteEnable();
+        /* Send instruction to flash */
+        QSPI_EnterDirectCommMode();
+        QSPI_WriteDirectCommValue(FLASH_INSTR_ERASE_4KB_SECTOR);
+        QSPI_WriteDirectCommValue((uint8_t)((u32Addr & 0xFF0000ul) >> 16));
+        QSPI_WriteDirectCommValue((uint8_t)((u32Addr & 0xFF00u) >> 8));
+        QSPI_WriteDirectCommValue((uint8_t)(u32Addr & 0xFFu));
+        QSPI_ExitDirectCommMode();
+        /* Wait for flash idle */
+        enRet = QspiFlash_WaitForWriteEnd();
+    }
 
     return enRet;
 }
@@ -408,7 +413,7 @@ void QspiFlash_EraseChip(void)
  ******************************************************************************/
 uint8_t QspiFlash_ReadStatusRegister(uint8_t u8Reg)
 {
-    uint8_t regSta = 0;
+    uint8_t regSta = 0u;
 
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(u8Reg);
@@ -427,15 +432,12 @@ uint8_t QspiFlash_ReadStatusRegister(uint8_t u8Reg)
  ** \retval None
  **
  ******************************************************************************/
-void SystemClk_Init(void)
+static void SystemClk_Init(void)
 {
-    en_clk_sys_source_t     enSysClkSrc;
     stc_clk_sysclk_cfg_t    stcSysClkCfg;
     stc_clk_xtal_cfg_t      stcXtalCfg;
     stc_clk_mpll_cfg_t      stcMpllCfg;
-    stc_clk_freq_t          stcClkFreq;
 
-    MEM_ZERO_STRUCT(enSysClkSrc);
     MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
     MEM_ZERO_STRUCT(stcMpllCfg);
@@ -459,11 +461,11 @@ void SystemClk_Init(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln = 42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -476,14 +478,12 @@ void SystemClk_Init(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
-
-    /* Check source and frequence. */
-    enSysClkSrc = CLK_GetSysClkSource();
-    CLK_GetClockFreq(&stcClkFreq);
 }
 
 /**
@@ -497,9 +497,10 @@ void SystemClk_Init(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint32_t flashAddr = 0;
-    uint8_t *pFlashReadAddr, bufferLen = 0;
-    uint8_t txBuffer[] = "QSPI read and write flash example: Welcome to use HDSC micro chip";
+    uint32_t flashAddr = 0u;
+    uint8_t *pFlashReadAddr;
+    uint16_t bufferLen = 0u;
+    char txBuffer[] = "QSPI read and write flash example: Welcome to use HDSC micro chip";
     stc_port_init_t stcPortInit;
 
     /* configure structure initialization */
@@ -523,23 +524,23 @@ int32_t main(void)
     /* Flash initialization */
     QspiFlash_Init();
     /* Get tx buffer length */
-    bufferLen = sizeof(txBuffer);
+    bufferLen = (uint16_t)sizeof(txBuffer);
 
     while (1)
     {
         if (1u == u8ExIntFlag)
         {
-            u8ExIntFlag = 0;
+            u8ExIntFlag = 0u;
             LED0_OFF();
             LED1_OFF();
             /* Erase sector */
             QspiFlash_Erase4KbSector(flashAddr);
             /* Write data to flash */
-            QspiFlash_WritePage(flashAddr, &txBuffer[0], bufferLen);
+            QspiFlash_WritePage(flashAddr, (uint8_t*)&txBuffer[0], bufferLen);
             /* Pointer to flash address map */
             pFlashReadAddr = (uint8_t *)((uint32_t)QSPI_BUS_ADDRESS + flashAddr);
             /* Compare txBuffer and flash */
-            if (memcmp(txBuffer, pFlashReadAddr, bufferLen) != 0)
+            if (memcmp(txBuffer, pFlashReadAddr, (uint32_t)bufferLen) != 0)
             {
                 LED0_ON();
             }
@@ -551,7 +552,7 @@ int32_t main(void)
             flashAddr += FLASH_SRCTOR_SIZE;
             if (flashAddr >= FALSH_MAX_ADDR)
             {
-                flashAddr = 0;
+                flashAddr = 0u;
             }
         }
     }

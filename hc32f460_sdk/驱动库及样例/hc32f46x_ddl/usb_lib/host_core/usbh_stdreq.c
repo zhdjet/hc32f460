@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file implements the standard requests for device enumeration
-	@endlink
+        This file implements the standard requests for device enumeration
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -111,16 +111,16 @@ USBH_Status USBH_Get_DevDesc(USB_OTG_CORE_HANDLE *pdev,
                              uint8_t length)
 {
     USBH_Status status;
-
-    if((status = USBH_GetDescriptor(pdev,
-                                    phost,
-                                    USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD,
-                                    USB_DESC_DEVICE,
-                                    pdev->host.Rx_Buffer,
-                                    length)) == USBH_OK)
+    status = USBH_GetDescriptor(pdev,
+                                phost,
+                                (uint8_t)(USB_REQ_RECIPIENT_DEVICE |USB_REQ_TYPE_STANDARD),
+                                USB_DESC_DEVICE,
+                                pdev->host.Rx_Buffer,
+                                (uint16_t)length);
+    if(status == USBH_OK)
     {
         /* Commands successfully sent and Response Received */
-        USBH_ParseDevDesc(&phost->device_prop.Dev_Desc, pdev->host.Rx_Buffer, length);
+        USBH_ParseDevDesc(&phost->device_prop.Dev_Desc, pdev->host.Rx_Buffer, (uint16_t)length);
     }
     return status;
 }
@@ -144,17 +144,18 @@ USBH_Status USBH_Get_CfgDesc(USB_OTG_CORE_HANDLE *pdev,
 
 {
     USBH_Status status;
-    uint16_t index = 0;
+    uint16_t index = 0u;
 
-    if((status = USBH_GetDescriptor(pdev,
+    status = USBH_GetDescriptor(pdev,
                                     phost,
                                     USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD,
                                     USB_DESC_CONFIGURATION,
                                     pdev->host.Rx_Buffer,
-                                    length)) == USBH_OK)
+                                    length);
+    if(status == USBH_OK)
     {
         /*save Cfg descriptor for class parsing usage */
-        for( ; index < length ; index ++)
+        for(index = 0u ; index < length ; index ++)
         {
             USBH_CfgDesc[index] = pdev->host.Rx_Buffer[index];
         }
@@ -186,13 +187,13 @@ USBH_Status USBH_Get_StringDesc(USB_OTG_CORE_HANDLE *pdev,
                                 uint16_t length)
 {
     USBH_Status status;
-
-    if((status = USBH_GetDescriptor(pdev,
+    status = USBH_GetDescriptor(pdev,
                                     phost,
                                     USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD,
                                     USB_DESC_STRING | string_index,
                                     pdev->host.Rx_Buffer,
-                                    length)) == USBH_OK)
+                                    length);
+    if(status == USBH_OK)
     {
         /* Commands successfully sent and Response Received  */
         USBH_ParseStringDesc(pdev->host.Rx_Buffer,buff, length);
@@ -222,13 +223,13 @@ USBH_Status USBH_GetDescriptor(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bRequest = USB_REQ_GET_DESCRIPTOR;
     phost->Control.setup.b.wValue.w = value_idx;
 
-    if ((value_idx & 0xff00) == USB_DESC_STRING)
+    if ((value_idx & 0xff00u) == USB_DESC_STRING)
     {
-        phost->Control.setup.b.wIndex.w = 0x0409;
+        phost->Control.setup.b.wIndex.w = 0x0409u;
     }
     else
     {
-        phost->Control.setup.b.wIndex.w = 0;
+        phost->Control.setup.b.wIndex.w = 0u;
     }
     phost->Control.setup.b.wLength.w = length;
     return USBH_CtlReq(pdev, phost, buff , length );
@@ -251,10 +252,10 @@ USBH_Status USBH_SetAddress(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bRequest = USB_REQ_SET_ADDRESS;
 
     phost->Control.setup.b.wValue.w = (uint16_t)DeviceAddress;
-    phost->Control.setup.b.wIndex.w = 0;
-    phost->Control.setup.b.wLength.w = 0;
+    phost->Control.setup.b.wIndex.w = 0u;
+    phost->Control.setup.b.wLength.w = 0u;
 
-    return USBH_CtlReq(pdev, phost, 0 , 0 );
+    return USBH_CtlReq(pdev, phost, 0u , 0u );
 }
 
 /**
@@ -272,10 +273,10 @@ USBH_Status USBH_SetCfg(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bmRequestType = USB_H2D | USB_REQ_RECIPIENT_DEVICE | USB_REQ_TYPE_STANDARD;
     phost->Control.setup.b.bRequest = USB_REQ_SET_CONFIGURATION;
     phost->Control.setup.b.wValue.w = cfg_idx;
-    phost->Control.setup.b.wIndex.w = 0;
-    phost->Control.setup.b.wLength.w = 0;
+    phost->Control.setup.b.wIndex.w = 0u;
+    phost->Control.setup.b.wLength.w = 0u;
 
-    return USBH_CtlReq(pdev, phost, 0 , 0 );
+    return USBH_CtlReq(pdev, phost, 0u , 0u );
 }
 
 /**
@@ -295,9 +296,9 @@ USBH_Status USBH_SetInterface(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bRequest = USB_REQ_SET_INTERFACE;
     phost->Control.setup.b.wValue.w = altSetting;
     phost->Control.setup.b.wIndex.w = ep_num;
-    phost->Control.setup.b.wLength.w = 0;
+    phost->Control.setup.b.wLength.w = 0u;
 
-    return USBH_CtlReq(pdev, phost, 0 , 0 );
+    return USBH_CtlReq(pdev, phost, 0u , 0u );
 }
 
 /**
@@ -321,18 +322,18 @@ USBH_Status USBH_ClrFeature(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bRequest = USB_REQ_CLEAR_FEATURE;
     phost->Control.setup.b.wValue.w = FEATURE_SELECTOR_ENDPOINT;
     phost->Control.setup.b.wIndex.w = ep_num;
-    phost->Control.setup.b.wLength.w = 0;
+    phost->Control.setup.b.wLength.w = 0u;
 
     if ((ep_num & USB_REQ_DIR_MASK ) == USB_D2H)
     { /* EP Type is IN */
-        pdev->host.hc[hc_num].toggle_in = 0;
+        pdev->host.hc[hc_num].toggle_in = 0u;
     }
     else
     {/* EP Type is OUT */
-        pdev->host.hc[hc_num].toggle_out = 0;
+        pdev->host.hc[hc_num].toggle_out = 0u;
     }
 
-    return USBH_CtlReq(pdev, phost, 0 , 0 );
+    return USBH_CtlReq(pdev, phost, 0u , 0u );
 }
 
 /**
@@ -348,24 +349,24 @@ static void  USBH_ParseDevDesc (USBH_DevDesc_TypeDef* dev_desc,
                                 uint8_t *buf,
                                 uint16_t length)
 {
-    dev_desc->bLength            = *(uint8_t  *) (buf +  0);
-    dev_desc->bDescriptorType    = *(uint8_t  *) (buf +  1);
-    dev_desc->bcdUSB             = LE16 (buf +  2);
-    dev_desc->bDeviceClass       = *(uint8_t  *) (buf +  4);
-    dev_desc->bDeviceSubClass    = *(uint8_t  *) (buf +  5);
-    dev_desc->bDeviceProtocol    = *(uint8_t  *) (buf +  6);
-    dev_desc->bMaxPacketSize     = *(uint8_t  *) (buf +  7);
+    dev_desc->bLength            = *(uint8_t  *) (buf +  0u);
+    dev_desc->bDescriptorType    = *(uint8_t  *) (buf +  1u);
+    dev_desc->bcdUSB             = LE16 (buf +  2u);
+    dev_desc->bDeviceClass       = *(uint8_t  *) (buf +  4u);
+    dev_desc->bDeviceSubClass    = *(uint8_t  *) (buf +  5u);
+    dev_desc->bDeviceProtocol    = *(uint8_t  *) (buf +  6u);
+    dev_desc->bMaxPacketSize     = *(uint8_t  *) (buf +  7u);
 
-    if (length > 8)
+    if (length > (uint16_t)8)
     { /* For 1st time after device connection, Host may issue only 8 bytes for
         Device Descriptor Length  */
-        dev_desc->idVendor           = LE16 (buf +  8);
-        dev_desc->idProduct          = LE16 (buf + 10);
-        dev_desc->bcdDevice          = LE16 (buf + 12);
-        dev_desc->iManufacturer      = *(uint8_t  *) (buf + 14);
-        dev_desc->iProduct           = *(uint8_t  *) (buf + 15);
-        dev_desc->iSerialNumber      = *(uint8_t  *) (buf + 16);
-        dev_desc->bNumConfigurations = *(uint8_t  *) (buf + 17);
+        dev_desc->idVendor           = LE16 (buf +  8u);
+        dev_desc->idProduct          = LE16 (buf + 10u);
+        dev_desc->bcdDevice          = LE16 (buf + 12u);
+        dev_desc->iManufacturer      = *(uint8_t  *) (buf + 14u);
+        dev_desc->iProduct           = *(uint8_t  *) (buf + 15u);
+        dev_desc->iSerialNumber      = *(uint8_t  *) (buf + 16u);
+        dev_desc->bNumConfigurations = *(uint8_t  *) (buf + 17u);
     }
 }
 
@@ -391,22 +392,22 @@ static void  USBH_ParseCfgDesc (USBH_CfgDesc_TypeDef* cfg_desc,
     USBH_EpDesc_TypeDef           *pep;
     USBH_DescHeader_t             *pdesc = (USBH_DescHeader_t *)buf;
     uint16_t                      ptr;
-    int8_t                        if_ix = 0;
-    int8_t                        ep_ix = 0;
-    static uint16_t               prev_ep_size = 0;
-    static uint8_t                prev_itf = 0;
+    int8_t                        if_ix = (int8_t)0;
+    int8_t                        ep_ix = (int8_t)0;
+    static uint16_t               prev_ep_size = 0u;
+    static uint8_t                prev_itf = 0u;
 
     pdesc   = (USBH_DescHeader_t *)buf;
 
     /* Parse configuration descriptor */
-    cfg_desc->bLength             = *(uint8_t  *) (buf + 0);
-    cfg_desc->bDescriptorType     = *(uint8_t  *) (buf + 1);
-    cfg_desc->wTotalLength        = LE16 (buf + 2);
-    cfg_desc->bNumInterfaces      = *(uint8_t  *) (buf + 4);
-    cfg_desc->bConfigurationValue = *(uint8_t  *) (buf + 5);
-    cfg_desc->iConfiguration      = *(uint8_t  *) (buf + 6);
-    cfg_desc->bmAttributes        = *(uint8_t  *) (buf + 7);
-    cfg_desc->bMaxPower           = *(uint8_t  *) (buf + 8);
+    cfg_desc->bLength             = *(uint8_t  *) (buf + 0u);
+    cfg_desc->bDescriptorType     = *(uint8_t  *) (buf + 1u);
+    cfg_desc->wTotalLength        = LE16 (buf + 2u);
+    cfg_desc->bNumInterfaces      = *(uint8_t  *) (buf + 4u);
+    cfg_desc->bConfigurationValue = *(uint8_t  *) (buf + 5u);
+    cfg_desc->iConfiguration      = *(uint8_t  *) (buf + 6u);
+    cfg_desc->bmAttributes        = *(uint8_t  *) (buf + 7u);
+    cfg_desc->bMaxPower           = *(uint8_t  *) (buf + 8u);
 
     if (length > USB_CONFIGURATION_DESC_SIZE)
     {
@@ -414,39 +415,39 @@ static void  USBH_ParseCfgDesc (USBH_CfgDesc_TypeDef* cfg_desc,
 
         if ( cfg_desc->bNumInterfaces <= USBH_MAX_NUM_INTERFACES)
         {
-            pif = (USBH_InterfaceDesc_TypeDef *)0;
+            pif = (USBH_InterfaceDesc_TypeDef *)0u;
 
             while (ptr < cfg_desc->wTotalLength )
             {
                 pdesc = USBH_GetNextDesc((uint8_t *)pdesc, &ptr);
                 if (pdesc->bDescriptorType   == USB_DESC_TYPE_INTERFACE)
                 {
-                    if_ix             = *(((uint8_t *)pdesc ) + 2);
+                    if_ix             = (int8_t)*(((uint8_t *)pdesc ) + 2u);
                     pif               = &itf_desc[if_ix];
 
-                    if((*((uint8_t *)pdesc + 3)) < 3)
+                    if((*((uint8_t *)pdesc + 3u)) < 3u)
                     {
                         USBH_ParseInterfaceDesc (&temp_pif, (uint8_t *)pdesc);
-                        ep_ix = 0;
+                        ep_ix = (int8_t)0;
 
                         /* Parse Ep descriptors relative to the current interface */
                         if(temp_pif.bNumEndpoints <= USBH_MAX_NUM_ENDPOINTS)
                         {
-                            while (ep_ix < temp_pif.bNumEndpoints)
+                            while (ep_ix < (int8_t)temp_pif.bNumEndpoints)
                             {
                                 pdesc = USBH_GetNextDesc((void* )pdesc, &ptr);
                                 if (pdesc->bDescriptorType   == USB_DESC_TYPE_ENDPOINT)
                                 {
                                     pep               = &ep_desc[if_ix][ep_ix];
 
-                                    if(prev_itf != if_ix)
+                                    if(prev_itf != (uint8_t)if_ix)
                                     {
-                                        prev_itf = if_ix;
+                                        prev_itf = (uint8_t)if_ix;
                                         USBH_ParseInterfaceDesc (pif, (uint8_t *)&temp_pif);
                                     }
                                     else
                                     {
-                                        if(prev_ep_size > LE16((uint8_t *)pdesc + 4))
+                                        if(prev_ep_size > LE16((uint8_t *)pdesc + 4u))
                                         {
                                             break;
                                         }
@@ -456,7 +457,7 @@ static void  USBH_ParseCfgDesc (USBH_CfgDesc_TypeDef* cfg_desc,
                                         }
                                     }
                                     USBH_ParseEPDesc (pep, (uint8_t *)pdesc);
-                                    prev_ep_size = LE16((uint8_t *)pdesc + 4);
+                                    prev_ep_size = LE16((uint8_t *)pdesc + 4u);
                                     ep_ix++;
                                 }
                             }
@@ -465,8 +466,8 @@ static void  USBH_ParseCfgDesc (USBH_CfgDesc_TypeDef* cfg_desc,
                 }
             }
         }
-        prev_ep_size = 0;
-        prev_itf = 0;
+        prev_ep_size = 0u;
+        prev_itf = 0u;
     }
 }
 
@@ -482,15 +483,15 @@ static void  USBH_ParseCfgDesc (USBH_CfgDesc_TypeDef* cfg_desc,
 static void  USBH_ParseInterfaceDesc (USBH_InterfaceDesc_TypeDef *if_descriptor,
                                       uint8_t *buf)
 {
-    if_descriptor->bLength            = *(uint8_t  *) (buf + 0);
-    if_descriptor->bDescriptorType    = *(uint8_t  *) (buf + 1);
-    if_descriptor->bInterfaceNumber   = *(uint8_t  *) (buf + 2);
-    if_descriptor->bAlternateSetting  = *(uint8_t  *) (buf + 3);
-    if_descriptor->bNumEndpoints      = *(uint8_t  *) (buf + 4);
-    if_descriptor->bInterfaceClass    = *(uint8_t  *) (buf + 5);
-    if_descriptor->bInterfaceSubClass = *(uint8_t  *) (buf + 6);
-    if_descriptor->bInterfaceProtocol = *(uint8_t  *) (buf + 7);
-    if_descriptor->iInterface         = *(uint8_t  *) (buf + 8);
+    if_descriptor->bLength            = *(uint8_t  *) (buf + 0u);
+    if_descriptor->bDescriptorType    = *(uint8_t  *) (buf + 1u);
+    if_descriptor->bInterfaceNumber   = *(uint8_t  *) (buf + 2u);
+    if_descriptor->bAlternateSetting  = *(uint8_t  *) (buf + 3u);
+    if_descriptor->bNumEndpoints      = *(uint8_t  *) (buf + 4u);
+    if_descriptor->bInterfaceClass    = *(uint8_t  *) (buf + 5u);
+    if_descriptor->bInterfaceSubClass = *(uint8_t  *) (buf + 6u);
+    if_descriptor->bInterfaceProtocol = *(uint8_t  *) (buf + 7u);
+    if_descriptor->iInterface         = *(uint8_t  *) (buf + 8u);
 }
 
 /**
@@ -504,12 +505,12 @@ static void  USBH_ParseInterfaceDesc (USBH_InterfaceDesc_TypeDef *if_descriptor,
 static void  USBH_ParseEPDesc (USBH_EpDesc_TypeDef  *ep_descriptor,
                                uint8_t *buf)
 {
-    ep_descriptor->bLength          = *(uint8_t  *) (buf + 0);
-    ep_descriptor->bDescriptorType  = *(uint8_t  *) (buf + 1);
-    ep_descriptor->bEndpointAddress = *(uint8_t  *) (buf + 2);
-    ep_descriptor->bmAttributes     = *(uint8_t  *) (buf + 3);
-    ep_descriptor->wMaxPacketSize   = LE16(buf + 4);
-    ep_descriptor->bInterval        = *(uint8_t  *) (buf + 6);
+    ep_descriptor->bLength          = *(uint8_t  *) (buf + 0u);
+    ep_descriptor->bDescriptorType  = *(uint8_t  *) (buf + 1u);
+    ep_descriptor->bEndpointAddress = *(uint8_t  *) (buf + 2u);
+    ep_descriptor->bmAttributes     = *(uint8_t  *) (buf + 3u);
+    ep_descriptor->wMaxPacketSize   = LE16(buf + 4u);
+    ep_descriptor->bInterval        = *(uint8_t  *) (buf + 6u);
 }
 
 /**
@@ -538,15 +539,15 @@ static void USBH_ParseStringDesc (uint8_t* psrc,
     {   /* Make sure the Descriptor is String Type */
 
         /* psrc[0] contains Size of Descriptor, subtract 2 to get the length of string */
-        strlength = ( ( (psrc[0]-2) <= length) ? (psrc[0]-2) :length);
-        psrc += 2; /* Adjust the offset ignoring the String Len and Descriptor type */
+        strlength = (( ((uint16_t)psrc[0])-2u) <= length) ? (((uint16_t)psrc[0])-2u) : length;
+        psrc += 2u; /* Adjust the offset ignoring the String Len and Descriptor type */
 
-        for (idx = 0; idx < strlength; idx+=2 )
+        for (idx = 0u; idx < strlength; idx+=2u )
         {/* Copy Only the string and ignore the UNICODE ID, hence add the src */
             *pdest =  psrc[idx];
             pdest++;
         }
-        *pdest = 0; /* mark end of string */
+        *pdest = 0u; /* mark end of string */
     }
 }
 

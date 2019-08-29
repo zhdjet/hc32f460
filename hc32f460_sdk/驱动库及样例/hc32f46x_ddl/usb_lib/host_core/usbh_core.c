@@ -44,9 +44,9 @@
  **
  ** A detailed description is available at
  ** @link
-		This file implements the functions for the core state machine process
+        This file implements the functions for the core state machine process
     the enumeration and the control transfer process
-	@endlink
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -84,9 +84,9 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost);
  ******************************************************************************/
 USBH_HCD_INT_cb_TypeDef USBH_HCD_INT_cb =
 {
-    USBH_SOF,
-    USBH_Connected,
-    USBH_Disconnected,
+    &USBH_SOF,
+    &USBH_Connected,
+    &USBH_Disconnected,
 };
 
 /*******************************************************************************
@@ -107,8 +107,8 @@ USBH_HCD_INT_cb_TypeDef  *USBH_HCD_INT_fops = &USBH_HCD_INT_cb;
  ******************************************************************************/
 uint8_t USBH_Connected (USB_OTG_CORE_HANDLE *pdev)
 {
-    pdev->host.ConnSts = 1;
-    return 0;
+    pdev->host.ConnSts = 1u;
+    return 0u;
 }
 
 /**
@@ -120,8 +120,8 @@ uint8_t USBH_Connected (USB_OTG_CORE_HANDLE *pdev)
  ******************************************************************************/
 uint8_t USBH_Disconnected (USB_OTG_CORE_HANDLE *pdev)
 {
-    pdev->host.ConnSts = 0;
-    return 0;
+    pdev->host.ConnSts = 0u;
+    return 0u;
 }
 
 /**
@@ -134,7 +134,7 @@ uint8_t USBH_Disconnected (USB_OTG_CORE_HANDLE *pdev)
 uint8_t USBH_SOF (USB_OTG_CORE_HANDLE *pdev)
 {
     /* This callback could be used to implement a scheduler process */
-    return 0;
+    return 0u;
 }
 /**
  *******************************************************************************
@@ -209,19 +209,22 @@ USBH_Status USBH_DeInit(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
 void USBH_Process(USB_OTG_CORE_HANDLE *pdev , USBH_HOST *phost)
 {
     volatile USBH_Status status = USBH_FAIL;
-    static  int tet = 0;
+    static  int tet = (int)0;
     /* check for Host port events */
-    if ((HCD_IsDeviceConnected(pdev) == 0)&& (phost->gState != HOST_IDLE))
+    if ((HCD_IsDeviceConnected(pdev) == 0ul)&& (phost->gState != HOST_IDLE))
     {
         if(phost->gState != HOST_DEV_DISCONNECTED)
         {
-            if (phost->device_prop.speed == USB_SPEED_LOW && phost->gState == HOST_DEV_ATTACHED)
+            if ((phost->device_prop.speed == USB_SPEED_LOW) && (phost->gState == HOST_DEV_ATTACHED))
             {
                 phost->gState = HOST_DEV_ATTACHED;
             }
             else
             {
-                if(tet == 0) phost->gState = HOST_DEV_DISCONNECTED;
+                if(tet == (int)0)
+                {
+                    phost->gState = HOST_DEV_DISCONNECTED;
+                }
             }
         }
     }
@@ -232,22 +235,23 @@ void USBH_Process(USB_OTG_CORE_HANDLE *pdev , USBH_HOST *phost)
             if (HCD_IsDeviceConnected(pdev))
             {
             phost->gState = HOST_DEV_ATTACHED;
-            USB_OTG_BSP_mDelay(100);
+            USB_OTG_BSP_mDelay(100ul);
             }
             break;
 
         case HOST_DEV_ATTACHED :
             phost->usr_cb->DeviceAttached();
-            phost->Control.hc_num_out = USBH_Alloc_Channel(pdev, 0x00);
-            phost->Control.hc_num_in = USBH_Alloc_Channel(pdev, 0x80);
+            phost->Control.hc_num_out = USBH_Alloc_Channel(pdev, 0x00u);
+            phost->Control.hc_num_in = USBH_Alloc_Channel(pdev, 0x80u);
 
             /* Reset USB Device */
-            if ( HCD_ResetPort(pdev) == 0)
-            {
+            //if ( HCD_ResetPort(pdev) == 0) /* MISRAC 2004*/
+            HCD_ResetPort(pdev);
+            //{
                 phost->usr_cb->ResetDevice();
                 /*  Wait for USB USBH_ISR_PrtEnDisableChange()
                 Host is Now ready to start the Enumeration  */
-                phost->device_prop.speed = HCD_GetCurrentSpeed(pdev);
+                phost->device_prop.speed = (uint8_t)HCD_GetCurrentSpeed(pdev);
 
                 phost->gState = HOST_ENUMERATION;
                 phost->usr_cb->DeviceSpeedDetected(phost->device_prop.speed);
@@ -258,7 +262,7 @@ void USBH_Process(USB_OTG_CORE_HANDLE *pdev , USBH_HOST *phost)
                                     phost->device_prop.address,
                                     phost->device_prop.speed,
                                     EP_TYPE_CTRL,
-                                    phost->Control.ep0size);
+                                (uint16_t)phost->Control.ep0size);
 
                 /* Open Control pipes */
                 USBH_Open_Channel (pdev,
@@ -266,8 +270,8 @@ void USBH_Process(USB_OTG_CORE_HANDLE *pdev , USBH_HOST *phost)
                                     phost->device_prop.address,
                                     phost->device_prop.speed,
                                     EP_TYPE_CTRL,
-                                    phost->Control.ep0size);
-            }
+                                (uint16_t)phost->Control.ep0size);
+            //}
             break;
 
         case HOST_ENUMERATION:
@@ -355,6 +359,10 @@ void USBH_ErrorHandle(USBH_HOST *phost, USBH_Status errType)
         /* user callback for initalization */
         phost->usr_cb->Init();
     }
+    else
+    {
+        //
+    }
 }
 
 /**
@@ -373,7 +381,7 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
     {
         case ENUM_IDLE:
             /* Get Device Desc for only 1st 8 bytes : To get EP0 MaxPacketSize */
-            if ( USBH_Get_DevDesc(pdev , phost, 8) == USBH_OK)
+            if ( USBH_Get_DevDesc(pdev , phost, 8u) == USBH_OK)
             {
                 phost->Control.ep0size = phost->device_prop.Dev_Desc.bMaxPacketSize;
 
@@ -384,16 +392,16 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                 /* modify control channels configuration for MaxPacket size */
                 USBH_Modify_Channel (pdev,
                                         phost->Control.hc_num_out,
-                                        0,
-                                        0,
-                                        0,
-                                        phost->Control.ep0size);
+                                        0u,
+                                        0u,
+                                        0u,
+                                        (uint16_t)phost->Control.ep0size);
                 USBH_Modify_Channel (pdev,
                                         phost->Control.hc_num_in,
-                                        0,
-                                        0,
-                                        0,
-                                        phost->Control.ep0size);
+                                        0u,
+                                        0u,
+                                        0u,
+                                        (uint16_t)phost->Control.ep0size);
             }
             break;
         case ENUM_GET_FULL_DEV_DESC:
@@ -409,7 +417,7 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             /* set address */
             if ( USBH_SetAddress(pdev, phost, USBH_DEVICE_ADDRESS) == USBH_OK)
             {
-                USB_OTG_BSP_mDelay(2);
+                USB_OTG_BSP_mDelay(2ul);
                 phost->device_prop.address = USBH_DEVICE_ADDRESS;
 
                 /* user callback for device address assigned */
@@ -420,16 +428,16 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                 USBH_Modify_Channel (pdev,
                                         phost->Control.hc_num_in,
                                         phost->device_prop.address,
-                                        0,
-                                        0,
-                                        0);
+                                        0u,
+                                        0u,
+                                        0u);
 
                 USBH_Modify_Channel (pdev,
                                         phost->Control.hc_num_out,
                                         phost->device_prop.address,
-                                        0,
-                                        0,
-                                        0);
+                                        0u,
+                                        0u,
+                                        0u);
             }
             break;
         case ENUM_GET_CFG_DESC:
@@ -452,14 +460,14 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             }
             break;
         case ENUM_GET_MFC_STRING_DESC:
-            if (phost->device_prop.Dev_Desc.iManufacturer != 0)
+            if (phost->device_prop.Dev_Desc.iManufacturer != (uint8_t)0)
             {
                 /* Check that Manufacturer String is available */
                 if ( USBH_Get_StringDesc(pdev,
                                             phost,
                                             phost->device_prop.Dev_Desc.iManufacturer,
                                             Local_Buffer ,
-                                            0xff) == USBH_OK)
+                                            0xffu) == USBH_OK)
                 {
                     /* User callback for Manufacturing string */
                     phost->usr_cb->ManufacturerString(Local_Buffer);
@@ -473,14 +481,14 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             }
             break;
         case ENUM_GET_PRODUCT_STRING_DESC:
-            if (phost->device_prop.Dev_Desc.iProduct != 0)
+            if (phost->device_prop.Dev_Desc.iProduct != (uint8_t)0)
             {
                 /* Check that Product string is available */
                 if ( USBH_Get_StringDesc(pdev,
                                             phost,
                                             phost->device_prop.Dev_Desc.iProduct,
                                             Local_Buffer,
-                                            0xff) == USBH_OK)
+                                            0xffu) == USBH_OK)
                 {
                     /* User callback for Product string */
                     phost->usr_cb->ProductString(Local_Buffer);
@@ -494,14 +502,14 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             }
             break;
         case ENUM_GET_SERIALNUM_STRING_DESC:
-            if (phost->device_prop.Dev_Desc.iSerialNumber != 0)
+            if (phost->device_prop.Dev_Desc.iSerialNumber != (uint8_t)0)
             {
                     /* Check that Serial number string is available */
                 if ( USBH_Get_StringDesc(pdev,
                                             phost,
                                             phost->device_prop.Dev_Desc.iSerialNumber,
                                             Local_Buffer,
-                                            0xff) == USBH_OK)
+                                            0xffu) == USBH_OK)
                 {
                     /* User callback for Serial number string */
                     phost->usr_cb->SerialNumString(Local_Buffer);
@@ -517,7 +525,7 @@ static USBH_Status USBH_HandleEnum(USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
         case ENUM_SET_CONFIGURATION:
             /* set configuration  (default config) */
             if (USBH_SetCfg(pdev, phost,
-                            phost->device_prop.Cfg_Desc.bConfigurationValue) == USBH_OK)
+                            (uint16_t)phost->device_prop.Cfg_Desc.bConfigurationValue) == USBH_OK)
             {
                 phost->EnumState = ENUM_DEV_CONFIGURED;
             }
@@ -557,8 +565,8 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             phost->Control.setup.d8 ,
             phost->Control.hc_num_out);
             phost->Control.state = CTRL_SETUP_WAIT;
-            timeout = DATA_STAGE_TIMEOUT * 6;
-            phost->Control.timer = HCD_GetCurrentFrame(pdev);
+            timeout = DATA_STAGE_TIMEOUT * 6u;
+            phost->Control.timer = (uint16_t)HCD_GetCurrentFrame(pdev);
             break;
         case CTRL_SETUP_WAIT:
             URB_Status = HCD_GetURB_State(pdev , phost->Control.hc_num_out);
@@ -567,7 +575,7 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             {
                 direction = (phost->Control.setup.b.bmRequestType & USB_REQ_DIR_MASK);
                 /* check if there is a data stage */
-                if (phost->Control.setup.b.wLength.w != 0 )
+                if (phost->Control.setup.b.wLength.w != 0u )
                 {
                     timeout = DATA_STAGE_TIMEOUT;
                     if (direction == USB_D2H)
@@ -598,7 +606,7 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                     }
                 }
                 /* Set the delay timer to enable timeout for data stage completion */
-                phost->Control.timer = HCD_GetCurrentFrame(pdev);
+                phost->Control.timer = (uint16_t)HCD_GetCurrentFrame(pdev);
             }
             else if(URB_Status == URB_ERROR)
             {
@@ -609,6 +617,11 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             {
                 printf("Device not responding\n");
             }
+            else
+            {
+                //
+            }
+
             break;
 
         case CTRL_DATA_IN:
@@ -642,10 +655,14 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                 /* timeout for IN transfer */
                 phost->Control.state = CTRL_ERROR;
             }
+            else
+            {
+                //
+            }
             break;
         case CTRL_DATA_OUT:
             /* Start DATA out transfer (only one DATA packet)*/
-            pdev->host.hc[phost->Control.hc_num_out].toggle_out = 1;
+            pdev->host.hc[phost->Control.hc_num_out].toggle_out = (uint8_t)1;
 
             USBH_CtlSendData (pdev,
             phost->Control.buff,
@@ -676,12 +693,16 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                 /* device error */
                 phost->Control.state = CTRL_ERROR;
             }
+            else
+            {
+                //
+            }
             break;
         case CTRL_STATUS_IN:
             /* Send 0 bytes out packet */
             USBH_CtlReceiveData (pdev,
-                                 0,
-                                 0,
+                                 0u,
+                                 0u,
                                  phost->Control.hc_num_in);
             phost->Control.state = CTRL_STATUS_IN_WAIT;
             break;
@@ -707,12 +728,16 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
                 phost->Control.status = CTRL_STALL;
                 status = USBH_NOT_SUPPORTED;
             }
+            else
+            {
+                //
+            }
             break;
         case CTRL_STATUS_OUT:
-            pdev->host.hc[phost->Control.hc_num_out].toggle_out ^= 1;
+            pdev->host.hc[phost->Control.hc_num_out].toggle_out ^= (uint8_t)1;
             USBH_CtlSendData (pdev,
-                                0,
-                                0,
+                                0u,
+                                0u,
                                 phost->Control.hc_num_out);
             phost->Control.state = CTRL_STATUS_OUT_WAIT;
             break;
@@ -731,6 +756,10 @@ USBH_Status USBH_HandleControl (USB_OTG_CORE_HANDLE *pdev, USBH_HOST *phost)
             else if (URB_Status == URB_ERROR)
             {
                 phost->Control.state = CTRL_ERROR;
+            }
+            else
+            {
+                //
             }
             break;
         case CTRL_ERROR:

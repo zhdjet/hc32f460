@@ -1,5 +1,8 @@
 version     date            comment
-1.0.4       
+1.1.0       Aug 29, 2019    1. modify DDL code for C-STAT and MISRA-2004 warning. 
+                            2. add RAM3 wait-time in startup_hc32f46x.s
+
+1.0.4
             July 31, 2019   1.Fix bug for i2c_at24c02 example.
 
             July 29, 2019   1.modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
@@ -12,11 +15,6 @@ version     date            comment
                               modify device class name from "vcp" to "cdc_vcp"
                             4.Add example hid_custom.
                               Add example composite device cdc_hid
-
-            July 17, 2019   1. push usb_cdc_vcp sample
-                            2. modify *.ini file for MDK
-                            3. modify project setting files due to sram configure
-                            4. sync *.sfr with trunk
 
             July 16, 2019   1. modified CMP driver enumeration en_cmp_inp4_sel_t
                             2. modify spelling mistake for "position"

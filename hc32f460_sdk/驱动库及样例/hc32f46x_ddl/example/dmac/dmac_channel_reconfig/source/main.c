@@ -62,34 +62,37 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* DMAC */
-#define DMA_UNIT                M4_DMA2
-#define DMA_CH                  DmaCh0
+/* DMA_UNIT_NUM = 1 means M4_DMA1, DMA_UNIT_NUM = 2 means  M4_DMA2. */
+#define DMA_UNIT_INDEX          (2u)
+
+#define DMA_UNIT                (M4_DMA2)
+#define DMA_CH                  (DmaCh0)
 #define DMA_TRNCNT              (20u)
 #define DMA_BLKSIZE             (1u)
 #define DMA_RPTB_SIZE           (5u)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 definition */
-#define LED0_ON()               PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
+#define LED0_ON()               (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
 
-#define LED1_ON()               PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED1_ON()               (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
-#define KEY0_PORT               PortD
-#define KEY0_PIN                Pin03
+#define KEY0_PORT               (PortD)
+#define KEY0_PIN                (Pin03)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
-uint8_t u8CmpRet = 1;
+int32_t CmpRet = 1;
 /*******************************************************************************
  * Local function prototypes ('static')
  ******************************************************************************/
@@ -101,7 +104,7 @@ static const uint32_t u32SrcBuf[22] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                        11, 12, 13, 14, 15, 16, 17, 18,
                                        19, 20, 21, 22};
 static uint32_t u32DstBuf[22] = {0};
-static uint32_t u32ExpectDstBufData[22] = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5};
+
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -147,6 +150,7 @@ static void Led_Init(void)
  ******************************************************************************/
 void ExtInt03_Callback(void)
 {
+    static uint32_t u32ExpectDstBufData[22] = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5};
     EXINT_IrqFlgClr(ExtiCh03);
     AOS_SW_Trigger();
 
@@ -154,7 +158,7 @@ void ExtInt03_Callback(void)
     {
         AOS_SW_Trigger();
     }
-    u8CmpRet = memcmp(u32DstBuf, u32ExpectDstBufData, sizeof(u32DstBuf));
+    CmpRet = memcmp(u32DstBuf, u32ExpectDstBufData, sizeof(u32DstBuf));
 }
 /**
  *******************************************************************************
@@ -165,7 +169,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -195,7 +199,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -274,7 +278,7 @@ void Dma_ReCfgInit(void)
     /* Disable LLP */
     stcDmaReCfg.enReCfgLlp = Disable;
     /* re_config destination repeat size */
-    stcDmaReCfg.u16DesRptBSize = DMA_RPTB_SIZE + 5;
+    stcDmaReCfg.u16DesRptBSize = DMA_RPTB_SIZE + 5u;
     /* re_config source repeat size */
     stcDmaReCfg.u16SrcRptBSize = DMA_RPTB_SIZE;
 
@@ -298,14 +302,12 @@ int32_t main(void)
     Sw2_Init();
 
     /* Enable DMA clock. */
-    if(DMA_UNIT == M4_DMA1)
-    {
+#if (DMA_UNIT_INDEX == 1u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA1,Enable);
-    }
-    else if(DMA_UNIT == M4_DMA2)
-    {
+#endif
+#if (DMA_UNIT_INDEX == 2u)
         PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_DMA2,Enable);
-    }
+#endif
 
     /* Enable DMA. */
     DMA_Cmd(DMA_UNIT,Enable);
@@ -328,7 +330,10 @@ int32_t main(void)
     DMA_SetReConfigTriggerSrc(EVT_PORT_EIRQ3);
 
     /* SW2 */
-    while(0 != PORT_GetBit(KEY0_PORT, KEY0_PIN));
+    while(0 != PORT_GetBit(KEY0_PORT, KEY0_PIN))
+    {
+        ;
+    }
 
     while(Set != DMA_GetIrqFlag(DMA_UNIT,DMA_CH, TrnCpltIrq))
     {
@@ -336,7 +341,7 @@ int32_t main(void)
     }
 
 
-    if(0 == u8CmpRet)
+    if(0 == CmpRet)
     {
         LED1_ON();    /* Meet the expected */
     }
@@ -345,7 +350,10 @@ int32_t main(void)
         LED0_ON();    /* Don't meet the expected */
     }
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

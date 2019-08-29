@@ -65,44 +65,44 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Define if need play by speaker*/
-#define SPEAKER_ON      1
+#define SPEAKER_ON                  (true)
 /* Define if use exclk */
-#define EXCK_ON         1
+#define EXCK_ON                     (true)
 /* Define I2C unit used for the example */
-#define I2C_CH                          M4_I2C2
+#define I2C_CH                      (M4_I2C2)
 /* Define port and pin for SDA and SCL */
-#define I2C2_SCL_PORT                   PortD
-#define I2C2_SCL_PIN                    Pin00
-#define I2C2_SDA_PORT                   PortD
-#define I2C2_SDA_PIN                    Pin01
+#define I2C2_SCL_PORT               (PortD)
+#define I2C2_SCL_PIN                (Pin00)
+#define I2C2_SDA_PORT               (PortD)
+#define I2C2_SDA_PIN                (Pin01)
 /* Define I2S unit used for the example */
-#define I2S_CH                          M4_I2S3
+#define I2S_CH                      (M4_I2S3)
 /* Define port and pin for i2s1 function */
-#ifdef EXCK_ON
+#if(EXCK_ON)
 /* if exck enable*/
-#define I2S3_PORT                       PortB
-#define I2S3_WS_PIN                     Pin13
-#define I2S3_SD_PIN                     Pin14
-#define I2S3_SD_IN_PIN                  Pin15
-#define I2S3_CK_PIN                     Pin12
-#define I2S3_EXCK_PORT                  PortB
-#define I2S3_EXCK_PIN                   Pin10
+#define I2S3_PORT                   (PortB)
+#define I2S3_WS_PIN                 (Pin13)
+#define I2S3_SD_PIN                 (Pin14)
+#define I2S3_SD_IN_PIN              (Pin15)
+#define I2S3_CK_PIN                 (Pin12)
+#define I2S3_EXCK_PORT              (PortB)
+#define I2S3_EXCK_PIN               (Pin10)
 #else
 /* if exck disable */
-#define I2S3_PORT                       PortB
-#define I2S3_WS_PIN                     Pin13
-#define I2S3_SD_PIN                     Pin14
-#define I2S3_SD_IN_PIN                  Pin15
-#define I2S3_CK_PIN                     Pin10
-#define I2S3_MCK_PORT                   PortB
-#define I2S3_MCK_PIN                    Pin12
+#define I2S3_PORT                   (PortB)
+#define I2S3_WS_PIN                 (Pin13)
+#define I2S3_SD_PIN                 (Pin14)
+#define I2S3_SD_IN_PIN              (Pin15)
+#define I2S3_CK_PIN                 (Pin10)
+#define I2S3_MCK_PORT               (PortB)
+#define I2S3_MCK_PIN                (Pin12)
 #endif
 
-#define SPK_EN_PORT                     PortB
-#define SPK_EN_PIN                      Pin00
+#define SPK_EN_PORT                 (PortB)
+#define SPK_EN_PIN                  (Pin00)
 
-#define SPEAKER_EN()                    PORT_SetBits(SPK_EN_PORT, SPK_EN_PIN)
-#define SPEAKER_DISEN()                 PORT_ResetBits(SPK_EN_PORT, SPK_EN_PIN)
+#define SPEAKER_EN()                (PORT_SetBits(SPK_EN_PORT, SPK_EN_PIN))
+#define SPEAKER_DISEN()             (PORT_ResetBits(SPK_EN_PORT, SPK_EN_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -124,7 +124,10 @@ const uint16_t *pu16SoundData=&au16PixieDustSoundI2s_8[0];
 
 void delay(uint32_t u32Tmp)
 {
-    while(u32Tmp--);
+    while(u32Tmp--)
+    {
+        ;
+    }
 }
 
 /**
@@ -166,11 +169,11 @@ static void SysClkIni(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln    =42ul;
+    stcMpllCfg.PllpDiv = 2ul;
+    stcMpllCfg.PllqDiv = 2ul;
+    stcMpllCfg.PllrDiv = 2ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -182,10 +185,71 @@ static void SysClkIni(void)
     /* Enable MPLL. */
     CLK_MpllCmd(Enable);
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
+}
+
+/**
+ *******************************************************************************
+ ** \brief  Get I2S clock frequency.
+ **
+ ** \param  [in] pstcI2sReg             Pointer to I2S register
+ ** \arg    M4_I2S1                     I2s channel 1
+ ** \arg    M4_I2S2                     I2s channel 2
+ ** \arg    M4_I2S3                     I2s channel 3
+ ** \arg    M4_I2S4                     I2s channel 4
+ **
+ ** \retval uint32_t                    The  I2S clock frequency.
+ **
+ ** \note   None
+ **
+ ******************************************************************************/
+uint32_t GetI2SClkFreq(M4_I2S_TypeDef* pstcI2sReg)
+{
+    en_clk_peri_source_t enSrc = ClkPeriSrcPclk;
+    uint32_t u32Freq = 0ul;
+    stc_clk_freq_t stcClkFreq;
+    stc_pll_clk_freq_t stcPllClkFreq;
+
+    /* Check parameters */
+    if(NULL != pstcI2sReg)
+    {
+        enSrc = CLK_GetI2sClkSource(pstcI2sReg);
+        CLK_GetClockFreq(&stcClkFreq);
+        CLK_GetPllClockFreq(&stcPllClkFreq);
+        switch(enSrc)
+        {
+            case ClkPeriSrcPclk:
+                u32Freq = stcClkFreq.pclk3Freq;
+                break;
+            case ClkPeriSrcMpllp:
+                u32Freq = stcPllClkFreq.mpllp;
+                break;
+            case ClkPeriSrcMpllq:
+                u32Freq = stcPllClkFreq.mpllq;
+                break;
+            case ClkPeriSrcMpllr:
+                u32Freq = stcPllClkFreq.mpllr;
+                break;
+            case ClkPeriSrcUpllp:
+                u32Freq = stcPllClkFreq.upllp;
+                break;
+            case ClkPeriSrcUpllq:
+                u32Freq = stcPllClkFreq.upllq;
+                break;
+            case ClkPeriSrcUpllr:
+                u32Freq = stcPllClkFreq.upllr;
+                break;
+            default:
+                break;
+        }
+    }
+    return u32Freq;
 }
 
 /**
@@ -196,11 +260,16 @@ static void SysClkIni(void)
 void I2sTxFifoCallback(void)
 {
     uint16_t u16Data;
+    uint32_t Adr1 = 0ul, Adr2 = 0ul;
 
     u16Data =  *pu16SoundData++;
-    I2S_SendData(I2S_CH, u16Data);
+    I2S_SendData(I2S_CH, (uint32_t)u16Data);
 
-    if(u32WavLen_8k == (pu16SoundData - &au16PixieDustSoundI2s_8[0]))
+    Adr1 = (uint32_t)pu16SoundData;
+    Adr2 = (uint32_t)&au16PixieDustSoundI2s_8[0];
+
+    //if(u32WavLen_8k == (pu16SoundData - &au16PixieDustSoundI2s_8[0]))   /* C-STAT MISRAC2004-17.2 */
+    if(u32WavLen_8k <= (Adr1 - Adr2))
     {
         pu16SoundData = &au16PixieDustSoundI2s_8[0];
     }
@@ -247,10 +316,10 @@ int32_t main(void)
     stcWm8731Reg.RLIN_f.RINMUTE     = 1u;       // Enable right channel line input mute
     stcWm8731Reg.RLIN_f.RINBOTH     = 0u;       // Disable simultaneous input volume and mute load from right to left
     /* Left & right headphone output */
-    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5F;     // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.LHOUT_f.LHPVOL     = 0x5Fu;    // Set volume of left headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.LHOUT_f.LZCEN      = 0u;       // Disable left channel zero cross detect
     stcWm8731Reg.LHOUT_f.LRHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from left to right
-    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5F;     // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
+    stcWm8731Reg.RHOUT_f.RHPVOL     = 0x5Fu;    // Set volume of right headphone to 0dB. 0x30(-73dB) ~ 0x7F(+6dB), 0 ~ 0x2F: mute
     stcWm8731Reg.RHOUT_f.RZCEN      = 0u;       // Enable right channel zero cross detect
     stcWm8731Reg.RHOUT_f.RLHPBOTH   = 0u;       // Disable simultaneous output volume and mute load from right to left
     /* Analog audio path control */
@@ -292,11 +361,9 @@ int32_t main(void)
     // Active control
     stcWm8731Reg.AC_f.ACTIVE        = 1u;       // 0: inactive, 1: active
 
-    if(Ok != WM8731_Init(I2C_CH, &stcWm8731Reg))
-    {
-        while(1);
-    }
-    WM8731_SetHpVolume(I2C_CH, 0x7F,0x7F);  //0x2F-MUTE ~ 0x7F Maximum
+    WM8731_Init(I2C_CH, &stcWm8731Reg);
+
+    WM8731_SetHpVolume(I2C_CH, 0x7Fu,0x7Fu);    //0x2F-MUTE ~ 0x7F Maximum
 
     /* Initialize i2s port for codec wm8731 play function */
     MEM_ZERO_STRUCT(stcPortIni);
@@ -311,7 +378,7 @@ int32_t main(void)
     PORT_SetFunc(I2S3_PORT, I2S3_WS_PIN, Func_I2s3_Ws, Disable);
     PORT_SetFunc(I2S3_PORT, I2S3_SD_PIN, Func_I2s3_Sd, Disable);
     PORT_SetFunc(I2S3_PORT, I2S3_SD_IN_PIN, Func_I2s3_Sdin, Disable);
-#ifdef EXCK_ON
+#if(EXCK_ON)
     PORT_Init(I2S3_EXCK_PORT, I2S3_EXCK_PIN, &stcPortIni);
     PORT_SetFunc(I2S3_EXCK_PORT, I2S3_EXCK_PIN, Func_I2s, Disable);
 #else
@@ -319,7 +386,7 @@ int32_t main(void)
     PORT_SetFunc(I2S3_MCK_PORT, I2S3_MCK_PIN, Func_I2s, Disable);
 #endif
 
-#ifdef SPEAKER_ON
+#if(SPEAKER_ON)
     /* Initialize SPK_EN port for speaker */
     MEM_ZERO_STRUCT(stcPortIni);
     stcPortIni.enPinMode = Pin_Mode_Out;
@@ -334,12 +401,13 @@ int32_t main(void)
     CLK_SetI2sClkSource(I2S_CH, ClkPeriSrcMpllp);
     /* Config i2s peripheral */
     I2s_DeInit(I2S_CH);
+    stcI2sCfg.u32I2sInterClkFreq = GetI2SClkFreq(I2S_CH);
     stcI2sCfg.enStandrad = Std_Philips;
     stcI2sCfg.enMode = I2sMaster;
     stcI2sCfg.enChanelLen = I2s_ChLen_16Bit;
     stcI2sCfg.enDataBits = I2s_DataLen_16Bit;
     stcI2sCfg.u32AudioFreq = I2S_AudioFreq_8k;
-#ifdef EXCK_ON
+#if(EXCK_ON)
     stcI2sCfg.enMcoOutEn = Disable;
     stcI2sCfg.enExckEn = Enable;
 #else
@@ -353,7 +421,7 @@ int32_t main(void)
     /* Select I2C Error or Event interrupt function */
     stcIrqRegiConf.enIntSrc = INT_I2S3_TXIRQOUT;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = I2sTxFifoCallback;
+    stcIrqRegiConf.pfnCallback = &I2sTxFifoCallback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -369,7 +437,10 @@ int32_t main(void)
     /* Enable I2S txi function to kick start conmmunication */
     I2S_FuncCmd(I2S_CH, TxIntEn, Enable);
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

@@ -65,75 +65,72 @@ typedef struct stc_buf_handle
 {
     uint8_t u8Cnt;
     uint8_t u8Size;
-    uint8_t *pu8Buf;
+    uint8_t au8Buf[200];
 } stc_buf_handle_t;
 
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Serial USART channel definition */
-#define SERIEL_USART_CH                 M4_USART3
+#define SERIEL_USART_CH                 (M4_USART3)
 
 /* Serial USART baudrate definition */
-#define SERIEL_USART_BAUDRATE           (115200)
+#define SERIEL_USART_BAUDRATE           (115200ul)
 
 /* Serial USART TX Port/Pin definition */
-#define SERIEL_TX_PORT                  PortE
-#define SERIEL_TX_PIN                   Pin05
-#define SERIEL_TX_FUNC                  Func_Usart3_Tx
+#define SERIEL_TX_PORT                  (PortE)
+#define SERIEL_TX_PIN                   (Pin05)
+#define SERIEL_TX_FUNC                  (Func_Usart3_Tx)
 
 /* Smart-card USART channel definition */
-#define SC_USART_CH                     M4_USART2
+#define SC_USART_CH                     (M4_USART2)
 
 /* Smart-card USART baudrate definition */
-#define SC_USART_BAUDRATE               (9600)
+#define SC_USART_BAUDRATE               (9600ul)
 
 /* Smart-card USART RX Port/Pin definition */
-#define SC_RX_PORT                      PortA
-#define SC_RX_PIN                       Pin03
-#define SC_RX_FUNC                      Func_Usart2_Rx
+#define SC_RX_PORT                      (PortA)
+#define SC_RX_PIN                       (Pin03)
+#define SC_RX_FUNC                      (Func_Usart2_Rx)
 
 /* Smart-card USART TX Port/Pin definition */
-#define SC_TX_PORT                      PortA
-#define SC_TX_PIN                       Pin02
-#define SC_TX_FUNC                      Func_Usart2_Tx
+#define SC_TX_PORT                      (PortA)
+#define SC_TX_PIN                       (Pin02)
+#define SC_TX_FUNC                      (Func_Usart2_Tx)
 
 /* Smart-card USART CK Port/Pin definition */
-#define SC_CK_PORT                      PortD
-#define SC_CK_PIN                       Pin07
-#define SC_CK_FUNC                      Func_Usart_Ck
+#define SC_CK_PORT                      (PortD)
+#define SC_CK_PIN                       (Pin07)
+#define SC_CK_FUNC                      (Func_Usart_Ck)
 
 /* Smart-card CD Port/Pin definition */
-#define SC_CD_PORT                      PortB
-#define SC_CD_PIN                       Pin01
+#define SC_CD_PORT                      (PortB)
+#define SC_CD_PIN                       (Pin01)
 
 /* Smart-card RST Port/Pin definition */
-#define SC_RST_PORT                     PortA
-#define SC_RST_PIN                      Pin00
+#define SC_RST_PORT                     (PortA)
+#define SC_RST_PIN                      (Pin00)
 
 /* Smart-card power on Port/Pin definition */
-#define SC_PWREN_PORT                   PortA
-#define SC_PWREN_PIN                    Pin01
+#define SC_PWREN_PORT                   (PortA)
+#define SC_PWREN_PIN                    (Pin01)
 
 /* Smart-card CD pin operation */
 #define IS_CARD_INSERTED()              (Reset == PORT_GetBit(SC_CD_PORT, SC_CD_PIN))
 
 /* Smart-card reset pin operation */
-#define SC_RESET_LOW()                  PORT_ResetBits(SC_RST_PORT, SC_RST_PIN)
-#define SC_RESET_HIGH()                 PORT_SetBits(SC_RST_PORT, SC_RST_PIN)
+#define SC_RESET_LOW()                  (PORT_ResetBits(SC_RST_PORT, SC_RST_PIN))
+#define SC_RESET_HIGH()                 (PORT_SetBits(SC_RST_PORT, SC_RST_PIN))
 
 /* Smart-card power pin operation */
-#define SC_POWER_ON()                   PORT_ResetBits(SC_PWREN_PORT, SC_PWREN_PIN)
-#define SC_POWER_OFF()                  PORT_SetBits(SC_PWREN_PORT, SC_PWREN_PIN)
-
-/* Smart-card USART RX buffer size */
-#define SC_USART_RX_BUF_SIZE            (100)
+#define SC_POWER_ON()                   (PORT_ResetBits(SC_PWREN_PORT, SC_PWREN_PIN))
+#define SC_POWER_OFF()                  (PORT_SetBits(SC_PWREN_PORT, SC_PWREN_PIN))
 
 /* Smart-card USART interrupt number  */
-#define SC_USART_RI_NUM                 INT_USART2_RI
-#define SC_USART_RI_IRQn                Int001_IRQn
-#define SC_USART_EI_NUM                 INT_USART2_EI
-#define SC_USART_EI_IRQn                Int002_IRQn
+#define SC_USART_RI_NUM                 (INT_USART2_RI)
+#define SC_USART_RI_IRQn                (Int001_IRQn)
+#define SC_USART_EI_NUM                 (INT_USART2_EI)
+#define SC_USART_EI_IRQn                (Int002_IRQn)
 
 /* Smart-card initial character TS: 0x3B */
 #define SC_INITIAL_CHARACTER_TS         (0x3B)
@@ -153,20 +150,12 @@ static void ScPinInit(void);
 static void ScUsartRxIrqCallback(void);
 static void ScUsartErrIrqCallback(void);
 static void SerialUsartInit(void);
-static void SerialUsartSend(uint8_t *pu8Data, uint8_t u8Size);
+static void SerialUsartSend(const uint8_t au8Data[], uint8_t u8Size);
 
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t m_au8RxBuf[SC_USART_RX_BUF_SIZE];
-
-static stc_buf_handle_t m_stcRxBufHanlde = {0, sizeof(m_au8RxBuf), m_au8RxBuf};
-
-static const stc_usart_sc_init_t m_stcScInitCfg = {
-    UsartIntClkCkOutput,
-    UsartClkDiv_1,
-    UsartDataLsbFirst,
-};
+static stc_buf_handle_t m_stcRxBufHanlde;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -211,11 +200,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln = 50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -259,6 +248,7 @@ static void SerialUsartInit(void)
         UsartParityNone,
         UsartSamleBit8,
         UsartStartBitFallEdge,
+        UsartRtsEnable,
     };
 
     /* Enable peripheral clock */
@@ -275,9 +265,6 @@ static void SerialUsartInit(void)
         {
         }
     }
-    else
-    {
-    }
 
     /* Set baudrate */
     enRet = USART_SetBaudrate(SERIEL_USART_CH, SERIEL_USART_BAUDRATE);
@@ -286,9 +273,6 @@ static void SerialUsartInit(void)
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /*Enable TX function*/
@@ -304,17 +288,17 @@ static void SerialUsartInit(void)
  ** \retval None
  **
  ******************************************************************************/
-static void SerialUsartSend(uint8_t *pu8Data, uint8_t u8Size)
+static void SerialUsartSend(const uint8_t au8Data[], uint8_t u8Size)
 {
     uint8_t i;
 
-    for (i = 0; i < u8Size; i++)
+    for (i = 0u; i < u8Size; i++)
     {
         while ( Reset == USART_GetStatus(SERIEL_USART_CH, UsartTxEmpty))
         {
         }
 
-        USART_SendData(SERIEL_USART_CH, *pu8Data++);
+        USART_SendData(SERIEL_USART_CH, (uint16_t)au8Data[i]);
     }
 }
 
@@ -390,7 +374,7 @@ static void ScUsartRxIrqCallback(void)
 {
     if (m_stcRxBufHanlde.u8Cnt < m_stcRxBufHanlde.u8Size)
     {
-        m_stcRxBufHanlde.pu8Buf[m_stcRxBufHanlde.u8Cnt++] = USART_RecData(SC_USART_CH);;
+        m_stcRxBufHanlde.au8Buf[m_stcRxBufHanlde.u8Cnt++] = (uint8_t)USART_RecData(SC_USART_CH);;
     }
     else
     {
@@ -446,13 +430,22 @@ int32_t main(void)
 {
     en_result_t enRet = Ok;
     stc_irq_regi_conf_t stcIrqRegiCfg;
-    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    uint32_t u32Fcg1Periph = PWC_FCG1_PERIPH_USART1 | PWC_FCG1_PERIPH_USART2 | \
+                             PWC_FCG1_PERIPH_USART3 | PWC_FCG1_PERIPH_USART4;
+    const stc_usart_sc_init_t stcScInitCfg = {
+        UsartIntClkCkOutput,
+        UsartClkDiv_1,
+        UsartDataLsbFirst,
+    };
 
     /* Initialize Clock */
     ClkInit();
 
     /* Enable peripheral clock */
     PWC_Fcg1PeriphClockCmd(u32Fcg1Periph, Enable);
+
+    /* Initialize buffer */
+    m_stcRxBufHanlde.u8Size = (uint8_t)sizeof(m_stcRxBufHanlde.au8Buf);
 
     /* Initialize card-detect IO */
     ScCdPinInit();
@@ -468,15 +461,12 @@ int32_t main(void)
     USART_DeInit(SC_USART_CH);
 
     /* Initialize UART */
-    enRet = USART_SC_Init(SC_USART_CH, &m_stcScInitCfg);
+    enRet = USART_SC_Init(SC_USART_CH, &stcScInitCfg);
     if(enRet != Ok)
     {
         while (1)
         {
         }
-    }
-    else
-    {
     }
 
     /* Set baudrate */
@@ -487,13 +477,10 @@ int32_t main(void)
         {
         }
     }
-    else
-    {
-    }
 
     /* Set USART RX IRQ */
     stcIrqRegiCfg.enIRQn = SC_USART_RI_IRQn;
-    stcIrqRegiCfg.pfnCallback = ScUsartRxIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &ScUsartRxIrqCallback;
     stcIrqRegiCfg.enIntSrc = SC_USART_RI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -502,7 +489,7 @@ int32_t main(void)
 
     /* Set USART RX error IRQ */
     stcIrqRegiCfg.enIRQn = SC_USART_EI_IRQn;
-    stcIrqRegiCfg.pfnCallback = ScUsartErrIrqCallback;
+    stcIrqRegiCfg.pfnCallback = &ScUsartErrIrqCallback;
     stcIrqRegiCfg.enIntSrc = SC_USART_EI_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
@@ -515,13 +502,13 @@ int32_t main(void)
 
     /* Cold reset :smart card */
     SC_POWER_ON();
-    Ddl_Delay1ms(1);
+    Ddl_Delay1ms(1ul);
     SC_RESET_HIGH();
-    Ddl_Delay1ms(150);  /* Delay for receving Smart-card ATR */
+    Ddl_Delay1ms(150ul);  /* Delay for receving Smart-card ATR */
 
     /* Initialize serial USART channel and send ATR to computer */
     SerialUsartInit();
-    SerialUsartSend(m_stcRxBufHanlde.pu8Buf, m_stcRxBufHanlde.u8Cnt);
+    SerialUsartSend(m_stcRxBufHanlde.au8Buf, m_stcRxBufHanlde.u8Cnt);
 
     while (1)
     {

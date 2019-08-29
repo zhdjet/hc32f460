@@ -62,23 +62,23 @@
  ******************************************************************************/
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT          PortE
-#define  LED0_PIN           Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT          PortA
-#define  LED1_PIN           Pin07
+#define  LED1_PORT          (PortA)
+#define  LED1_PIN           (Pin07)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* Define Timer Unit for example */
-#define TMR_UNIT            M4_TMR02
-#define TMR_INI_GCMA        INT_TMR02_GCMA
-#define TMR_INI_GCMB        INT_TMR02_GCMB
+#define TMR_UNIT            (M4_TMR02)
+#define TMR_INI_GCMA        (INT_TMR02_GCMA)
+#define TMR_INI_GCMB        (INT_TMR02_GCMB)
 
-#define ENABLE_TMR0()      PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable)
+#define ENABLE_TMR0()      (PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM02, Enable))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -151,11 +151,11 @@ static void SysClkIni(void)
 
     /* MPLL config. */
     /*system clk = 168M, pclk1 = 84M, pclk3 = 42M*/
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln =42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
 
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
@@ -169,7 +169,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -188,8 +191,8 @@ int32_t main(void)
     stc_tim0_base_init_t stcTimerCfg;
     stc_irq_regi_conf_t stcIrqRegiConf;
     stc_port_init_t stcPortInit;
-    __IO uint16_t u16cmp = 0;
-    __IO uint16_t u16cnt = 0;
+    __IO uint16_t u16cmp = 0u;
+    __IO uint16_t u16cnt = 0u;
     uint32_t u32Pclk1;
     stc_clk_freq_t stcClkTmp;
     uint32_t u32tmp;
@@ -218,7 +221,7 @@ int32_t main(void)
     stcTimerCfg.Tim0_CounterMode = Tim0_Async;
     stcTimerCfg.Tim0_AsyncClockSource = Tim0_XTAL32;
     stcTimerCfg.Tim0_ClockDivision = Tim0_ClkDiv4;
-    stcTimerCfg.Tim0_CmpValue = 32000/4 - 1;
+    stcTimerCfg.Tim0_CmpValue = (uint16_t)(32000/4 - 1);
     TIMER0_BaseInit(TMR_UNIT,Tim0_ChannelA,&stcTimerCfg);
 
     /* Enable channel A interrupt */
@@ -228,7 +231,7 @@ int32_t main(void)
     /* Select I2C Error or Event interrupt function */
     stcIrqRegiConf.enIntSrc = TMR_INI_GCMA;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = Timer0A_CallBack;
+    stcIrqRegiConf.pfnCallback =&Timer0A_CallBack;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -242,7 +245,7 @@ int32_t main(void)
     stcTimerCfg.Tim0_CounterMode = Tim0_Sync;
     stcTimerCfg.Tim0_SyncClockSource = Tim0_Pclk1;
     stcTimerCfg.Tim0_ClockDivision = Tim0_ClkDiv1024;
-    stcTimerCfg.Tim0_CmpValue = u32Pclk1/1024 - 1;
+    stcTimerCfg.Tim0_CmpValue = (uint16_t)(u32Pclk1/1024ul - 1ul);
     TIMER0_BaseInit(TMR_UNIT,Tim0_ChannelB,&stcTimerCfg);
 
     /* Enable channel B interrupt */
@@ -252,7 +255,7 @@ int32_t main(void)
     /* Select I2C Error or Event interrupt function */
     stcIrqRegiConf.enIntSrc = TMR_INI_GCMB;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = Timer0B_CallBack;
+    stcIrqRegiConf.pfnCallback = &Timer0B_CallBack;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
     /* Clear Pending */
@@ -278,8 +281,11 @@ int32_t main(void)
         u16cmp = TIMER0_GetCntReg(TMR_UNIT,Tim0_ChannelA);
         TIMER0_Cmd(TMR_UNIT,Tim0_ChannelA,Enable);
 
-        u32tmp = 0xFFFFF;
-        while(u32tmp--);
+        u32tmp = 0xFFFFFul;
+        while(u32tmp--)
+        {
+            ;
+        }
     }
 
 }

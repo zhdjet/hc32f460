@@ -63,20 +63,20 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* QSPCK Port/Pin definition */
-#define QSPCK_PORT                      PortC
-#define QSPCK_PIN                       Pin06
+#define QSPCK_PORT                      (PortC)
+#define QSPCK_PIN                       (Pin06)
 
 /* QSNSS Port/Pin definition */
-#define QSNSS_PORT                      PortC
-#define QSNSS_PIN                       Pin07
+#define QSNSS_PORT                      (PortC)
+#define QSNSS_PIN                       (Pin07)
 
 /* QSIO0 Port/Pin definition */
-#define QSIO0_PORT                      PortD
-#define QSIO0_PIN                       Pin08
+#define QSIO0_PORT                      (PortD)
+#define QSIO0_PIN                       (Pin08)
 
 /* QSIO1 Port/Pin definition */
-#define QSIO1_PORT                      PortD
-#define QSIO1_PIN                       Pin09
+#define QSIO1_PORT                      (PortD)
+#define QSIO1_PIN                       (Pin09)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -152,7 +152,7 @@ void W25QXX_Init(void)
  ******************************************************************************/
 uint8_t W25QXX_ReadSR(void)
 {
-    uint8_t regSta = 0;
+    uint8_t regSta = 0u;
 
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_ReadStatusReg);
@@ -227,14 +227,14 @@ void W25QXX_Write_Disable(void)
  ******************************************************************************/
 uint16_t W25QXX_ReadID(void)
 {
-    uint16_t u16FlashID = 0;
+    uint16_t u16FlashID = 0u;
 
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_ManufactDeviceID);
-    QSPI_WriteDirectCommValue(0x00);
-    QSPI_WriteDirectCommValue(0x00);
-    QSPI_WriteDirectCommValue(0x00);
-    u16FlashID |= QSPI_ReadDirectCommValue() << 8;
+    QSPI_WriteDirectCommValue(0x00u);
+    QSPI_WriteDirectCommValue(0x00u);
+    QSPI_WriteDirectCommValue(0x00u);
+    u16FlashID |= (uint16_t)((uint16_t)QSPI_ReadDirectCommValue() << (int8_t)8);
     u16FlashID |= QSPI_ReadDirectCommValue();
     QSPI_ExitDirectCommMode();
     return u16FlashID;
@@ -257,10 +257,10 @@ void W25QXX_Read(uint8_t* pBuffer, uint32_t ReadAddr, uint16_t NumByteToRead)
 
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_ReadData);
-    QSPI_WriteDirectCommValue((uint8_t)((ReadAddr) >> 16));
-    QSPI_WriteDirectCommValue((uint8_t)((ReadAddr) >> 8));
+    QSPI_WriteDirectCommValue((uint8_t)((ReadAddr) >> 16u));
+    QSPI_WriteDirectCommValue((uint8_t)((ReadAddr) >> 8u));
     QSPI_WriteDirectCommValue((uint8_t)ReadAddr);
-    for (i = 0; i < NumByteToRead; i++)
+    for (i = 0u; i < NumByteToRead; i++)
     {
         pBuffer[i] = QSPI_ReadDirectCommValue();
     }
@@ -284,9 +284,9 @@ void W25QXX_Write_Page(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToW
     /* Send data to flash */
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_PageProgram);
-    QSPI_WriteDirectCommValue((WriteAddr & 0xFF0000) >> 16);
-    QSPI_WriteDirectCommValue((WriteAddr & 0xFF00) >> 8);
-    QSPI_WriteDirectCommValue(WriteAddr & 0xFF);
+    QSPI_WriteDirectCommValue((uint8_t)((WriteAddr & 0xFF0000ul) >> 16u));
+    QSPI_WriteDirectCommValue((uint8_t)((WriteAddr & 0xFF00u) >> 8u));
+    QSPI_WriteDirectCommValue((uint8_t)(WriteAddr & 0xFFu));
     while (NumByteToWrite--)
     {
         QSPI_WriteDirectCommValue(*pBuffer++);
@@ -310,7 +310,7 @@ void W25QXX_Write_Page(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToW
 void W25QXX_Write_NoCheck(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
 {
     uint16_t pageremain;
-    pageremain = 256 - WriteAddr % 256;
+    pageremain = (uint16_t)(256u - WriteAddr % 256u);
     if (NumByteToWrite <= pageremain)
     {
         pageremain = NumByteToWrite;
@@ -328,9 +328,9 @@ void W25QXX_Write_NoCheck(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByte
             WriteAddr      += pageremain;
 
             NumByteToWrite -= pageremain;
-            if (NumByteToWrite > 256)
+            if (NumByteToWrite > 256u)
             {
-                pageremain = 256;
+                pageremain = 256u;
             }
             else
             {
@@ -359,9 +359,9 @@ void W25QXX_Write(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
     uint16_t i;
     uint8_t * W25QXX_BUF;
     W25QXX_BUF = W25QXX_BUFFER;
-    secpos     = WriteAddr / 4096;
-    secoff     = WriteAddr % 4096;
-    secremain  = 4096 - secoff;
+    secpos     = WriteAddr / 4096u;
+    secoff     = (uint16_t)(WriteAddr % 4096u);
+    secremain  = 4096u - secoff;
 //    printf("ad:%X,nb:%X\r\n",WriteAddr,NumByteToWrite);           // for test
     if (NumByteToWrite <= secremain)
     {
@@ -369,10 +369,10 @@ void W25QXX_Write(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
     }
     while (1)
     {
-        W25QXX_Read(W25QXX_BUF, secpos * 4096, 4096);              // read one sector content
-        for (i = 0; i < secremain; i++)                            // check if blank sector
+        W25QXX_Read(W25QXX_BUF, secpos * 4096u, 4096u);              // read one sector content
+        for (i = 0u; i < secremain; i++)                            // check if blank sector
         {
-            if (W25QXX_BUF[secoff + i] != 0XFF)
+            if (W25QXX_BUF[secoff + i] != (uint8_t)0XFF)
             {
                 break;
             }
@@ -380,11 +380,11 @@ void W25QXX_Write(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
         if (i < secremain)
         {
             W25QXX_Erase_Sector(secpos);                           // not blank, need erase
-            for (i = 0; i < secremain; i++)                        // backup first
+            for (i = 0u; i < secremain; i++)                        // backup first
             {
                 W25QXX_BUF[i + secoff] = pBuffer[i];
             }
-            W25QXX_Write_NoCheck(W25QXX_BUF, secpos * 4096, 4096); // write back after erase
+            W25QXX_Write_NoCheck(W25QXX_BUF, secpos * 4096u, 4096u); // write back after erase
 
         }
         else
@@ -398,14 +398,14 @@ void W25QXX_Write(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
         else
         {
             secpos++;                                              // next sector
-            secoff          = 0;
+            secoff          = 0u;
 
             pBuffer        += secremain;
             WriteAddr      += secremain;
             NumByteToWrite -= secremain;
-            if (NumByteToWrite > 4096)
+            if (NumByteToWrite > 4096u)
             {
-                secremain = 4096;
+                secremain = 4096u;
             }
             else
             {
@@ -446,15 +446,13 @@ void W25QXX_Erase_Chip(void)
  ******************************************************************************/
 void W25QXX_Erase_Sector(uint32_t Dst_Addr)
 {
-    // for test
-    printf("fe:%x\r\n", Dst_Addr);
-    Dst_Addr *= 4096;
+    Dst_Addr *= 4096u;
     W25QXX_Write_Enable();
     W25QXX_Wait_Busy();
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_SectorErase);
-    QSPI_WriteDirectCommValue((uint8_t)((Dst_Addr) >> 16));
-    QSPI_WriteDirectCommValue((uint8_t)((Dst_Addr) >> 8));
+    QSPI_WriteDirectCommValue((uint8_t)((Dst_Addr) >> 16u));
+    QSPI_WriteDirectCommValue((uint8_t)((Dst_Addr) >> 8u));
     QSPI_WriteDirectCommValue((uint8_t)Dst_Addr);
     QSPI_ExitDirectCommMode();
     W25QXX_Wait_Busy();
@@ -471,7 +469,7 @@ void W25QXX_Erase_Sector(uint32_t Dst_Addr)
  ******************************************************************************/
 void W25QXX_Wait_Busy(void)
 {
-    while ((W25QXX_ReadSR() & 0x01) == 0x01)            // Wait SR.BUSY = 0
+    while ((W25QXX_ReadSR() & 0x01u) == 0x01u)            // Wait SR.BUSY = 0
     {
         ;
     }
@@ -491,7 +489,7 @@ void W25QXX_PowerDown(void)
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_PowerDown);
     QSPI_ExitDirectCommMode();
-    Ddl_Delay1ms(1);
+    Ddl_Delay1ms(1ul);
 }
 
 /**
@@ -508,7 +506,7 @@ void W25QXX_WAKEUP(void)
     QSPI_EnterDirectCommMode();
     QSPI_WriteDirectCommValue(W25X_ReleasePowerDown);
     QSPI_ExitDirectCommMode();
-    Ddl_Delay1ms(1);
+    Ddl_Delay1ms(1ul);
 }
 
 /*******************************************************************************

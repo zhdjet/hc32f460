@@ -61,19 +61,19 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* Clock output Port/Pin definition */
-#define MCO_PORT                        PortE
-#define MCO_PIN                         Pin00
+#define MCO_PORT                        (PortE)
+#define MCO_PIN                         (Pin00)
 
 /* Clock output channel definition */
-#define MCO_CHANNEL                     ClkOutputCh1
+#define MCO_CHANNEL                     (ClkOutputCh1)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -113,7 +113,7 @@ void SysTick_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-void SysTick_Init(void)
+static void SysTick_Init(void)
 {
     stc_clk_freq_t stcClkFreq;
 
@@ -134,7 +134,7 @@ void SysTick_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Clock_OutputConfig(void)
+static void Clock_OutputConfig(void)
 {
     stc_clk_output_cfg_t stcClkOutputCfg;
 

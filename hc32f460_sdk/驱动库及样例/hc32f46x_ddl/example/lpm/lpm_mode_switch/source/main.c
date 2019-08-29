@@ -60,28 +60,28 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define PORT_IRQn               Int003_IRQn
+#define PORT_IRQn               (Int003_IRQn)
 
-#define KEY1_PORT               PortD
-#define KEY1_PIN                Pin04
+#define KEY1_PORT               (PortD)
+#define KEY1_PIN                (Pin04)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT              PortE
-#define  LED0_PIN               Pin06
+#define  LED0_PORT              (PortE)
+#define  LED0_PIN               (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT              PortA
-#define  LED1_PIN               Pin07
+#define  LED1_PORT              (PortA)
+#define  LED1_PIN               (Pin07)
 
 /* LED0~1 off definition */
-#define LED0_OFF()              PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_OFF()              PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_OFF()              (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_OFF()              (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()          PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()          PORT_Toggle(LED1_PORT, LED1_PIN)
+#define  LED0_TOGGLE()          (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()          (PORT_Toggle(LED1_PORT, LED1_PIN))
 
-#define  DLY_MS                 1000
+#define  DLY_MS                 (1000u)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -94,7 +94,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-uint8_t u8IntCnt = 0;
+static uint8_t u8IntCnt = 0u;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -107,7 +107,7 @@ uint8_t u8IntCnt = 0;
  ** \retval None
  **
  ******************************************************************************/
-void Led_Init(void)
+static void Led_Init(void)
 {
     stc_port_init_t stcPortInit;
 
@@ -138,16 +138,22 @@ void Led_Init(void)
  ******************************************************************************/
 void ExtInt04_Callback(void)
 {
+    if(4u == u8IntCnt)
+    {
+        PWC_IrqClkRecover();
+    }
     if (Set == EXINT_IrqFlgGet(ExtiCh04))
     {
-        /* NVIC recover after wakeup from stop mode. */
-        enNvicRecover();
         u8IntCnt++;
-        if(u8IntCnt >= 6)
+        if(u8IntCnt >= 6u)
         {
-            u8IntCnt = 0;
+            u8IntCnt = 0u;
         }
         EXINT_IrqFlgClr(ExtiCh04);
+    }
+    if(4u == u8IntCnt)
+    {
+        PWC_IrqClkBackup();
     }
 }
 
@@ -160,7 +166,7 @@ void ExtInt04_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void SW4_Init(void)
+static void SW4_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -190,7 +196,7 @@ void SW4_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt04_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt04_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -210,7 +216,7 @@ void SW4_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void StopMode_Init()
+static void StopMode_Init(void)
 {
     stc_pwc_stop_mode_cfg_t stcPwcStopCfg;
 
@@ -234,7 +240,7 @@ void StopMode_Init()
  ** \retval None
  **
  ******************************************************************************/
-void PowerDownMode_Init()
+static void PowerDownMode_Init(void)
 {
     stc_pwc_pwr_mode_cfg_t  stcPwcPwrMdCfg;
     stc_pwc_wkup_edge_cfg_t stcPwcWkupEdgCfg;
@@ -248,8 +254,8 @@ void PowerDownMode_Init()
     stcPwcPwrMdCfg.enRLdo = Enable;
     stcPwcPwrMdCfg.enIoRetain = IoPwrDownRetain;
     stcPwcPwrMdCfg.enRetSram = Disable;
-    stcPwcPwrMdCfg.enVHrc = Disable;
-    stcPwcPwrMdCfg.enVPll = Disable;
+    stcPwcPwrMdCfg.enVHrc = Enable;
+    stcPwcPwrMdCfg.enVPll = Enable;
     stcPwcPwrMdCfg.enDynVol =  Voltage09;
     stcPwcPwrMdCfg.enDrvAbility = Ulowspeed;
     stcPwcPwrMdCfg.enPwrDWkupTm = Vcap0047;
@@ -302,8 +308,6 @@ int32_t main(void)
         }
         else if(3u == u8IntCnt)
         {
-            /* NVIC backup and disable before entry from stop mode.*/
-            enNvicBackup();
             PWC_EnterStopMd();
         }
         else if(4u == u8IntCnt)
@@ -314,6 +318,10 @@ int32_t main(void)
         else if(5u == u8IntCnt)
         {
             PWC_EnterPowerDownMd();
+        }
+        else
+        {
+            //else
         }
     }
 }

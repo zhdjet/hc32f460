@@ -80,7 +80,7 @@ USB_OTG_CORE_HANDLE  USB_OTG_dev;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-extern  void         USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev);
+
 
 /**
  *******************************************************************************
@@ -93,7 +93,7 @@ extern  void         USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev);
  ******************************************************************************/
 int32_t main (void)
 {
-    __IO uint32_t test = 0;
+    __IO uint32_t test = 0ul;
 
     USBD_Init(&USB_OTG_dev,
 #ifdef USE_USB_OTG_FS
@@ -108,10 +108,10 @@ int32_t main (void)
     while (1)
     {
         /* remote wakeup test */
-        if(test == 0x1)
+        if(test == 0x1ul)
         {
             USB_OTG_ActiveRemoteWakeup(&USB_OTG_dev);
-            test  = 0;
+            test  = 0ul;
         }
     }
 }

@@ -59,12 +59,12 @@
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define BOT_GET_MAX_LUN              0xFE
-#define BOT_RESET                    0xFF
-#define USB_MSC_CONFIG_DESC_SIZ      32
+#define BOT_GET_MAX_LUN              (0xFEu)
+#define BOT_RESET                    (0xFFu)
+#define USB_MSC_CONFIG_DESC_SIZ      (32u)
 
-#define MSC_EPIN_SIZE                MSC_MAX_PACKET
-#define MSC_EPOUT_SIZE               MSC_MAX_PACKET
+#define MSC_EPIN_SIZE                (MSC_MAX_PACKET)
+#define MSC_EPOUT_SIZE               (MSC_MAX_PACKET)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

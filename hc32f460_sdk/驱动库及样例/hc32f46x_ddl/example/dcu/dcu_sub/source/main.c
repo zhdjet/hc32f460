@@ -60,21 +60,21 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define DCU_UNIT                        M4_DCU1
+#define DCU_UNIT                        (M4_DCU1)
 
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED0 & LED1 */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -88,9 +88,6 @@ static void LedInit(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint32_t m_au32Data0Val[4];
-static uint32_t m_au32Data2Val[4];
-static uint32_t m_au32Data1Val[4] = {0x00000000, 0x22222222, 0x22222222, 0x22222222};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -131,10 +128,13 @@ static void LedInit(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint8_t i;
+    uint32_t i;
     stc_dcu_init_t stcDcuInit;
     en_result_t enTestResult = Ok;
-    uint8_t u8CalTimes = sizeof(m_au32Data1Val)/4;
+    uint32_t au32Data0Val[4];
+    uint32_t au32Data2Val[4];
+    uint32_t au32Data1Val[4] = {0x00000000, 0x22222222, 0x22222222, 0x22222222};
+    uint32_t u32CalTimes = sizeof(au32Data1Val)/4ul;
 
     /* Initialize LED */
     LedInit();
@@ -144,22 +144,22 @@ int32_t main(void)
 
     /* Initialize DCU */
     MEM_ZERO_STRUCT(stcDcuInit);
-    stcDcuInit.u32IntSel = 0;
+    stcDcuInit.u32IntSel = 0u;
     stcDcuInit.enIntWinMode = DcuIntInvalid;
     stcDcuInit.enDataSize = DcuDataBit32;
     stcDcuInit.enOperation = DcuOpSub;
     DCU_Init(DCU_UNIT, &stcDcuInit);
-    DCU_WriteDataWord(DCU_UNIT, DcuRegisterData0, 0x88888888);
+    DCU_WriteDataWord(DCU_UNIT, DcuRegisterData0, 0x88888888ul);
 
-    for (i = 0; i < u8CalTimes; i++)
+    for (i = 0u; i < u32CalTimes; i++)
     {
-        DCU_WriteDataWord(DCU_UNIT, DcuRegisterData1, m_au32Data1Val[i]);
+        DCU_WriteDataWord(DCU_UNIT, DcuRegisterData1, au32Data1Val[i]);
 
-        m_au32Data0Val[i] = DCU_ReadDataWord(DCU_UNIT, DcuRegisterData0);
-        m_au32Data2Val[i] = DCU_ReadDataWord(DCU_UNIT, DcuRegisterData2);
+        au32Data0Val[i] = DCU_ReadDataWord(DCU_UNIT, DcuRegisterData0);
+        au32Data2Val[i] = DCU_ReadDataWord(DCU_UNIT, DcuRegisterData2);
 
         /* Compare DCU regisger DATA0 && DATA2 value: DATA0 value == 2 * DATA2 value */
-        if (m_au32Data0Val[i] != (2 * m_au32Data2Val[i]))
+        if (au32Data0Val[i] != (2ul * au32Data2Val[i]))
         {
             enTestResult = Error;
             break;

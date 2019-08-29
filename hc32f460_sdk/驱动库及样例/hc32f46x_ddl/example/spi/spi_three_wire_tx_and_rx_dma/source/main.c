@@ -61,51 +61,51 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* LED1 Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
-#define LED1_TOGGLE()                   PORT_Toggle(LED1_PORT, LED1_PIN)
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
+#define LED1_TOGGLE()                   (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /* SPI_SCK Port/Pin definition */
-#define SPI_SCK_PORT                    PortE
-#define SPI_SCK_PIN                     Pin00
-#define SPI_SCK_FUNC                    Func_Spi3_Sck
+#define SPI_SCK_PORT                    (PortE)
+#define SPI_SCK_PIN                     (Pin00)
+#define SPI_SCK_FUNC                    (Func_Spi3_Sck)
 
 /* SPI_MOSI Port/Pin definition */
-#define SPI_MOSI_PORT                   PortE
-#define SPI_MOSI_PIN                    Pin02
-#define SPI_MOSI_FUNC                   Func_Spi3_Mosi
+#define SPI_MOSI_PORT                   (PortE)
+#define SPI_MOSI_PIN                    (Pin02)
+#define SPI_MOSI_FUNC                   (Func_Spi3_Mosi)
 
 /* SPI_MISO Port/Pin definition */
-#define SPI_MISO_PORT                   PortE
-#define SPI_MISO_PIN                    Pin03
-#define SPI_MISO_FUNC                   Func_Spi3_Miso
+#define SPI_MISO_PORT                   (PortE)
+#define SPI_MISO_PIN                    (Pin03)
+#define SPI_MISO_FUNC                   (Func_Spi3_Miso)
 
 /* SPI unit and clock definition */
-#define SPI_UNIT                        M4_SPI3
-#define SPI_UNIT_CLOCK                  PWC_FCG1_PERIPH_SPI3
+#define SPI_UNIT                        (M4_SPI3)
+#define SPI_UNIT_CLOCK                  (PWC_FCG1_PERIPH_SPI3)
 
 /* SPI DMA unit and channel definition */
-#define SPI_DMA_UNIT                    M4_DMA1
-#define SPI_DMA_CLOCK_UNIT              PWC_FCG0_PERIPH_DMA1
-#define SPI_DMA_TX_CHANNEL              DmaCh1
-#define SPI_DMA_RX_CAHNNEL              DmaCh0
-#define SPI_DMA_TX_TRIG_SOURCE          EVT_SPI3_SRTI
-#define SPI_DMA_RX_TRIG_SOURCE          EVT_SPI3_SRRI
+#define SPI_DMA_UNIT                    (M4_DMA1)
+#define SPI_DMA_CLOCK_UNIT              (PWC_FCG0_PERIPH_DMA1)
+#define SPI_DMA_TX_CHANNEL              (DmaCh1)
+#define SPI_DMA_RX_CAHNNEL              (DmaCh0)
+#define SPI_DMA_TX_TRIG_SOURCE          (EVT_SPI3_SRTI)
+#define SPI_DMA_RX_TRIG_SOURCE          (EVT_SPI3_SRRI)
 
 /* Choose SPI master or slave mode */
 #define SPI_MASTER_MODE
@@ -122,10 +122,10 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8ExIntFlag = 0;
-static uint8_t u8TxBuffer[] = "SPI Master/Slave example: Communication between two boards using SPI interface!";
-static uint8_t u8RxBuffer[128] = {0};
-static uint8_t u8BufferLen = 0;
+static uint8_t u8ExIntFlag = 0u;
+static char u8TxBuffer[] = "SPI Master/Slave example: Communication between two boards using SPI interface!";
+static char u8RxBuffer[128] = {0};
+static uint16_t u16BufferLen = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -139,7 +139,7 @@ static uint8_t u8BufferLen = 0;
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
@@ -157,7 +157,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -185,7 +185,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -206,15 +206,12 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void SystemClk_Init(void)
+static void SystemClk_Init(void)
 {
-    en_clk_sys_source_t     enSysClkSrc;
     stc_clk_sysclk_cfg_t    stcSysClkCfg;
     stc_clk_xtal_cfg_t      stcXtalCfg;
     stc_clk_mpll_cfg_t      stcMpllCfg;
-    stc_clk_freq_t          stcClkFreq;
 
-    MEM_ZERO_STRUCT(enSysClkSrc);
     MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
     MEM_ZERO_STRUCT(stcMpllCfg);
@@ -238,11 +235,11 @@ void SystemClk_Init(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln = 42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -255,14 +252,12 @@ void SystemClk_Init(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
-
-    /* Check source and frequence. */
-    enSysClkSrc = CLK_GetSysClkSource();
-    CLK_GetClockFreq(&stcClkFreq);
 }
 
 /**
@@ -274,7 +269,7 @@ void SystemClk_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Spi_Config(void)
+static void Spi_Config(void)
 {
     stc_spi_init_t stcSpiInit;
 
@@ -330,7 +325,7 @@ void Spi_Config(void)
  ** \retval None
  **
  ******************************************************************************/
-void Spi_DmaConfig(void)
+static void Spi_DmaConfig(void)
 {
     stc_dma_config_t stcDmaCfg;
 
@@ -342,8 +337,8 @@ void Spi_DmaConfig(void)
     PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     /* Configure TX DMA */
-    stcDmaCfg.u16BlockSize = 1;
-    stcDmaCfg.u16TransferCnt = u8BufferLen;
+    stcDmaCfg.u16BlockSize = 1u;
+    stcDmaCfg.u16TransferCnt = u16BufferLen;
     stcDmaCfg.u32SrcAddr = (uint32_t)(&u8TxBuffer[0]);
     stcDmaCfg.u32DesAddr = (uint32_t)(&SPI_UNIT->DR);
     stcDmaCfg.stcDmaChCfg.enSrcInc = AddressIncrease;
@@ -353,8 +348,8 @@ void Spi_DmaConfig(void)
     DMA_InitChannel(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, &stcDmaCfg);
 
     /* Configure RX DMA */
-    stcDmaCfg.u16BlockSize = 1;
-    stcDmaCfg.u16TransferCnt = u8BufferLen;
+    stcDmaCfg.u16BlockSize = 1u;
+    stcDmaCfg.u16TransferCnt = u16BufferLen;
     stcDmaCfg.u32SrcAddr = (uint32_t)(&SPI_UNIT->DR);
     stcDmaCfg.u32DesAddr = (uint32_t)(&u8RxBuffer[0]);
     stcDmaCfg.stcDmaChCfg.enSrcInc = AddressFix;
@@ -365,6 +360,9 @@ void Spi_DmaConfig(void)
 
     DMA_SetTriggerSrc(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, SPI_DMA_TX_TRIG_SOURCE);
     DMA_SetTriggerSrc(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, SPI_DMA_RX_TRIG_SOURCE);
+
+    /* Enable DMA. */
+    DMA_Cmd(SPI_DMA_UNIT, Enable);
 }
 
 /**
@@ -401,39 +399,41 @@ int32_t main(void)
     /* Configure SPI */
     Spi_Config();
     /* Get tx buffer length */
-    u8BufferLen = sizeof(u8TxBuffer);
+    u16BufferLen = (uint16_t)sizeof(u8TxBuffer);
     Spi_DmaConfig();
 
     while (1)
     {
         /* Wait key trigger in master mode */
 #ifdef SPI_MASTER_MODE
-        while (0u == u8ExIntFlag);
-        u8ExIntFlag = 0;
+        while (0u == u8ExIntFlag)
+        {
+        }
+        u8ExIntFlag = 0u;
 #endif
-        memset(u8RxBuffer, 0, sizeof(u8RxBuffer));
+        memset(u8RxBuffer, 0l, sizeof(u8RxBuffer));
         DMA_SetSrcAddress(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, (uint32_t)(&u8TxBuffer[0]));
-        DMA_SetTransferCnt(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, u8BufferLen);
+        DMA_SetTransferCnt(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, u16BufferLen);
         DMA_SetDesAddress(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, (uint32_t)(&u8RxBuffer[0]));
-        DMA_SetTransferCnt(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, u8BufferLen);
+        DMA_SetTransferCnt(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, u16BufferLen);
         /* Enable DMA channel */
         DMA_ChannelCmd(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, Enable);
         DMA_ChannelCmd(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, Enable);
-        /* Enable DMA. */
-        DMA_Cmd(SPI_DMA_UNIT, Enable);
         /* Enable SPI to start DMA */
         SPI_Cmd(SPI_UNIT, Enable);
-        while (Reset == DMA_GetIrqFlag(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, TrnCpltIrq));
-        while (Reset == DMA_GetIrqFlag(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, TrnCpltIrq));
+        while (Reset == DMA_GetIrqFlag(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, TrnCpltIrq))
+        {
+        }
+        while (Reset == DMA_GetIrqFlag(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, TrnCpltIrq))
+        {
+        }
         DMA_ClearIrqFlag(SPI_DMA_UNIT, SPI_DMA_TX_CHANNEL, TrnCpltIrq);
         DMA_ClearIrqFlag(SPI_DMA_UNIT, SPI_DMA_RX_CAHNNEL, TrnCpltIrq);
         /* Disable SPI */
         SPI_Cmd(SPI_UNIT, Disable);
-        /* Disable DMA. */
-        DMA_Cmd(SPI_DMA_UNIT, Disable);
 
         /* Compare u8TxBuffer and u8RxBuffer */
-        if (memcmp(u8TxBuffer, u8RxBuffer, u8BufferLen) != 0)
+        if (memcmp(u8TxBuffer, u8RxBuffer, (uint32_t)u16BufferLen) != 0)
         {
             LED0_ON();
             LED1_OFF();

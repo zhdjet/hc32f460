@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file provides the fatfs functions.
-	@endlink
+        This file provides the fatfs functions.
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -77,7 +77,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static volatile DSTATUS Stat = STA_NOINIT;	/* Disk status */
+static volatile DSTATUS Stat = STA_NOINIT;  /* Disk status */
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -92,12 +92,12 @@ extern USBH_HOST                     USB_Host;
  ** \retval DSTATUS
  ******************************************************************************/
 DSTATUS disk_initialize (
-                         BYTE drv		/* Physical drive number (0) */
+                         BYTE drv       /* Physical drive number (0) */
                            )
 {
     if(HCD_IsDeviceConnected(&USB_OTG_Core))
     {
-    Stat &= ~STA_NOINIT;
+        Stat &= (DSTATUS)~STA_NOINIT;
     }
     return Stat;
 }
@@ -109,11 +109,15 @@ DSTATUS disk_initialize (
  ** \retval DSTATUS
  ******************************************************************************/
 DSTATUS disk_status (
-                     BYTE drv		/* Physical drive number (0) */
+                     BYTE drv       /* Physical drive number (0) */
                        )
 {
-    if (drv) return STA_NOINIT;		/* Supports only single drive */
-    return Stat;
+    DSTATUS status = Stat;
+    if (drv)
+    {
+        status = STA_NOINIT;        /* Supports only single drive */
+    }
+    return status;
 }
 
 /**
@@ -126,37 +130,44 @@ DSTATUS disk_status (
  ** \retval DSTATUS
  ******************************************************************************/
 DRESULT disk_read (
-                   BYTE drv,			/* Physical drive number (0) */
-                   BYTE *buff,			/* Pointer to the data buffer to store read data */
-                   DWORD sector,		/* Start sector number (LBA) */
-                   BYTE count			/* Sector count (1..255) */
+                   BYTE drv,            /* Physical drive number (0) */
+                   BYTE *buff,          /* Pointer to the data buffer to store read data */
+                   DWORD sector,        /* Start sector number (LBA) */
+                   BYTE count           /* Sector count (1..255) */
                      )
 {
-  BYTE status = USBH_MSC_OK;
+    BYTE status = USBH_MSC_OK;
 
-  if (drv || !count) return RES_PARERR;
-  if (Stat & STA_NOINIT) return RES_NOTRDY;
-
-
-  if(HCD_IsDeviceConnected(&USB_OTG_Core))
-  {
-
-    do
+    if (drv || (!count))
     {
-      status = USBH_MSC_Read10(&USB_OTG_Core, buff,sector,512 * count);
-      USBH_MSC_HandleBOTXfer(&USB_OTG_Core ,&USB_Host);
-
-      if(!HCD_IsDeviceConnected(&USB_OTG_Core))
-      {
-        return RES_ERROR;
-      }
+        return RES_PARERR;
     }
-    while(status == USBH_MSC_BUSY );
-  }
+    if (Stat & STA_NOINIT)
+    {
+        return RES_NOTRDY;
+    }
 
-  if(status == USBH_MSC_OK)
-    return RES_OK;
-  return RES_ERROR;
+    if(HCD_IsDeviceConnected(&USB_OTG_Core))
+    {
+
+        do
+        {
+            status = USBH_MSC_Read10(&USB_OTG_Core, buff,sector,512ul * (uint32_t)count);
+            USBH_MSC_HandleBOTXfer(&USB_OTG_Core ,&USB_Host);
+
+            if(!HCD_IsDeviceConnected(&USB_OTG_Core))
+            {
+                return RES_ERROR;
+            }
+        }
+        while(status == USBH_MSC_BUSY );
+    }
+
+    if(status == USBH_MSC_OK)
+    {
+        return RES_OK;
+    }
+    return RES_ERROR;
 
 }
 
@@ -172,21 +183,31 @@ DRESULT disk_read (
  ** \retval DSTATUS
  ******************************************************************************/
 DRESULT disk_write (
-                    BYTE drv,			/* Physical drive number (0) */
-                    const BYTE *buff,	/* Pointer to the data to be written */
-                    DWORD sector,		/* Start sector number (LBA) */
-                    BYTE count			/* Sector count (1..255) */
+                    BYTE drv,           /* Physical drive number (0) */
+                    const BYTE *buff,   /* Pointer to the data to be written */
+                    DWORD sector,       /* Start sector number (LBA) */
+                    BYTE count          /* Sector count (1..255) */
                       )
 {
     BYTE status = USBH_MSC_OK;
-    if (drv || !count) return RES_PARERR;
-    if (Stat & STA_NOINIT) return RES_NOTRDY;
-    if (Stat & STA_PROTECT) return RES_WRPRT;
+
+    if (drv || (!count))
+    {
+        return RES_PARERR;
+    }
+    if (Stat & STA_NOINIT)
+    {
+        return RES_NOTRDY;
+    }
+    if (Stat & STA_PROTECT)
+    {
+        return RES_WRPRT;
+    }
     if(HCD_IsDeviceConnected(&USB_OTG_Core))
     {
         do
         {
-            status = USBH_MSC_Write10(&USB_OTG_Core,(BYTE*)buff,sector,512 * count);
+            status = USBH_MSC_Write10(&USB_OTG_Core,(BYTE*)buff,sector,512ul * (uint32_t)count);
             USBH_MSC_HandleBOTXfer(&USB_OTG_Core, &USB_Host);
 
             if(!HCD_IsDeviceConnected(&USB_OTG_Core))
@@ -198,7 +219,9 @@ DRESULT disk_write (
     }
 
     if(status == USBH_MSC_OK)
+    {
         return RES_OK;
+    }
     return RES_ERROR;
 }
 #endif /* _READONLY == 0 */
@@ -214,37 +237,44 @@ DRESULT disk_write (
  ** \retval DSTATUS
  ******************************************************************************/
 DRESULT disk_ioctl (
-                    BYTE drv,		/* Physical drive number (0) */
-                    BYTE ctrl,		/* Control code */
-                    void *buff		/* Buffer to send/receive control data */
+                    BYTE drv,       /* Physical drive number (0) */
+                    BYTE ctrl,      /* Control code */
+                    void *buff      /* Buffer to send/receive control data */
                       )
 {
     DRESULT res = RES_OK;
 
-    if (drv) return RES_PARERR;
+    if (drv)
+    {
+        return RES_PARERR;
+    }
 
     res = RES_ERROR;
 
-    if (Stat & STA_NOINIT) return RES_NOTRDY;
+    if (Stat & STA_NOINIT)
+    {
+        return RES_NOTRDY;
+    }
 
     switch (ctrl)
     {
-        case CTRL_SYNC :		/* Make sure that no pending write process */
+        case CTRL_SYNC :        /* Make sure that no pending write process */
             res = RES_OK;
             break;
-        case GET_SECTOR_COUNT :	/* Get number of sectors on the disk (DWORD) */
+        case GET_SECTOR_COUNT : /* Get number of sectors on the disk (DWORD) */
             *(DWORD*)buff = (DWORD) USBH_MSC_Param.MSCapacity;
             res = RES_OK;
             break;
-        case GET_SECTOR_SIZE :	/* Get R/W sector size (WORD) */
-            *(WORD*)buff = 512;
+        case GET_SECTOR_SIZE :  /* Get R/W sector size (WORD) */
+            *(WORD*)buff = 512u;
             res = RES_OK;
             break;
-        case GET_BLOCK_SIZE :	/* Get erase block size in unit of sector (DWORD) */
-            *(DWORD*)buff = 512;
+        case GET_BLOCK_SIZE :   /* Get erase block size in unit of sector (DWORD) */
+            *(DWORD*)buff = 512u;
             break;
         default:
             res = RES_PARERR;
+            break;
     }
     return res;
 }

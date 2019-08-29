@@ -80,7 +80,7 @@ USB_OTG_CORE_HANDLE  USB_OTG_dev;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-extern  void         USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev);
+//extern  void         USB_OTG_ActiveRemoteWakeup(USB_OTG_CORE_HANDLE *pdev);
 
 /**
  *******************************************************************************

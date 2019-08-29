@@ -75,7 +75,7 @@ typedef struct _USBD_STORAGE
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define USBD_STD_INQUIRY_LENGTH     36
+#define USBD_STD_INQUIRY_LENGTH     (36u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

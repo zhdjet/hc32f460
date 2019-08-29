@@ -61,26 +61,26 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define  LED0_PORT          PortE
-#define  LED0_PIN           Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT          PortA
-#define  LED1_PIN           Pin07
+#define  LED1_PORT          (PortA)
+#define  LED1_PIN           (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT          PortB
-#define  LED2_PIN           Pin05
+#define  LED2_PORT          (PortB)
+#define  LED2_PIN           (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT          PortB
-#define  LED3_PIN           Pin09
+#define  LED3_PORT          (PortB)
+#define  LED3_PIN           (Pin09)
 
 /* LED0~3 toggle definition */
-#define  LED0_TOGGLE()      PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()      PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()      PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()      PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()      (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()      (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -153,7 +153,7 @@ void SramErr_IrqHandler(void)
         while (1)
         {
             LED0_TOGGLE();
-            Ddl_Delay1ms(100);
+            Ddl_Delay1ms(100ul);
         }
     }
 
@@ -185,7 +185,7 @@ void SramErr_IrqHandler(void)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint32_t temp;
+    volatile uint32_t temp;
     stc_sram_config_t stcSramConfig;
     stc_nmi_config_t stcNmiConfig;
 
@@ -215,30 +215,33 @@ int32_t main(void)
 
     SRAM_Init(&stcSramConfig);
 
-    stcNmiConfig.pfnNmiCallback = SramErr_IrqHandler;
+    stcNmiConfig.pfnNmiCallback = &SramErr_IrqHandler;
     stcNmiConfig.u16NmiSrc = NmiSrcSramDE | NmiSrcSramPE;
 
     NMI_Init(&stcNmiConfig);
 #if 1
     /* This section raw sample to generate the ECC error */
-    M4_SRAMC->CKPR = 0x77;
-    M4_SRAMC->CKCR = 0x03000000;
-    SRAM3_BASE_ADDR = 0x1234567;
+    M4_SRAMC->CKPR = 0x77ul;
+    M4_SRAMC->CKCR = 0x03000000ul;
+    SRAM3_BASE_ADDR = 0x1234567ul;
     temp = SRAM3_BASE_ADDR;
 
-    M4_SRAMC->CKPR = 0x77;
-    M4_SRAMC->CKCR = 0x00;
-    SRAM3_BASE_ADDR = 0x1234562;
+    M4_SRAMC->CKPR = 0x77ul;
+    M4_SRAMC->CKCR = 0x00ul;
+    SRAM3_BASE_ADDR = 0x1234562ul;
 
-    M4_SRAMC->CKPR = 0x77;
-    M4_SRAMC->CKCR = 0x03000000;
+    M4_SRAMC->CKPR = 0x77ul;
+    M4_SRAMC->CKCR = 0x03000000ul;
     temp = SRAM3_BASE_ADDR;
-    if (temp == 0)
+    if (temp == 0ul)
     {
         // avoid warning
     }
 #endif
-    while (1);
+    while (1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

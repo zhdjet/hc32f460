@@ -61,12 +61,12 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -92,7 +92,7 @@
  ** \retval None
  **
  ******************************************************************************/
-void Nmi_IrqCallback(void)
+static void Nmi_IrqCallback(void)
 {
     /* NMI Pin */
     if (Set == NMI_IrqFlgGet(NmiSrcNmi))
@@ -137,7 +137,7 @@ int32_t main(void)
     PORT_Init(LED0_PORT, LED0_PIN, &stcPortInit);
 
     /* NMI(PB11) Int Callback function */
-    stcNmiConfig.pfnNmiCallback = Nmi_IrqCallback;
+    stcNmiConfig.pfnNmiCallback = &Nmi_IrqCallback;
     stcNmiConfig.u16NmiSrc = NmiSrcNmi;
     NMI_Init(&stcNmiConfig);
 

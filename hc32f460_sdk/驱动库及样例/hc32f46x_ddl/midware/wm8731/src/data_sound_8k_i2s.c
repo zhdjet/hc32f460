@@ -52,7 +52,7 @@
 /******************************************************************************/
 /* Include files                                                              */
 /******************************************************************************/
-#include "hc32_ddl.h"
+#include "hc32_common.h"
 #include "data_sound_i2s.h"
 
 /*****************************************************************************/
@@ -16200,10 +16200,10 @@ const uint16_t au16PixieDustSoundI2s_8[]={
 0x1327,0x0806,0x880F,0x0C57,0x052D,0x0BC5,0xFF65,0x0228,
 0x03F9,0xF7FD,0xB908,0xF5FF,0x0779,0xF932,0x0433,0xF8BA,
 0x0424,0xF257,0x1E05,0xECB1,0xFF92,0xEE67,0xF50B,0xF415,
-0xEE10,0xF682,0xF5EB,0xF17D,0xEB69,0xED6E,0xE8C0,0xF162, 
+0xEE10,0xF682,0xF5EB,0xF17D,0xEB69,0xED6E,0xE8C0,0xF162,
 };
 
-uint32_t u32WavLen_8k = sizeof(au16PixieDustSoundI2s_8)/sizeof(uint16_t);
+uint32_t u32WavLen_8k = sizeof(au16PixieDustSoundI2s_8)/sizeof(uint8_t);
 
 /*****************************************************************************/
 /* EOF (not truncated)                                                       */

@@ -61,39 +61,39 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 */
-#define  SW2_PORT         PortD
-#define  SW2_PIN          Pin03
+#define  SW2_PORT         (PortD)
+#define  SW2_PIN          (Pin03)
 /* KEY1 */
-#define  SW3_PORT         PortD
-#define  SW3_PIN          Pin04
+#define  SW3_PORT         (PortD)
+#define  SW3_PIN          (Pin04)
 /* KEY2 */
-#define  SW4_PORT         PortD
-#define  SW4_PIN          Pin05
+#define  SW4_PORT         (PortD)
+#define  SW4_PIN          (Pin05)
 /* KEY3 */
-#define  SW5_PORT         PortD
-#define  SW5_PIN          Pin06
+#define  SW5_PORT         (PortD)
+#define  SW5_PIN          (Pin06)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT        (PortE)
+#define  LED0_PIN         (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortA
-#define  LED1_PIN         Pin07
+#define  LED1_PORT        (PortA)
+#define  LED1_PIN         (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT        (PortB)
+#define  LED2_PIN         (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT        PortB
-#define  LED3_PIN         Pin09
+#define  LED3_PORT        (PortB)
+#define  LED3_PIN         (Pin09)
 
 /* LED0~3 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()    PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()    PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()    (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()    (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 /* uncomment this line if wants to print information to Terminal I/O window */
 //#define  __PRINT_TO_TERMINAL
@@ -109,55 +109,55 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-uint32_t u32NmiCount = 0;
-uint32_t u32ExtInt00Count = 0;
-uint32_t u32ExtInt01Count = 0;
-uint32_t u32ExtInt02Count = 0;
-uint32_t u32ExtInt03Count = 0;
-uint32_t u32ExtInt04Count = 0;
-uint32_t u32ExtInt05Count = 0;
-uint32_t u32ExtInt06Count = 0;
-uint32_t u32ExtInt07Count = 0;
-uint32_t u32ExtInt08Count = 0;
-uint32_t u32ExtInt09Count = 0;
-uint32_t u32ExtInt10Count = 0;
-uint32_t u32ExtInt11Count = 0;
-uint32_t u32ExtInt12Count = 0;
-uint32_t u32ExtInt13Count = 0;
-uint32_t u32ExtInt14Count = 0;
-uint32_t u32ExtInt15Count = 0;
-uint32_t u32SWI00Count = 0;
-uint32_t u32SWI01Count = 0;
-uint32_t u32SWI02Count = 0;
-uint32_t u32SWI03Count = 0;
-uint32_t u32SWI04Count = 0;
-uint32_t u32SWI05Count = 0;
-uint32_t u32SWI06Count = 0;
-uint32_t u32SWI07Count = 0;
-uint32_t u32SWI08Count = 0;
-uint32_t u32SWI09Count = 0;
-uint32_t u32SWI10Count = 0;
-uint32_t u32SWI11Count = 0;
-uint32_t u32SWI12Count = 0;
-uint32_t u32SWI13Count = 0;
-uint32_t u32SWI14Count = 0;
-uint32_t u32SWI15Count = 0;
-uint32_t u32SWI16Count = 0;
-uint32_t u32SWI17Count = 0;
-uint32_t u32SWI18Count = 0;
-uint32_t u32SWI19Count = 0;
-uint32_t u32SWI20Count = 0;
-uint32_t u32SWI21Count = 0;
-uint32_t u32SWI22Count = 0;
-uint32_t u32SWI23Count = 0;
-uint32_t u32SWI24Count = 0;
-uint32_t u32SWI25Count = 0;
-uint32_t u32SWI26Count = 0;
-uint32_t u32SWI27Count = 0;
-uint32_t u32SWI28Count = 0;
-uint32_t u32SWI29Count = 0;
-uint32_t u32SWI30Count = 0;
-uint32_t u32SWI31Count = 0;
+static uint32_t u32NmiCount = 0ul;
+static uint32_t u32ExtInt00Count = 0ul;
+static uint32_t u32ExtInt01Count = 0ul;
+static uint32_t u32ExtInt02Count = 0ul;
+static uint32_t u32ExtInt03Count = 0ul;
+static uint32_t u32ExtInt04Count = 0ul;
+static uint32_t u32ExtInt05Count = 0ul;
+static uint32_t u32ExtInt06Count = 0ul;
+static uint32_t u32ExtInt07Count = 0ul;
+static uint32_t u32ExtInt08Count = 0ul;
+static uint32_t u32ExtInt09Count = 0ul;
+static uint32_t u32ExtInt10Count = 0ul;
+static uint32_t u32ExtInt11Count = 0ul;
+static uint32_t u32ExtInt12Count = 0ul;
+static uint32_t u32ExtInt13Count = 0ul;
+static uint32_t u32ExtInt14Count = 0ul;
+static uint32_t u32ExtInt15Count = 0ul;
+static uint32_t u32SWI00Count = 0ul;
+static uint32_t u32SWI01Count = 0ul;
+static uint32_t u32SWI02Count = 0ul;
+static uint32_t u32SWI03Count = 0ul;
+static uint32_t u32SWI04Count = 0ul;
+static uint32_t u32SWI05Count = 0ul;
+static uint32_t u32SWI06Count = 0ul;
+static uint32_t u32SWI07Count = 0ul;
+static uint32_t u32SWI08Count = 0ul;
+static uint32_t u32SWI09Count = 0ul;
+static uint32_t u32SWI10Count = 0ul;
+static uint32_t u32SWI11Count = 0ul;
+static uint32_t u32SWI12Count = 0ul;
+static uint32_t u32SWI13Count = 0ul;
+static uint32_t u32SWI14Count = 0ul;
+static uint32_t u32SWI15Count = 0ul;
+static uint32_t u32SWI16Count = 0ul;
+static uint32_t u32SWI17Count = 0ul;
+static uint32_t u32SWI18Count = 0ul;
+static uint32_t u32SWI19Count = 0ul;
+static uint32_t u32SWI20Count = 0ul;
+static uint32_t u32SWI21Count = 0ul;
+static uint32_t u32SWI22Count = 0ul;
+static uint32_t u32SWI23Count = 0ul;
+static uint32_t u32SWI24Count = 0ul;
+static uint32_t u32SWI25Count = 0ul;
+static uint32_t u32SWI26Count = 0ul;
+static uint32_t u32SWI27Count = 0ul;
+static uint32_t u32SWI28Count = 0ul;
+static uint32_t u32SWI29Count = 0ul;
+static uint32_t u32SWI30Count = 0ul;
+static uint32_t u32SWI31Count = 0ul;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -310,9 +310,9 @@ void ExtInt06_Callback(void)
         u32ExtInt06Count++;
 
         LED3_TOGGLE();
-        Ddl_Delay1ms(100);
+        Ddl_Delay1ms(100ul);
         LED3_TOGGLE();
-        Ddl_Delay1ms(100);
+        Ddl_Delay1ms(100ul);
 #ifdef  __PRINT_TO_TERMINAL
         printf("External interrupt 06(SW5) interrupt occurrence: %d\n", u32ExtInt06Count);
 #endif
@@ -1133,7 +1133,7 @@ void Sw2_Init(void)
     stcIrqRegiConf.enIRQn = Int000_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -1192,7 +1192,7 @@ void Sw3_Init(void)
     stcIrqRegiConf.enIRQn = Int001_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt05_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt05_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -1251,7 +1251,7 @@ void Sw4_Init(void)
     stcIrqRegiConf.enIRQn = Int025_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt04_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt04_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -1310,7 +1310,7 @@ void Sw5_Init(void)
     stcIrqRegiConf.enIRQn = Int002_IRQn;
 
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt06_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt06_Callback;
 
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
@@ -1334,17 +1334,17 @@ void Sw5_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void SWI_Init(stc_swi_config_t *pstcSwiConfig)
+void SWI_Init(const stc_swi_config_t *pstcSwiConfig)
 {
-    uint8_t u8SWI_IRQ, i;
+    uint8_t u8SWI_IRQ = 0u, i;
     stc_irq_regi_conf_t stcIrqRegiConf;
 
     /* configure structure initialization */
     MEM_ZERO_STRUCT(stcIrqRegiConf);
 
-    for (i = 0; i< 32; i++)
+    for (i = 0u; i< 32u; i++)
     {
-        if ((1u << i) == pstcSwiConfig->enSwiCh)
+        if ((uint32_t)(1ul << i) == (pstcSwiConfig->enSwiCh))
         {
             u8SWI_IRQ = i;
             break;
@@ -1438,7 +1438,7 @@ int32_t main(void)
     stcNmiConfig.enNmiLvl = NmiFallingEdge;
 
     /* Callback function */
-    stcNmiConfig.pfnNmiCallback = Nmi_IrqCallback;
+    stcNmiConfig.pfnNmiCallback = &Nmi_IrqCallback;
     stcNmiConfig.u16NmiSrc = NmiSrcNmi;
 
     NMI_Init(&stcNmiConfig);
@@ -1453,7 +1453,7 @@ int32_t main(void)
     stcSwiConfig.enSwiType = SwInt;
 
     /* Software interrupt callback function */
-    stcSwiConfig.pfnSwiCallback = SWI31_Callback;
+    stcSwiConfig.pfnSwiCallback = &SWI31_Callback;
 
     SWI_Init(&stcSwiConfig);
 
@@ -1465,7 +1465,10 @@ int32_t main(void)
     Sw4_Init();
     Sw5_Init();
 
-    while(1);
+    while(1)
+    {
+        ;
+    }
 }
 
 /*******************************************************************************

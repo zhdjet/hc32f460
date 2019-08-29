@@ -68,7 +68,7 @@ const uint8_t MSC_Page00_Inquiry_Data[] = { //7
     0x00,
     0x00,
     0x00,
-    (LENGTH_INQUIRY_PAGE00 - 4),
+    (LENGTH_INQUIRY_PAGE00 - 4u),
     0x00,
     0x80,
     0x83

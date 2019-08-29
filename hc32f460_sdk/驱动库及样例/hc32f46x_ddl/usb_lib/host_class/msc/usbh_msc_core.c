@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file implements the MSC class driver functions
-	@endlink
+        This file implements the MSC class driver functions
+    @endlink
  **
  **   - 2018-12-26  1.0  wangmin First version for USB demo.
  **
@@ -99,7 +99,7 @@ static void USBH_MSC_ErrorHandle(uint8_t status);
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define USBH_MSC_ERROR_RETRY_LIMIT 10
+#define USBH_MSC_ERROR_RETRY_LIMIT 10u
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
@@ -116,14 +116,14 @@ __USB_ALIGN_BEGIN MSC_Machine_TypeDef         MSC_Machine __USB_ALIGN_END ;
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
 __USB_ALIGN_BEGIN USB_Setup_TypeDef           MSC_Setup __USB_ALIGN_END ;
-uint8_t MSCErrorCount = 0;
+uint8_t MSCErrorCount = 0u;
 
 USBH_Class_cb_TypeDef  USBH_MSC_cb =
 {
-    USBH_MSC_InterfaceInit,
-    USBH_MSC_InterfaceDeInit,
-    USBH_MSC_ClassRequest,
-    USBH_MSC_Handle,
+    &USBH_MSC_InterfaceInit,
+    &USBH_MSC_InterfaceDeInit,
+    &USBH_MSC_ClassRequest,
+    &USBH_MSC_Handle,
 };
 
 /*******************************************************************************
@@ -150,7 +150,7 @@ static USBH_Status USBH_MSC_InterfaceInit ( USB_OTG_CORE_HANDLE *pdev,
     if((pphost->device_prop.Itf_Desc[0].bInterfaceClass == MSC_CLASS) && \
         (pphost->device_prop.Itf_Desc[0].bInterfaceProtocol == MSC_PROTOCOL))
     {
-        if(pphost->device_prop.Ep_Desc[0][0].bEndpointAddress & 0x80)
+        if(pphost->device_prop.Ep_Desc[0][0].bEndpointAddress & (uint8_t)0x80)
         {
             MSC_Machine.MSBulkInEp = (pphost->device_prop.Ep_Desc[0][0].bEndpointAddress);
             MSC_Machine.MSBulkInEpSize  = pphost->device_prop.Ep_Desc[0][0].wMaxPacketSize;
@@ -161,7 +161,7 @@ static USBH_Status USBH_MSC_InterfaceInit ( USB_OTG_CORE_HANDLE *pdev,
             MSC_Machine.MSBulkOutEpSize  = pphost->device_prop.Ep_Desc[0] [0].wMaxPacketSize;
         }
 
-        if(pphost->device_prop.Ep_Desc[0][1].bEndpointAddress & 0x80)
+        if(pphost->device_prop.Ep_Desc[0][1].bEndpointAddress & (uint8_t)0x80)
         {
             MSC_Machine.MSBulkInEp = (pphost->device_prop.Ep_Desc[0][1].bEndpointAddress);
             MSC_Machine.MSBulkInEpSize  = pphost->device_prop.Ep_Desc[0][1].wMaxPacketSize;
@@ -213,13 +213,13 @@ void USBH_MSC_InterfaceDeInit ( USB_OTG_CORE_HANDLE *pdev,
     {
         USB_OTG_HC_Halt(pdev, MSC_Machine.hc_num_out);
         USBH_Free_Channel  (pdev, MSC_Machine.hc_num_out);
-        MSC_Machine.hc_num_out = 0;     /* Reset the Channel as Free */
+        MSC_Machine.hc_num_out = (uint8_t)0;     /* Reset the Channel as Free */
     }
     if ( MSC_Machine.hc_num_in)
     {
         USB_OTG_HC_Halt(pdev, MSC_Machine.hc_num_in);
         USBH_Free_Channel  (pdev, MSC_Machine.hc_num_in);
-        MSC_Machine.hc_num_in = 0;     /* Reset the Channel as Free */
+        MSC_Machine.hc_num_in = (uint8_t)0;     /* Reset the Channel as Free */
     }
 }
 
@@ -256,7 +256,7 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
 
     USBH_Status status = USBH_BUSY;
     uint8_t mscStatus = USBH_MSC_BUSY;
-    uint8_t appliStatus = 0;
+    uint8_t appliStatus = 0u;
 
     static uint8_t maxLunExceed = FALSE;
 
@@ -291,7 +291,7 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
                 {
                     MSC_Machine.maxLun = *(MSC_Machine.buff) ;
                     /* If device has more that one logical unit then it is not supported */
-                    if((MSC_Machine.maxLun > 0) && (maxLunExceed == FALSE))
+                    if((MSC_Machine.maxLun > (uint8_t)0) && (maxLunExceed == FALSE))
                     {
                         maxLunExceed = TRUE;
                         pphost->usr_cb->DeviceNotSupported();
@@ -314,12 +314,12 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
                 /* Issue Clearfeature request */
                 status = USBH_ClrFeature(pdev,
                                         phost,
-                                        0x00,
+                                        0x00u,
                                         pphost->Control.hc_num_out);
                 if(status == USBH_OK )
                 {
                     /* If GetMaxLun Request not support, assume Single LUN configuration */
-                    MSC_Machine.maxLun = 0;
+                    MSC_Machine.maxLun = (uint8_t)0;
                     USBH_MSC_BOTXferParam.MSCState = USBH_MSC_BOTXferParam.MSCStateBkp;
                 }
                 break;
@@ -330,7 +330,7 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
                 if(mscStatus == USBH_MSC_OK )
                 {
                     USBH_MSC_BOTXferParam.MSCState = USBH_MSC_READ_CAPACITY10;
-                    MSCErrorCount = 0;
+                    MSCErrorCount = (uint8_t)0;
                     status = USBH_OK;
                 }
                 else
@@ -345,7 +345,7 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
                 if(mscStatus == USBH_MSC_OK )
                 {
                     USBH_MSC_BOTXferParam.MSCState = USBH_MSC_MODE_SENSE6;
-                    MSCErrorCount = 0;
+                    MSCErrorCount = (uint8_t)0;
                     status = USBH_OK;
                 }
                 else
@@ -359,7 +359,7 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
                 if(mscStatus == USBH_MSC_OK )
                 {
                     USBH_MSC_BOTXferParam.MSCState = USBH_MSC_DEFAULT_APPLI_STATE;
-                    MSCErrorCount = 0;
+                    MSCErrorCount = (uint8_t)0;
                     status = USBH_OK;
                 }
                 else
@@ -387,14 +387,18 @@ static USBH_Status USBH_MSC_Handle(USB_OTG_CORE_HANDLE *pdev ,
             case USBH_MSC_DEFAULT_APPLI_STATE:
                 /* Process Application callback for MSC */
                 appliStatus = pphost->usr_cb->UserApplication();
-                if(appliStatus == 0)
+                if(appliStatus == (uint8_t)0)
                 {
                 USBH_MSC_BOTXferParam.MSCState = USBH_MSC_DEFAULT_APPLI_STATE;
                 }
-                else if (appliStatus == 1)
+                else if (appliStatus == (uint8_t)1)
                 {
                 /* De-init requested from application layer */
                 status =  USBH_APPLY_DEINIT;
+                }
+                else
+                {
+                    //
                 }
                 break;
             case USBH_MSC_UNRECOVERED_STATE:
@@ -422,11 +426,11 @@ static USBH_Status USBH_MSC_BOTReset(USB_OTG_CORE_HANDLE *pdev,
     phost->Control.setup.b.bmRequestType = USB_H2D | USB_REQ_TYPE_CLASS | \
                               USB_REQ_RECIPIENT_INTERFACE;
     phost->Control.setup.b.bRequest = USB_REQ_BOT_RESET;
-    phost->Control.setup.b.wValue.w = 0;
-    phost->Control.setup.b.wIndex.w = 0;
-    phost->Control.setup.b.wLength.w = 0;
+    phost->Control.setup.b.wValue.w = 0u;
+    phost->Control.setup.b.wIndex.w = 0u;
+    phost->Control.setup.b.wLength.w = 0u;
 
-    return USBH_CtlReq(pdev, phost, 0 , 0 );
+    return USBH_CtlReq(pdev, phost, 0u , 0u );
 }
 
 /**
@@ -444,11 +448,11 @@ static USBH_Status USBH_MSC_GETMaxLUN(USB_OTG_CORE_HANDLE *pdev , USBH_HOST *pho
                                             USB_REQ_RECIPIENT_INTERFACE;
 
     phost->Control.setup.b.bRequest = USB_REQ_GET_MAX_LUN;
-    phost->Control.setup.b.wValue.w = 0;
-    phost->Control.setup.b.wIndex.w = 0;
-    phost->Control.setup.b.wLength.w = 1;
+    phost->Control.setup.b.wValue.w = 0u;
+    phost->Control.setup.b.wIndex.w = 0u;
+    phost->Control.setup.b.wLength.w = 1u;
 
-    return USBH_CtlReq(pdev, phost, MSC_Machine.buff , 1 );
+    return USBH_CtlReq(pdev, phost, MSC_Machine.buff , 1u );
 }
 
 /**
@@ -481,7 +485,8 @@ void USBH_MSC_ErrorHandle(uint8_t status)
         /* Phase error, Go to Unrecoovered state */
         USBH_MSC_BOTXferParam.MSCState = USBH_MSC_UNRECOVERED_STATE;
     }
-    else if(status == USBH_MSC_BUSY)
+    //else if(status == USBH_MSC_BUSY)   /* MISRAC 2004*/
+    else
     {
         /*No change in state*/
     }

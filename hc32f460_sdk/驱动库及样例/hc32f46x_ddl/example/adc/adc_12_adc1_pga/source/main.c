@@ -67,54 +67,42 @@
  */
 #define ADC_CH_REMAP                (0u)
 
-/* The AOS function is used in this example. */
-#define ENABLE_AOS()                PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable)
-
-/* Enable ADC1. */
-#define ENABLE_ADC1()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable)
-
-/* Enable ADC2. */
-#define ENABLE_ADC2()               PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Enable)
-
-/* Disable ADC1. */
-#define DISABLE_ADC1()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Disable)
-
-/* Disable ADC2. */
-#define DISABLE_ADC2()              PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC2, Disable)
-
 /* ADC clock selection definition. */
 #define ADC_CLK_PCLK                (1u)
 #define ADC_CLK_MPLLQ               (2u)
 #define ADC_CLK_UPLLR               (3u)
 
 /* Select MPLLQ as ADC clock. */
-#define ADC_CLK                     ADC_CLK_MPLLQ
+#define ADC_CLK                     (ADC_CLK_MPLLQ)
+
+/* PGA channels definition.
+   In this example, select pins ADC1_IN0 and ADC1_IN2 as input pins for the PGA.
+   The PGA channels are PGA_CH0 and PGA_CH2. */
+#define PGA_CHANNLE                 (PGA_CH0 | PGA_CH2)
+#if (ADC_CH_REMAP == 0u)
+/* If the ADC channels are not remapped, then the ADC channels corresponding to
+   the two PGA input pins are ADC1_CH0 and ADC1_CH2, same with the PGA_CHANNLE. */
+#define ADC1_PGA_CHANNLE            (PGA_CHANNLE)
+#else
+/* If the ADC channel are remapped. */
+#define ADC1_PGA_CHANNLE            (ADC1_CHxx | ADC1_CHyy)
+#endif
 
 /* ADC1 channel definition for this example. */
-#define ADC1_SA_NORMAL_CHANNEL      ADC1_CH0
-#define ADC1_SA_CHANNEL             ADC1_SA_NORMAL_CHANNEL
-#define ADC1_SA_CHANNEL_COUNT       (1u)
+#define ADC1_SA_NORMAL_CHANNEL      (ADC1_CH5 | ADC1_CH6)
+#define ADC1_SA_CHANNEL             (ADC1_PGA_CHANNLE | ADC1_SA_NORMAL_CHANNEL)
+#define ADC1_SA_CHANNEL_COUNT       (4u)
+#define ADC1_CHANNEL                (ADC1_SA_CHANNEL)
 
-#define ADC1_SB_NORMAL_CHANNEL      (ADC1_CH2 | ADC1_CH5 | ADC1_CH6)
-#define ADC1_SB_CHANNEL             ADC1_SB_NORMAL_CHANNEL
-#define ADC1_SB_CHANNEL_COUNT       (3u)
-
-#define ADC1_CHANNEL                (ADC1_SA_CHANNEL | ADC1_SB_CHANNEL)
-#define ADC1_PGA_CHANNLE            (PGA_CH0 | PGA_CH2 | PGA_CH5)
-
-/* ADC1 channel sampling time.      ADC1_CH0 */
-#define ADC1_SA_CHANNEL_SAMPLE_TIME { 0x30 }
-
-/* ADC1 channel sampling time.      ADC1_CH2   ADC1_CH5   ADC1_CH6 */
-#define ADC1_SB_CHANNEL_SAMPLE_TIME { 0x50,     0x60,      0x45 }
+/* ADC1 channel sampling time.      ADC1_CH0  ADC1_CH2  ADC1_CH5  ADC1_CH6 */
+#define ADC1_SA_CHANNEL_SAMPLE_TIME { 0x30,     0x30,     0x30,     0x30 }
 
 /* ADC resolution definitions. */
 #define ADC_RESOLUTION_8BIT         (8u)
 #define ADC_RESOLUTION_10BIT        (10u)
 #define ADC_RESOLUTION_12BIT        (12u)
 
-#define ADC1_RESOLUTION             ADC_RESOLUTION_12BIT
-#define ADC2_RESOLUTION             ADC_RESOLUTION_10BIT
+#define ADC1_RESOLUTION             (ADC_RESOLUTION_12BIT)
 
 /* ADC reference voltage. The voltage of pin VREFH. */
 #define ADC_VREF                    (3.3382f)
@@ -126,7 +114,7 @@
 /* Choose a part from @ref en_adc_pga_factor_t. */
 #define PGA_FACTOR_3P2              (5u)
 #define PGA_FACTOR_4P571            (8u)
-#define PGA_FACTOR                  PGA_FACTOR_4P571
+#define PGA_FACTOR                  (PGA_FACTOR_3P2)
 
 #if (PGA_FACTOR == PGA_FACTOR_3P2)
 #define ADC_PGA_FACTOR              (3.2f)
@@ -135,6 +123,7 @@
 #else
 #endif
 
+/* Timeout value definitions. */
 #define TIMEOUT_MS                  (10u)
 
 /*******************************************************************************
@@ -186,37 +175,21 @@ int32_t main(void)
 
     while (1u)
     {
+        /* Disable PGA. */
         ADC_PgaCmd(Disable);
-        /* Start ADC1. */
-        ADC_StartConvert(M4_ADC1);
-        /* Check ADC1 sequence A and sequence B. */
-        if (Ok == ADC_CheckConvert(M4_ADC1, AdcSequence_A, m_au16Adc1Value, TIMEOUT_MS))
-        {
-            printf("\nBefore PGA enable.");
-            printf("\nADC1_IN0 value %d.", m_au16Adc1Value[0u]);
-            printf("\nADC1_IN0 voltage is %.4fV.",
-                    ((float)m_au16Adc1Value[0u] * ADC_VREF) / (float)ADC1_ACCURACY);
-        }
-        if (Ok == ADC_CheckConvert(M4_ADC1, AdcSequence_B, m_au16Adc1Value, TIMEOUT_MS))
-        {
-            // Do something.
-        }
-
-        ADC_PgaCmd(Enable);
-        /* Start ADC1. */
-        ADC_StartConvert(M4_ADC1);
-        /* Check ADC1 sequence A and sequence B. */
-        if (Ok == ADC_CheckConvert(M4_ADC1, AdcSequence_A, m_au16Adc1Value, TIMEOUT_MS))
-        {
-            printf("\nAfter PGA enable and factor is %f.", ADC_PGA_FACTOR);
-            printf("\nADC1_IN0 value %d.", m_au16Adc1Value[0u]);
-            printf("\nADC1_IN0 voltage is %.4fV.",
+        ADC_PollingSa(M4_ADC1, m_au16Adc1Value, ADC1_CH_COUNT, TIMEOUT_MS);
+        printf("\nBefore PGA enable.");
+        printf("\nADC1_IN0 value %d.", m_au16Adc1Value[0u]);
+        printf("\nADC1_IN0 voltage is %.4fV.",
                 ((float)m_au16Adc1Value[0u] * ADC_VREF) / (float)ADC1_ACCURACY);
-        }
-        if (Ok == ADC_CheckConvert(M4_ADC1, AdcSequence_B, m_au16Adc1Value, TIMEOUT_MS))
-        {
-            // Do something.
-        }
+
+        /* Enable PGA. */
+        ADC_PgaCmd(Enable);
+        ADC_PollingSa(M4_ADC1, m_au16Adc1Value, ADC1_CH_COUNT, TIMEOUT_MS);
+        printf("\nAfter PGA enable and factor is %f.", ADC_PGA_FACTOR);
+        printf("\nADC1_IN0 value %d.", m_au16Adc1Value[0u]);
+        printf("\nADC1_IN0 voltage is %.4fV.",
+                ((float)m_au16Adc1Value[0u] * ADC_VREF) / (float)ADC1_ACCURACY);
 
         /* Main loop cycles is 1000ms. */
         Ddl_Delay1ms(1000u);
@@ -355,7 +328,7 @@ static void AdcInitConfig(void)
     stcAdcInit.enScanMode   = AdcMode_SAOnceSBOnce;
 
     /* 1. Enable ADC1. */
-    ENABLE_ADC1();
+    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_ADC1, Enable);
     /* 2. Initialize ADC1. */
     ADC_Init(M4_ADC1, &stcAdcInit);
 }
@@ -374,33 +347,22 @@ static void AdcInitConfig(void)
 static void AdcChannelConfig(void)
 {
     stc_adc_ch_cfg_t  stcChCfg;
-    stc_adc_pga_cfg_t stcPgaCfg;
     uint8_t au8Adc1SaSampTime[ADC1_SA_CHANNEL_COUNT] = ADC1_SA_CHANNEL_SAMPLE_TIME;
-    uint8_t au8Adc1SbSampTime[ADC1_SB_CHANNEL_COUNT] = ADC1_SB_CHANNEL_SAMPLE_TIME;
 
     MEM_ZERO_STRUCT(stcChCfg);
-    MEM_ZERO_STRUCT(stcPgaCfg);
 
     /**************************** Add ADC1 channels ****************************/
     /* 1. Set the ADC pin to analog mode. */
     AdcSetChannelPinMode(M4_ADC1, ADC1_CHANNEL, Pin_Mode_Ana);
 
     stcChCfg.u32Channel  = ADC1_SA_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_A;
+    stcChCfg.u8Sequence  = ADC_SEQ_A;
     stcChCfg.pu8SampTime = au8Adc1SaSampTime;
     /* 2. Add ADC channel. */
     ADC_AddAdcChannel(M4_ADC1, &stcChCfg);
 
-    stcChCfg.u32Channel  = ADC1_SB_CHANNEL;
-    stcChCfg.u8Sequence  = AdcSequence_B;
-    stcChCfg.pu8SampTime = au8Adc1SbSampTime;
-    /* 2. Add ADC channel. */
-    ADC_AddAdcChannel(M4_ADC1, &stcChCfg);
-
     /* 3. Config PGA and add PGA channels. */
-    stcPgaCfg.enFactor     = (en_adc_pga_factor_t)PGA_FACTOR;
-    stcPgaCfg.enNegativeIn = AdcPgaNegative_VSSA;
-    ADC_ConfigPga(&stcPgaCfg);
+    ADC_ConfigPga((en_adc_pga_factor_t)PGA_FACTOR, AdcPgaNegative_VSSA);
 
     /* Add PGA pin ADC1_IN0, ADC1_IN2, ADC12_IN5 */
     ADC_AddPgaChannel(ADC1_PGA_CHANNLE);
@@ -424,17 +386,17 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    ENABLE_AOS();
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
 
     /* Sequence A will be started by software. */
-    ADC_TriggerSrcCmd(M4_ADC1, AdcSequence_A, Disable);
+    ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_A, Disable);
 
     /* Sequence A scan ends to trigger sequence B. */
-    stcTrgCfg.u8Sequence = AdcSequence_B;
+    stcTrgCfg.u8Sequence = ADC_SEQ_B;
     stcTrgCfg.enTrgSel   = AdcTrgsel_TRGX0;
     stcTrgCfg.enInTrg0   = EVT_ADC1_EOCA;
     ADC_ConfigTriggerSrc(M4_ADC1, &stcTrgCfg);
-    ADC_TriggerSrcCmd(M4_ADC1, AdcSequence_B, Enable);
+    ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_B, Enable);
 }
 
 /**
@@ -453,24 +415,8 @@ static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
     uint8_t u8ChOffset = 0u;
 #endif
 
-    if ((NULL == ADCx) || (0u == u32Channel))
-    {
-        return;
-    }
-
-    if (M4_ADC1 == ADCx)
-    {
-        u32Channel &= ADC1_PIN_MASK_ALL;
-    }
-    else
-    {
-        u32Channel &= ADC2_PIN_MASK_ALL;
-#if (!ADC_CH_REMAP)
-        u8ChOffset = 4u;
-#endif
-    }
-
-    u8ChIndex = 0u;
+    u32Channel &= ADC1_PIN_MASK_ALL;
+    u8ChIndex   = 0u;
     while (0u != u32Channel)
     {
         if (u32Channel & 0x1ul)
@@ -495,13 +441,14 @@ static void AdcSetChannelPinMode(M4_ADC_TypeDef *ADCx,
  ******************************************************************************/
 static void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode)
 {
-    en_port_t enPort;
-    en_pin_t enPin;
+    en_port_t enPort = PortA;
+    en_pin_t enPin   = Pin00;
+    bool bFlag       = true;
     stc_port_init_t stcPortInit;
 
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enPinMode = enMode;
-    stcPortInit.enPullUp = Disable;
+    stcPortInit.enPullUp  = Disable;
 
     switch (u8AdcPin)
     {
@@ -586,12 +533,15 @@ static void AdcSetPinMode(uint8_t u8AdcPin, en_pin_mode_t enMode)
         break;
 
     default:
-        return;
+        bFlag = false;
+        break;
     }
 
-    PORT_Init(enPort, enPin, &stcPortInit);
+    if (true == bFlag)
+    {
+        PORT_Init(enPort, enPin, &stcPortInit);
+    }
 }
-
 /*******************************************************************************
  * EOF (not truncated)
  ******************************************************************************/

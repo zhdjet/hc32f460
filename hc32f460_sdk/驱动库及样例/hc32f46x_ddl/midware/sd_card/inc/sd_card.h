@@ -341,42 +341,42 @@ typedef struct stc_sd_handle
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
 
-#define SD_CARD_ERROR_NONE                      SDMMC_ERROR_NONE                    /*!< No error                                                      */
-#define SD_CARD_ERROR_CMD_CRC_FAIL              SDMMC_ERROR_CMD_CRC_FAIL            /*!< Command response received (but CRC check failed)              */
-#define SD_CARD_ERROR_DATA_CRC_FAIL             SDMMC_ERROR_DATA_CRC_FAIL           /*!< Data block sent/received (CRC check failed)                   */
-#define SD_CARD_ERROR_CMD_RSP_TIMEOUT           SDMMC_ERROR_CMD_RSP_TIMEOUT         /*!< Command response timeout                                      */
-#define SD_CARD_ERROR_DATA_TIMEOUT              SDMMC_ERROR_DATA_TIMEOUT            /*!< Data timeout                                                  */
-#define SD_CARD_ERROR_TX_UNDERRUN               SDMMC_ERROR_TX_UNDERRUN             /*!< Transmit FIFO underrun                                        */
-#define SD_CARD_ERROR_RX_OVERRUN                SDMMC_ERROR_RX_OVERRUN              /*!< Receive FIFO overrun                                          */
-#define SD_CARD_ERROR_ADDR_MISALIGNED           SDMMC_ERROR_ADDR_MISALIGNED         /*!< Misaligned address                                            */
-#define SD_CARD_ERROR_BLOCK_LEN_ERR             SDMMC_ERROR_BLOCK_LEN_ERR           /*!< Transferred block length is not allowed for the card or the
+#define SD_CARD_ERROR_NONE                      (SDMMC_ERROR_NONE)                  /*!< No error                                                      */
+#define SD_CARD_ERROR_CMD_CRC_FAIL              (SDMMC_ERROR_CMD_CRC_FAIL)          /*!< Command response received (but CRC check failed)              */
+#define SD_CARD_ERROR_DATA_CRC_FAIL             (SDMMC_ERROR_DATA_CRC_FAIL)         /*!< Data block sent/received (CRC check failed)                   */
+#define SD_CARD_ERROR_CMD_RSP_TIMEOUT           (SDMMC_ERROR_CMD_RSP_TIMEOUT)       /*!< Command response timeout                                      */
+#define SD_CARD_ERROR_DATA_TIMEOUT              (SDMMC_ERROR_DATA_TIMEOUT)          /*!< Data timeout                                                  */
+#define SD_CARD_ERROR_TX_UNDERRUN               (SDMMC_ERROR_TX_UNDERRUN)           /*!< Transmit FIFO underrun                                        */
+#define SD_CARD_ERROR_RX_OVERRUN                (SDMMC_ERROR_RX_OVERRUN)            /*!< Receive FIFO overrun                                          */
+#define SD_CARD_ERROR_ADDR_MISALIGNED           (SDMMC_ERROR_ADDR_MISALIGNED)       /*!< Misaligned address                                            */
+#define SD_CARD_ERROR_BLOCK_LEN_ERR             (SDMMC_ERROR_BLOCK_LEN_ERR)         /*!< Transferred block length is not allowed for the card or the
                                                                                          number of transferred bytes does not match the block length   */
-#define SD_CARD_ERROR_ERASE_SEQ_ERR             SDMMC_ERROR_ERASE_SEQ_ERR           /*!< An error in the sequence of erase command occurs              */
-#define SD_CARD_ERROR_BAD_ERASE_PARAM           SDMMC_ERROR_BAD_ERASE_PARAM         /*!< An invalid selection for erase groups                         */
-#define SD_CARD_ERROR_WRITE_PROT_VIOLATION      SDMMC_ERROR_WRITE_PROT_VIOLATION    /*!< Attempt to program a write protect block                      */
-#define SD_CARD_ERROR_LOCK_UNLOCK_FAILED        SDMMC_ERROR_LOCK_UNLOCK_FAILED      /*!< Sequence or password error has been detected in unlock
+#define SD_CARD_ERROR_ERASE_SEQ_ERR             (SDMMC_ERROR_ERASE_SEQ_ERR)         /*!< An error in the sequence of erase command occurs              */
+#define SD_CARD_ERROR_BAD_ERASE_PARAM           (SDMMC_ERROR_BAD_ERASE_PARAM)       /*!< An invalid selection for erase groups                         */
+#define SD_CARD_ERROR_WRITE_PROT_VIOLATION      (SDMMC_ERROR_WRITE_PROT_VIOLATION)  /*!< Attempt to program a write protect block                      */
+#define SD_CARD_ERROR_LOCK_UNLOCK_FAILED        (SDMMC_ERROR_LOCK_UNLOCK_FAILED)    /*!< Sequence or password error has been detected in unlock
                                                                                          command or if there was an attempt to access a locked card    */
-#define SD_CARD_ERROR_COM_CRC_FAILED            SDMMC_ERROR_COM_CRC_FAILED          /*!< CRC check of the previous command failed                      */
-#define SD_CARD_ERROR_ILLEGAL_CMD               SDMMC_ERROR_ILLEGAL_CMD             /*!< Command is not legal for the card state                       */
-#define SD_CARD_ERROR_CARD_ECC_FAILED           SDMMC_ERROR_CARD_ECC_FAILED         /*!< Card internal ECC was applied but failed to correct the data  */
-#define SD_CARD_ERROR_CC_ERR                    SDMMC_ERROR_CC_ERR                  /*!< Internal card controller error                                */
-#define SD_CARD_ERROR_GENERAL_UNKNOWN_ERR       SDMMC_ERROR_GENERAL_UNKNOWN_ERR     /*!< General or unknown error                                      */
-#define SD_CARD_ERROR_STREAM_READ_UNDERRUN      SDMMC_ERROR_STREAM_READ_UNDERRUN    /*!< The card could not sustain data reading in stream rmode       */
-#define SD_CARD_ERROR_STREAM_WRITE_OVERRUN      SDMMC_ERROR_STREAM_WRITE_OVERRUN    /*!< The card could not sustain data programming in stream mode    */
-#define SD_CARD_ERROR_CID_CSD_OVERWRITE         SDMMC_ERROR_CID_CSD_OVERWRITE       /*!< CID/CSD overwrite error                                       */
-#define SD_CARD_ERROR_WP_ERASE_SKIP             SDMMC_ERROR_WP_ERASE_SKIP           /*!< Only partial address space was erased                         */
-#define SD_CARD_ERROR_CARD_ECC_DISABLED         SDMMC_ERROR_CARD_ECC_DISABLED       /*!< Command has been executed without using internal ECC          */
-#define SD_CARD_ERROR_ERASE_RESET               SDMMC_ERROR_ERASE_RESET             /*!< Erase sequence was cleared before executing because an out
+#define SD_CARD_ERROR_COM_CRC_FAILED            (SDMMC_ERROR_COM_CRC_FAILED)        /*!< CRC check of the previous command failed                      */
+#define SD_CARD_ERROR_ILLEGAL_CMD               (SDMMC_ERROR_ILLEGAL_CMD)           /*!< Command is not legal for the card state                       */
+#define SD_CARD_ERROR_CARD_ECC_FAILED           (SDMMC_ERROR_CARD_ECC_FAILED)       /*!< Card internal ECC was applied but failed to correct the data  */
+#define SD_CARD_ERROR_CC_ERR                    (SDMMC_ERROR_CC_ERR)                /*!< Internal card controller error                                */
+#define SD_CARD_ERROR_GENERAL_UNKNOWN_ERR       (SDMMC_ERROR_GENERAL_UNKNOWN_ERR)   /*!< General or unknown error                                      */
+#define SD_CARD_ERROR_STREAM_READ_UNDERRUN      (SDMMC_ERROR_STREAM_READ_UNDERRUN)  /*!< The card could not sustain data reading in stream rmode       */
+#define SD_CARD_ERROR_STREAM_WRITE_OVERRUN      (SDMMC_ERROR_STREAM_WRITE_OVERRUN)  /*!< The card could not sustain data programming in stream mode    */
+#define SD_CARD_ERROR_CID_CSD_OVERWRITE         (SDMMC_ERROR_CID_CSD_OVERWRITE)     /*!< CID/CSD overwrite error                                       */
+#define SD_CARD_ERROR_WP_ERASE_SKIP             (SDMMC_ERROR_WP_ERASE_SKIP)         /*!< Only partial address space was erased                         */
+#define SD_CARD_ERROR_CARD_ECC_DISABLED         (SDMMC_ERROR_CARD_ECC_DISABLED)     /*!< Command has been executed without using internal ECC          */
+#define SD_CARD_ERROR_ERASE_RESET               (SDMMC_ERROR_ERASE_RESET)           /*!< Erase sequence was cleared before executing because an out
                                                                                          of erase sequence command was received                        */
-#define SD_CARD_ERROR_AKE_SEQ_ERR               SDMMC_ERROR_AKE_SEQ_ERR             /*!< Error in sequence of authentication                           */
-#define SD_CARD_ERROR_INVALID_VOLTRANGE         SDMMC_ERROR_INVALID_VOLTRANGE       /*!< Error in case of invalid voltage range                        */
-#define SD_CARD_ERROR_ADDR_OUT_OF_RANGE         SDMMC_ERROR_ADDR_OUT_OF_RANGE       /*!< Error when addressed block is out of range                    */
-#define SD_CARD_ERROR_REQUEST_NOT_APPLICABLE    SDMMC_ERROR_REQUEST_NOT_APPLICABLE  /*!< Error when command request is not applicable                  */
-#define SD_CARD_ERROR_PARAM                     SDMMC_ERROR_INVALID_PARAMETER       /*!< the used parameter is not valid                               */
-#define SD_CARD_ERROR_UNSUPPORTED_FEATURE       SDMMC_ERROR_UNSUPPORTED_FEATURE     /*!< Error when feature is not insupported                         */
-#define SD_CARD_ERROR_BUSY                      SDMMC_ERROR_BUSY                    /*!< Error when transfer process is busy                           */
-#define SD_CARD_ERROR_DMA                       SDMMC_ERROR_DMA                     /*!< Error while DMA transfer                                      */
-#define SD_CARD_ERROR_TIMEOUT                   SDMMC_ERROR_TIMEOUT                 /*!< Timeout error                                                 */
+#define SD_CARD_ERROR_AKE_SEQ_ERR               (SDMMC_ERROR_AKE_SEQ_ERR)           /*!< Error in sequence of authentication                           */
+#define SD_CARD_ERROR_INVALID_VOLTRANGE         (SDMMC_ERROR_INVALID_VOLTRANGE)     /*!< Error in case of invalid voltage range                        */
+#define SD_CARD_ERROR_ADDR_OUT_OF_RANGE         (SDMMC_ERROR_ADDR_OUT_OF_RANGE)     /*!< Error when addressed block is out of range                    */
+#define SD_CARD_ERROR_REQUEST_NOT_APPLICABLE    (SDMMC_ERROR_REQUEST_NOT_APPLICABLE)/*!< Error when command request is not applicable                  */
+#define SD_CARD_ERROR_PARAM                     (SDMMC_ERROR_INVALID_PARAMETER)     /*!< the used parameter is not valid                               */
+#define SD_CARD_ERROR_UNSUPPORTED_FEATURE       (SDMMC_ERROR_UNSUPPORTED_FEATURE)   /*!< Error when feature is not insupported                         */
+#define SD_CARD_ERROR_BUSY                      (SDMMC_ERROR_BUSY)                  /*!< Error when transfer process is busy                           */
+#define SD_CARD_ERROR_DMA                       (SDMMC_ERROR_DMA)                   /*!< Error while DMA transfer                                      */
+#define SD_CARD_ERROR_TIMEOUT                   (SDMMC_ERROR_TIMEOUT)               /*!< Timeout error                                                 */
 
 /*******************************************************************************
  * Global variable definitions ('extern')
@@ -390,7 +390,7 @@ en_result_t SDCARD_Init(stc_sd_handle_t *handle,
                                 const stc_sdcard_init_t *pstcInitCfg);
 en_result_t SDCARD_SetDeviceMode(stc_sd_handle_t *handle,
                                 en_sd_card_device_mode_t enDevMode);
-en_sd_card_device_mode_t SDCARD_GetDeviceMode(stc_sd_handle_t *handle);
+en_sd_card_device_mode_t SDCARD_GetDeviceMode(const stc_sd_handle_t *handle);
 en_result_t SDCARD_GetCardCSD(stc_sd_handle_t *handle);
 en_result_t SDCARD_Erase(stc_sd_handle_t *handle,
                                 uint32_t u32BlkStartAddr,

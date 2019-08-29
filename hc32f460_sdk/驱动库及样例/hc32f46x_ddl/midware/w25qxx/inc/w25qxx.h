@@ -74,29 +74,29 @@ extern "C"
 /* Global pre-processor symbols/macros ('define')                            */
 /*****************************************************************************/
 /* W25QXX Flash ID */
-#define W25Q80  0XEF13
-#define W25Q16  0XEF14
-#define W25Q32  0XEF15
-#define W25Q64  0XEF16
-#define W25Q128 0XEF17
+#define W25Q80  0XEF13u
+#define W25Q16  0XEF14u
+#define W25Q32  0XEF15u
+#define W25Q64  0XEF16u
+#define W25Q128 0XEF17u
 
 /* W25QXX Command list */
-#define W25X_WriteEnable        0x06
-#define W25X_WriteDisable       0x04
-#define W25X_ReadStatusReg      0x05
-#define W25X_WriteStatusReg     0x01
-#define W25X_ReadData           0x03
-#define W25X_FastReadData       0x0B
-#define W25X_FastReadDual       0x3B
-#define W25X_PageProgram        0x02
-#define W25X_BlockErase         0xD8
-#define W25X_SectorErase        0x20
-#define W25X_ChipErase          0xC7
-#define W25X_PowerDown          0xB9
-#define W25X_ReleasePowerDown   0xAB
-#define W25X_DeviceID           0xAB
-#define W25X_ManufactDeviceID   0x90
-#define W25X_JedecDeviceID      0x9F
+#define W25X_WriteEnable        0x06u
+#define W25X_WriteDisable       0x04u
+#define W25X_ReadStatusReg      0x05u
+#define W25X_WriteStatusReg     0x01u
+#define W25X_ReadData           0x03u
+#define W25X_FastReadData       0x0Bu
+#define W25X_FastReadDual       0x3Bu
+#define W25X_PageProgram        0x02u
+#define W25X_BlockErase         0xD8u
+#define W25X_SectorErase        0x20u
+#define W25X_ChipErase          0xC7u
+#define W25X_PowerDown          0xB9u
+#define W25X_ReleasePowerDown   0xABu
+#define W25X_DeviceID           0xABu
+#define W25X_ManufactDeviceID   0x90u
+#define W25X_JedecDeviceID      0x9Fu
 
 /*******************************************************************************
  * Global variable definitions ('extern')

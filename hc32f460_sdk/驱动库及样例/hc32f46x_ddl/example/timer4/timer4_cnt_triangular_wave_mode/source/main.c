@@ -63,16 +63,17 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Timer4 counter */
-#define TIMER4_UNIT                     M4_TMR41
+#define TIMER4_UNIT                     (M4_TMR41)
+#define TIMER4_CNT_PEAK_INT_NUM         (INT_TMR41_GOVF)
 #define TIMER4_CNT_CYCLE_VAL            (50000u)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED_PORT                        PortA
-#define LED_PIN                         Pin07
+#define LED_PORT                        (PortA)
+#define LED_PIN                         (Pin07)
 
 /* LED1 */
-#define LED_ON()                        PORT_SetBits(LED_PORT, LED_PIN)
-#define LED_OFF()                       PORT_ResetBits(LED_PORT, LED_PIN)
+#define LED_ON()                        (PORT_SetBits(LED_PORT, LED_PIN))
+#define LED_OFF()                       (PORT_ResetBits(LED_PORT, LED_PIN))
 
 /* Parameter validity check for timer4 unit */
 #define IS_VALID_TIMER4(__TMRx__)                                              \
@@ -89,7 +90,6 @@
  ******************************************************************************/
 static void LedInit(void);
 static void PeakMatchIrqCb(void);
-static en_int_src_t GetTimer4CntPeakIntNum(M4_TMR4_TypeDef *TMR4x);
 
 /*******************************************************************************
  * Local variable definitions ('static')
@@ -124,49 +124,15 @@ static void LedInit(void)
 
 /**
  *******************************************************************************
- ** \brief Get Timer4-CNT peak interrupt number.
- **
- ** \param [in] TMR4x                   Pointer to Timer4 instance register base
- ** \arg M4_TMR41                       Timer4 unit 1 instance register base
- ** \arg M4_TMR42                       Timer4 unit 2 instance register base
- ** \arg M4_TMR43                       Timer4 unit 3 instance register base
- **
- ** \retval                             Timer4-CNT peak interrupt number
- **
- ******************************************************************************/
-static en_int_src_t GetTimer4CntPeakIntNum(M4_TMR4_TypeDef *TMR4x)
-{
-    en_int_src_t enIntSrc;
-
-    DDL_ASSERT(IS_VALID_TIMER4(TMR4x));
-
-    if (M4_TMR41 == TMR4x)
-    {
-        enIntSrc = INT_TMR41_GOVF;
-    }
-    else if (M4_TMR42 == TMR4x)
-    {
-        enIntSrc = INT_TMR42_GOVF;
-    }
-    else if (M4_TMR43 == TMR4x)
-    {
-        enIntSrc = INT_TMR43_GOVF;
-    }
-
-    return enIntSrc;
-}
-
-/**
- *******************************************************************************
  ** \brief Peak match interrupt handler
  **
  ******************************************************************************/
 static void PeakMatchIrqCb(void)
 {
-    static uint32_t u32IrqCnt = 0;
+    static uint32_t u32IrqCnt = 0ul;
 
     /* Set LED status */
-    (++u32IrqCnt & 0x00000001) ? LED_ON() : LED_OFF();
+    (++u32IrqCnt & 0x00000001ul) ? LED_ON() : LED_OFF();
 
     /* Clear Timer4-CNT peak interrupt flag */
     TIMER4_CNT_ClearIrqFlag(TIMER4_UNIT, Timer4CntPeakMatchInt);
@@ -208,8 +174,8 @@ int32_t main(void)
 
     /* Set Timer4-CNT IRQ */
     stcIrqRegiCfg.enIRQn = Int000_IRQn;
-    stcIrqRegiCfg.pfnCallback = PeakMatchIrqCb;
-    stcIrqRegiCfg.enIntSrc = GetTimer4CntPeakIntNum(TIMER4_UNIT);
+    stcIrqRegiCfg.pfnCallback = &PeakMatchIrqCb;
+    stcIrqRegiCfg.enIntSrc = TIMER4_CNT_PEAK_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);

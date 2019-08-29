@@ -66,14 +66,12 @@
 #define OTS_CLK_SEL_HRC             (1u)
 
 /* Select XTAL as OTS clock. */
-#define OTS_CLK_SEL                 OTS_CLK_SEL_HRC
+#define OTS_CLK_SEL                 (OTS_CLK_SEL_HRC)
 
 /* Select EVT_AOS_STRG as OTS trigger source. */
-#define OTS_TRG_SRC                 EVT_AOS_STRG
+#define OTS_TRG_SRC                 (EVT_AOS_STRG)
 
-/* Enable AOS macro definition. */
-#define ENABLE_AOS()                PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable)
-
+/* System clock frequency in MHz. */
 #define SYS_CLOCK_FREQ_MHZ          (SystemCoreClock / 1000000ul)
 
 #define TIMEOUT_10MS                (10u)
@@ -191,7 +189,10 @@ static void SystemClockConfig(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Set system clock source. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -243,7 +244,7 @@ static void OtsInitConfig(void)
 #else
     stcOtsInit.enClkSel = OtsClkSel_Xtal;
 #endif
-    stcOtsInit.u8ClkFreq = SYS_CLOCK_FREQ_MHZ;
+    stcOtsInit.u8ClkFreq = (uint8_t)SYS_CLOCK_FREQ_MHZ;
 
     /* 1. Enable OTS. */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_OTS, Enable);
@@ -288,7 +289,8 @@ static void OtsClockConfig(void)
 static void OtsTriggerSrcConfig(void)
 {
     /* 1. Enable AOS. */
-    ENABLE_AOS();
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+
     /* 2. Set OTS trigger source. */
     OTS_SetTriggerSrc(OTS_TRG_SRC);
 }

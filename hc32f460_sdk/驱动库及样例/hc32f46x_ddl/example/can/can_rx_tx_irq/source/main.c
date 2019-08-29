@@ -97,24 +97,27 @@ static void SysClkConfig(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln =50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1ul;
+    stcMpllCfg.plln    =50ul;
+    stcMpllCfg.PllpDiv = 4ul;
+    stcMpllCfg.PllqDiv = 4ul;
+    stcMpllCfg.PllrDiv = 4ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(5);
+    EFM_SetLatency(5ul);
     EFM_Lock();
 
     /* Enable MPLL. */
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -123,8 +126,8 @@ static void SysClkConfig(void)
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-stc_can_rxframe_t       stcRxFrame;
-uint8_t                 u8RxFlag = false;
+static stc_can_rxframe_t       stcRxFrame;
+static uint8_t                 u8RxFlag = false;
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
@@ -142,8 +145,6 @@ void CAN_RxIrqCallBack(void)
 
 }
 
-
-
 /**
  *******************************************************************************
  ** \brief  Main function of can tx rx Irq mode project
@@ -155,7 +156,6 @@ void CAN_RxIrqCallBack(void)
  ******************************************************************************/
 int32_t main(void)
 {
-
     stc_pwc_ram_cfg_t       stcRamCfg;
     stc_can_init_config_t   stcCanInitCfg;
     stc_can_filter_t        stcFilter;
@@ -163,7 +163,7 @@ int32_t main(void)
 
     stc_irq_regi_conf_t     stcIrqRegiConf;
 
-    uint8_t u8Idx = 0;
+    uint8_t u8Idx = 0u;
 
     MEM_ZERO_STRUCT(stcRamCfg);
     MEM_ZERO_STRUCT(stcCanInitCfg);
@@ -187,13 +187,13 @@ int32_t main(void)
     PORT_OE(PortD, Pin15, Enable);
 
     //<<Can bit time config
-    stcCanInitCfg.stcCanBt.PRESC = 1-1;
-    stcCanInitCfg.stcCanBt.SEG_1 = 5-2;
-    stcCanInitCfg.stcCanBt.SEG_2 = 3-1;
-    stcCanInitCfg.stcCanBt.SJW   = 3-1;
+    stcCanInitCfg.stcCanBt.PRESC = 1u-1u;
+    stcCanInitCfg.stcCanBt.SEG_1 = 5u-2u;
+    stcCanInitCfg.stcCanBt.SEG_2 = 3u-1u;
+    stcCanInitCfg.stcCanBt.SJW   = 3u-1u;
 
-    stcCanInitCfg.stcWarningLimit.CanErrorWarningLimitVal = 10;
-    stcCanInitCfg.stcWarningLimit.CanWarningLimitVal = 16-1;
+    stcCanInitCfg.stcWarningLimit.CanErrorWarningLimitVal = 10u;
+    stcCanInitCfg.stcWarningLimit.CanWarningLimitVal = 16u-1u;
 
     stcCanInitCfg.enCanRxBufAll  = CanRxNormal;
     stcCanInitCfg.enCanRxBufMode = CanRxBufNotStored;
@@ -205,8 +205,8 @@ int32_t main(void)
     //<<Can filter config
     stcFilter.enAcfFormat = CanAllFrames;
     stcFilter.enFilterSel = CanFilterSel1;
-    stcFilter.u32CODE     = 0x00000000;
-    stcFilter.u32MASK     = 0x1FFFFFFF;
+    stcFilter.u32CODE     = 0x00000000u;
+    stcFilter.u32MASK     = 0x1FFFFFFFu;
     CAN_FilterConfig(&stcFilter, Enable);
 
 
@@ -215,7 +215,7 @@ int32_t main(void)
 
     stcIrqRegiConf.enIRQn = Int000_IRQn;
     stcIrqRegiConf.enIntSrc = INT_CAN_INT;
-    stcIrqRegiConf.pfnCallback = CAN_RxIrqCallBack;
+    stcIrqRegiConf.pfnCallback = &CAN_RxIrqCallBack;
     enIrqRegistration(&stcIrqRegiConf);
     NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
@@ -228,29 +228,29 @@ int32_t main(void)
         {
             u8RxFlag = false;
 
-            if(1 == stcRxFrame.Cst.Control_f.RTR)
+            if(1u == stcRxFrame.Cst.Control_f.RTR)
             {
-                continue;
+//                continue;
             }
-
-            //<<Can Tx
-            stcTxFrame.StdID         = 0x123;
-            stcTxFrame.Control_f.DLC = stcRxFrame.Cst.Control_f.DLC;
-            stcTxFrame.Control_f.IDE = stcRxFrame.Cst.Control_f.IDE;
-
-            for(u8Idx=0; u8Idx<stcRxFrame.Cst.Control_f.DLC; u8Idx++)
+            else
             {
-                stcTxFrame.Data[u8Idx] = stcRxFrame.Data[u8Idx];
+                //<<Can Tx
+                stcTxFrame.StdID         = 0x123ul;
+                stcTxFrame.Control_f.DLC = stcRxFrame.Cst.Control_f.DLC;
+                stcTxFrame.Control_f.IDE = stcRxFrame.Cst.Control_f.IDE;
+
+                for(u8Idx=0u; u8Idx<stcRxFrame.Cst.Control_f.DLC; u8Idx++)
+                {
+                    stcTxFrame.Data[u8Idx] = stcRxFrame.Data[u8Idx];
+                }
+
+                CAN_SetFrame(&stcTxFrame);
+                CAN_TransmitCmd(CanPTBTxCmd);
+
+                CAN_IrqCmd(CanRxIrqEn, Enable);
             }
-
-            CAN_SetFrame(&stcTxFrame);
-            CAN_TransmitCmd(CanPTBTxCmd);
-
-            CAN_IrqCmd(CanRxIrqEn, Enable);
         }
-
     }
-
 }
 
 /*******************************************************************************

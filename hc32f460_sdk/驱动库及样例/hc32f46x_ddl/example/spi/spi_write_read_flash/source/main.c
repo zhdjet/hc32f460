@@ -61,55 +61,55 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /* LED1 Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
-#define LED1_TOGGLE()                   PORT_Toggle(LED1_PORT, LED1_PIN)
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
+#define LED1_TOGGLE()                   (PORT_Toggle(LED1_PORT, LED1_PIN))
 
 /* KEY0 Port/Pin definition */
-#define KEY0_PORT                       PortD
-#define KEY0_PIN                        Pin03
+#define KEY0_PORT                       (PortD)
+#define KEY0_PIN                        (Pin03)
 
 /* SPI_SCK Port/Pin definition */
-#define SPI_SCK_PORT                    PortC
-#define SPI_SCK_PIN                     Pin06
-#define SPI_SCK_FUNC                    Func_Spi3_Sck
+#define SPI_SCK_PORT                    (PortC)
+#define SPI_SCK_PIN                     (Pin06)
+#define SPI_SCK_FUNC                    (Func_Spi3_Sck)
 
 /* SPI_NSS Port/Pin definition */
-#define SPI_NSS_PORT                    PortC
-#define SPI_NSS_PIN                     Pin07
+#define SPI_NSS_PORT                    (PortC)
+#define SPI_NSS_PIN                     (Pin07)
 
-#define SPI_NSS_HIGH()                  PORT_SetBits(SPI_NSS_PORT, SPI_NSS_PIN)
-#define SPI_NSS_LOW()                   PORT_ResetBits(SPI_NSS_PORT, SPI_NSS_PIN)
+#define SPI_NSS_HIGH()                  (PORT_SetBits(SPI_NSS_PORT, SPI_NSS_PIN))
+#define SPI_NSS_LOW()                   (PORT_ResetBits(SPI_NSS_PORT, SPI_NSS_PIN))
 
 /* SPI_MOSI Port/Pin definition */
-#define SPI_MOSI_PORT                   PortD
-#define SPI_MOSI_PIN                    Pin08
-#define SPI_MOSI_FUNC                   Func_Spi3_Mosi
+#define SPI_MOSI_PORT                   (PortD)
+#define SPI_MOSI_PIN                    (Pin08)
+#define SPI_MOSI_FUNC                   (Func_Spi3_Mosi)
 
 /* SPI_MISO Port/Pin definition */
-#define SPI_MISO_PORT                   PortD
-#define SPI_MISO_PIN                    Pin09
-#define SPI_MISO_FUNC                   Func_Spi3_Miso
+#define SPI_MISO_PORT                   (PortD)
+#define SPI_MISO_PIN                    (Pin09)
+#define SPI_MISO_FUNC                   (Func_Spi3_Miso)
 
 /* SPI unit and clock definition */
-#define SPI_UNIT                        M4_SPI3
-#define SPI_UNIT_CLOCK                  PWC_FCG1_PERIPH_SPI3
+#define SPI_UNIT                        (M4_SPI3)
+#define SPI_UNIT_CLOCK                  (PWC_FCG1_PERIPH_SPI3)
 
 /* FLASH parameters */
 #define FLASH_PAGE_SIZE                 (0x100u)
 #define FLASH_SRCTOR_SIZE               (0x1000u)
-#define FALSH_MAX_ADDR                  (0x800000u)
+#define FALSH_MAX_ADDR                  (0x800000ul)
 #define FLASH_DUMMY_BYTE_VALUE          (0xffu)
 #define FLASH_BUSY_BIT_MASK             (0x01u)
 
@@ -131,7 +131,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8ExIntFlag = 0;
+static uint8_t u8ExIntFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -145,7 +145,7 @@ static uint8_t u8ExIntFlag = 0;
  ** \retval None
  **
  ******************************************************************************/
-void ExtInt03_Callback(void)
+static void ExtInt03_Callback(void)
 {
     if (Set == EXINT_IrqFlgGet(ExtiCh03))
     {
@@ -163,7 +163,7 @@ void ExtInt03_Callback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Sw2_Init(void)
+static void Sw2_Init(void)
 {
     stc_port_init_t stcPortInit;
     stc_exint_config_t stcExtiConfig;
@@ -191,7 +191,7 @@ void Sw2_Init(void)
     /* Register External Int to Vect.No.007 */
     stcIrqRegiConf.enIRQn = Int007_IRQn;
     /* Callback function */
-    stcIrqRegiConf.pfnCallback = ExtInt03_Callback;
+    stcIrqRegiConf.pfnCallback = &ExtInt03_Callback;
     /* Registration IRQ */
     enIrqRegistration(&stcIrqRegiConf);
 
@@ -212,15 +212,12 @@ void Sw2_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void SystemClk_Init(void)
+static void SystemClk_Init(void)
 {
-    en_clk_sys_source_t     enSysClkSrc;
     stc_clk_sysclk_cfg_t    stcSysClkCfg;
     stc_clk_xtal_cfg_t      stcXtalCfg;
     stc_clk_mpll_cfg_t      stcMpllCfg;
-    stc_clk_freq_t          stcClkFreq;
 
-    MEM_ZERO_STRUCT(enSysClkSrc);
     MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
     MEM_ZERO_STRUCT(stcMpllCfg);
@@ -244,11 +241,11 @@ void SystemClk_Init(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 42;
-    stcMpllCfg.PllpDiv = 2;
-    stcMpllCfg.PllqDiv = 2;
-    stcMpllCfg.PllrDiv = 2;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln = 42u;
+    stcMpllCfg.PllpDiv = 2u;
+    stcMpllCfg.PllqDiv = 2u;
+    stcMpllCfg.PllrDiv = 2u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -261,14 +258,12 @@ void SystemClk_Init(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while (Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
-
-    /* Check source and frequence. */
-    enSysClkSrc = CLK_GetSysClkSource();
-    CLK_GetClockFreq(&stcClkFreq);
 }
 
 /**
@@ -280,7 +275,7 @@ void SystemClk_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Spi_Config(void)
+static void Spi_Config(void)
 {
     stc_spi_init_t stcSpiInit;
 
@@ -331,16 +326,20 @@ void Spi_Config(void)
  ** \retval uint8_t                         SPI receive data from flash
  **
  ******************************************************************************/
-uint8_t SpiFlash_WriteReadByte(uint8_t u8Data)
+static uint8_t SpiFlash_WriteReadByte(uint8_t u8Data)
 {
     uint8_t u8Byte;
 
     /* Wait tx buffer empty */
-    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSendBufferEmpty));
+    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSendBufferEmpty))
+    {
+    }
     /* Send data */
     SPI_SendData8(SPI_UNIT, u8Data);
     /* Wait rx buffer full */
-    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagReceiveBufferFull));
+    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagReceiveBufferFull))
+    {
+    }
     /* Receive data */
     u8Byte = SPI_ReceiveData8(SPI_UNIT);
 
@@ -376,19 +375,19 @@ void SpiFlash_WriteEnable(void)
 en_result_t SpiFlash_WaitForWriteEnd(void)
 {
     en_result_t enRet = Ok;
-    uint8_t u8Status = 0;
+    uint8_t u8Status = 0u;
     uint32_t u32Timeout;
     stc_clk_freq_t stcClkFreq;
 
     CLK_GetClockFreq(&stcClkFreq);
-    u32Timeout = stcClkFreq.sysclkFreq / 1000;
+    u32Timeout = stcClkFreq.sysclkFreq / 1000u;
     SPI_NSS_LOW();
     SpiFlash_WriteReadByte(FLASH_INSTR_READ_SR1);
     do
     {
         u8Status = SpiFlash_WriteReadByte(FLASH_DUMMY_BYTE_VALUE);
         u32Timeout--;
-    } while ((u32Timeout != 0) &&
+    } while ((u32Timeout != 0ul) &&
              ((u8Status & FLASH_BUSY_BIT_MASK) == FLASH_BUSY_BIT_MASK));
 
     if (FLASH_BUSY_BIT_MASK == u8Status)
@@ -414,29 +413,33 @@ en_result_t SpiFlash_WaitForWriteEnd(void)
  ** \retval Ok                              Page write program success
  **
  ******************************************************************************/
-en_result_t SpiFlash_WritePage(uint32_t u32Addr, uint8_t *pData, uint16_t len)
+en_result_t SpiFlash_WritePage(uint32_t u32Addr, const uint8_t pData[], uint16_t len)
 {
-    en_result_t enRet;
+    en_result_t enRet = Ok;
+    uint16_t u16Index = 0u;
 
     if ((u32Addr > FALSH_MAX_ADDR) || (NULL == pData) || (len > FLASH_PAGE_SIZE))
     {
-        return Error;
+        enRet = Error;
     }
-
-    SpiFlash_WriteEnable();
-    /* Send data to flash */
-    SPI_NSS_LOW();
-    SpiFlash_WriteReadByte(FLASH_INSTR_PAGE_PROGRAM);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF0000) >> 16);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF00) >> 8);
-    SpiFlash_WriteReadByte(u32Addr & 0xFF);
-    while (len--)
+    else
     {
-        SpiFlash_WriteReadByte(*pData++);
+        SpiFlash_WriteEnable();
+        /* Send data to flash */
+        SPI_NSS_LOW();
+        SpiFlash_WriteReadByte(FLASH_INSTR_PAGE_PROGRAM);
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF0000ul) >> 16u));
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF00u) >> 8u));
+        SpiFlash_WriteReadByte((uint8_t)(u32Addr & 0xFFu));
+        while (len--)
+        {
+            SpiFlash_WriteReadByte(pData[u16Index]);
+            u16Index++;
+        }
+        SPI_NSS_HIGH();
+        /* Wait for flash idle */
+        enRet = SpiFlash_WaitForWriteEnd();
     }
-    SPI_NSS_HIGH();
-    /* Wait for flash idle */
-    enRet = SpiFlash_WaitForWriteEnd();
 
     return enRet;
 }
@@ -455,27 +458,31 @@ en_result_t SpiFlash_WritePage(uint32_t u32Addr, uint8_t *pData, uint16_t len)
  ** \retval Ok                              Read data program success
  **
  ******************************************************************************/
-en_result_t SpiFlash_ReadData(uint32_t u32Addr, uint8_t *pData, uint16_t len)
+en_result_t SpiFlash_ReadData(uint32_t u32Addr, uint8_t pData[], uint16_t len)
 {
     en_result_t enRet = Ok;
+    uint16_t u16Index = 0u;
 
     if ((u32Addr > FALSH_MAX_ADDR) || (NULL == pData))
     {
-        return Error;
+        enRet = Error;
     }
-
-    SpiFlash_WriteEnable();
-    /* Send data to flash */
-    SPI_NSS_LOW();
-    SpiFlash_WriteReadByte(FLASH_INSTR_STANDARD_READ);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF0000) >> 16);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF00) >> 8);
-    SpiFlash_WriteReadByte(u32Addr & 0xFF);
-    while (len--)
+    else
     {
-        *pData++ = SpiFlash_WriteReadByte(FLASH_DUMMY_BYTE_VALUE);
+        SpiFlash_WriteEnable();
+        /* Send data to flash */
+        SPI_NSS_LOW();
+        SpiFlash_WriteReadByte(FLASH_INSTR_STANDARD_READ);
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF0000ul) >> 16u));
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF00u) >> 8u));
+        SpiFlash_WriteReadByte((uint8_t)(u32Addr & 0xFFu));
+        while (len--)
+        {
+            pData[u16Index] = SpiFlash_WriteReadByte(FLASH_DUMMY_BYTE_VALUE);
+            u16Index++;
+        }
+        SPI_NSS_HIGH();
     }
-    SPI_NSS_HIGH();
 
     return enRet;
 }
@@ -492,23 +499,25 @@ en_result_t SpiFlash_ReadData(uint32_t u32Addr, uint8_t *pData, uint16_t len)
  ******************************************************************************/
 en_result_t SpiFlash_Erase4KbSector(uint32_t u32Addr)
 {
-    en_result_t enRet;
+    en_result_t enRet = Ok;
 
     if (u32Addr >= FALSH_MAX_ADDR)
     {
-        return Error;
+        enRet =  Error;
     }
-
-    SpiFlash_WriteEnable();
-    /* Send instruction to flash */
-    SPI_NSS_LOW();
-    SpiFlash_WriteReadByte(FLASH_INSTR_ERASE_4KB_SECTOR);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF0000) >> 16);
-    SpiFlash_WriteReadByte((u32Addr & 0xFF00) >> 8);
-    SpiFlash_WriteReadByte(u32Addr & 0xFF);
-    SPI_NSS_HIGH();
-    /* Wait for flash idle */
-    enRet = SpiFlash_WaitForWriteEnd();
+    else
+    {
+        SpiFlash_WriteEnable();
+        /* Send instruction to flash */
+        SPI_NSS_LOW();
+        SpiFlash_WriteReadByte(FLASH_INSTR_ERASE_4KB_SECTOR);
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF0000ul) >> 16u));
+        SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF00u) >> 8u));
+        SpiFlash_WriteReadByte((uint8_t)(u32Addr & 0xFFu));
+        SPI_NSS_HIGH();
+        /* Wait for flash idle */
+        enRet = SpiFlash_WaitForWriteEnd();
+    }
 
     return enRet;
 }
@@ -524,9 +533,10 @@ en_result_t SpiFlash_Erase4KbSector(uint32_t u32Addr)
  ******************************************************************************/
 int32_t main(void)
 {
-    uint32_t flashAddr = 0;
-    uint8_t bufferLen = 0, rxBuffer[128];
-    uint8_t txBuffer[] = "SPI read and write flash example: Welcome to use HDSC micro chip";
+    uint32_t flashAddr = 0u;
+    uint16_t bufferLen = 0u;
+    char txBuffer[] = "SPI read and write flash example: Welcome to use HDSC micro chip";
+    char rxBuffer[128];
     stc_port_init_t stcPortInit;
 
     /* configure structure initialization */
@@ -553,24 +563,24 @@ int32_t main(void)
     /* Configure SPI */
     Spi_Config();
     /* Get tx buffer length */
-    bufferLen = sizeof(txBuffer);
+    bufferLen = (uint16_t)sizeof(txBuffer);
 
     while (1)
     {
         if (1u == u8ExIntFlag)
         {
-            u8ExIntFlag = 0;
+            u8ExIntFlag = 0u;
             LED0_OFF();
             LED1_OFF();
-            memset(rxBuffer, 0, sizeof(rxBuffer));
+            memset(rxBuffer, 0l, sizeof(rxBuffer));
             /* Erase sector */
             SpiFlash_Erase4KbSector(flashAddr);
             /* Write data to flash */
-            SpiFlash_WritePage(flashAddr, &txBuffer[0], bufferLen);
+            SpiFlash_WritePage(flashAddr, (uint8_t*)&txBuffer[0], bufferLen);
             /* Read data from flash */
-            SpiFlash_ReadData(flashAddr, &rxBuffer[0], bufferLen);
+            SpiFlash_ReadData(flashAddr, (uint8_t*)&rxBuffer[0], bufferLen);
             /* Compare txBuffer and rxBuffer */
-            if (memcmp(txBuffer, rxBuffer, bufferLen) != 0)
+            if (memcmp(txBuffer, rxBuffer, (uint32_t)bufferLen) != 0)
             {
                 LED0_ON();
             }
@@ -582,7 +592,7 @@ int32_t main(void)
             flashAddr += FLASH_SRCTOR_SIZE;
             if (flashAddr >= FALSH_MAX_ADDR)
             {
-                flashAddr = 0;
+                flashAddr = 0u;
             }
         }
     }

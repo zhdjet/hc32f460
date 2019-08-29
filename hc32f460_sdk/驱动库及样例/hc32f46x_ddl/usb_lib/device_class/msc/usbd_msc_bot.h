@@ -83,35 +83,35 @@ MSC_BOT_CSW_TypeDef;
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define BOT_IDLE                      0       /* Idle state */
-#define BOT_DATA_OUT                  1       /* Data Out state */
-#define BOT_DATA_IN                   2       /* Data In state */
-#define BOT_LAST_DATA_IN              3       /* Last Data In Last */
-#define BOT_SEND_DATA                 4       /* Send Immediate data */
+#define BOT_IDLE                      (0u)       /* Idle state */
+#define BOT_DATA_OUT                  (1u)       /* Data Out state */
+#define BOT_DATA_IN                   (2u)       /* Data In state */
+#define BOT_LAST_DATA_IN              (3u)       /* Last Data In Last */
+#define BOT_SEND_DATA                 (4u)       /* Send Immediate data */
 
-#define BOT_CBW_SIGNATURE             0x43425355
-#define BOT_CSW_SIGNATURE             0x53425355
-#define BOT_CBW_LENGTH                31
-#define BOT_CSW_LENGTH                13
+#define BOT_CBW_SIGNATURE             (0x43425355ul)
+#define BOT_CSW_SIGNATURE             (0x53425355ul)
+#define BOT_CBW_LENGTH                (31u)
+#define BOT_CSW_LENGTH                (13u)
 
 /* CSW Status Definitions */
-#define CSW_CMD_PASSED                0x00
-#define CSW_CMD_FAILED                0x01
-#define CSW_PHASE_ERROR               0x02
+#define CSW_CMD_PASSED                (0x00u)
+#define CSW_CMD_FAILED                (0x01u)
+#define CSW_PHASE_ERROR               (0x02u)
 
 /* BOT Status */
-#define BOT_STATE_NORMAL              0
-#define BOT_STATE_RECOVERY            1
-#define BOT_STATE_ERROR               2
+#define BOT_STATE_NORMAL              (0u)
+#define BOT_STATE_RECOVERY            (1u)
+#define BOT_STATE_ERROR               (2u)
 
-#define DIR_IN                        0
-#define DIR_OUT                       1
-#define BOTH_DIR                      2
+#define DIR_IN                        (0u)
+#define DIR_OUT                       (1u)
+#define BOTH_DIR                      (2u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/
-extern uint8_t MSC_BOT_Data[];
+extern uint8_t MSC_BOT_Data[MSC_MEDIA_PACKET];
 extern uint16_t MSC_BOT_DataLen;
 extern uint8_t MSC_BOT_State;
 extern uint8_t MSC_BOT_BurstMode;

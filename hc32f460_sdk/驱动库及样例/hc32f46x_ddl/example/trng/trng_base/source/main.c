@@ -67,7 +67,7 @@
 #define TRNG_CLK_UPLLR              (3u)
 
 /* Select MPLLQ as TRNG clock. */
-#define TRNG_CLK                    TRNG_CLK_MPLLQ
+#define TRNG_CLK                    (TRNG_CLK_MPLLQ)
 
 #define TIMEOUT_10MS                (10u)
 
@@ -129,7 +129,7 @@ int32_t main(void)
     while (1u)
     {
         /* Start TRNG, check TRNG and get random number. */
-        TRNG_Generate(m_au32Random, TIMEOUT_10MS);
+        TRNG_Generate(m_au32Random, 2u, TIMEOUT_10MS);
         printf("\nRand number: 0x%.8x 0x%.8x.", m_au32Random[0u], m_au32Random[1u]);
         Ddl_Delay1ms(100u);
     }
@@ -194,7 +194,10 @@ static void SystemClockConfig(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Set system clock source. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);

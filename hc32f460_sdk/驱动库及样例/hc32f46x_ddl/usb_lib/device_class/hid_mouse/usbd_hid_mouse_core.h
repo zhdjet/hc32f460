@@ -68,22 +68,22 @@
  ** \brief USBD_HID_Exported_Defines
  **
  ******************************************************************************/
-#define USB_HID_CONFIG_DESC_SIZ       41
-#define USB_HID_DESC_SIZ              9
-#define HID_MOUSE_REPORT_DESC_SIZE    74
+#define USB_HID_CONFIG_DESC_SIZ       (41u)
+#define USB_HID_DESC_SIZ              (9u)
+#define HID_MOUSE_REPORT_DESC_SIZE    (74u)
 
-#define HID_DESCRIPTOR_TYPE           0x21
-#define HID_REPORT_DESC               0x22
+#define HID_DESCRIPTOR_TYPE           (0x21u)
+#define HID_REPORT_DESC               (0x22u)
 
 
-#define HID_REQ_SET_PROTOCOL          0x0B
-#define HID_REQ_GET_PROTOCOL          0x03
+#define HID_REQ_SET_PROTOCOL          (0x0Bu)
+#define HID_REQ_GET_PROTOCOL          (0x03u)
 
-#define HID_REQ_SET_IDLE              0x0A
-#define HID_REQ_GET_IDLE              0x02
+#define HID_REQ_SET_IDLE              (0x0Au)
+#define HID_REQ_GET_IDLE              (0x02u)
 
-#define HID_REQ_SET_REPORT            0x09
-#define HID_REQ_GET_REPORT            0x01
+#define HID_REQ_SET_REPORT            (0x09u)
+#define HID_REQ_GET_REPORT            (0x01u)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

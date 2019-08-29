@@ -63,30 +63,19 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* Timer4 CNT */
-#define TIMER4_UNIT                     M4_TMR41
-#define TIMER4_CNT_CYCLE_VAL            (40000u)       /* Timer4 counter cycle value */
+#define TIMER4_UNIT                     (M4_TMR41)
+#define TIMER4_CNT_CYCLE_VAL            (40000u)            /* Timer4 counter cycle value */
+#define TIMER4_CNT_ZERO_INT_NUM         (INT_TMR41_GUDF)    /* only INT_TMR41_GUDF  INT_TMR42_GUDF  INT_TMR43_GUDF */
 
 /* Timer4 OCO */
-#define TIMER4_OCO_HIGH_CH              Timer4OcoOuh   /* only Timer4OcoOuh  Timer4OcoOvh  Timer4OcoOwh */
+#define TIMER4_OCO_HIGH_CH              (Timer4OcoOuh)      /* only Timer4OcoOuh  Timer4OcoOvh  Timer4OcoOwh */
+
+/* Timer4 PWM */
+#define TIMER4_PWM_CH                   (Timer4PwmU)        /* only Timer4PwmU  Timer4PwmV  Timer4PwmW */
 
 /* Define port and pin for Timer4Pwm */
-#define TIMER4_PWM_H_PORT               PortE          /* TIM4_1_OUH_B:PE9   TIM4_1_OVH_B:PE11   TIM4_1_OWH_B:PE13 */
-#define TIMER4_PWM_H_PIN                Pin09
-
-/* Parameter validity check for oco channel */
-#define IS_VALID_OCO_CH(x)                                                     \
-(   (Timer4OcoOuh == (x))               ||                                     \
-    (Timer4OcoOul == (x))               ||                                     \
-    (Timer4OcoOvh == (x))               ||                                     \
-    (Timer4OcoOvl == (x))               ||                                     \
-    (Timer4OcoOwh == (x))               ||                                     \
-    (Timer4OcoOwl == (x)))
-
-/* Parameter validity check for timer4 unit */
-#define IS_VALID_TIMER4(__TMRx__)                                              \
-(   (M4_TMR41 == (__TMRx__))            ||                                     \
-    (M4_TMR42 == (__TMRx__))            ||                                     \
-    (M4_TMR43 == (__TMRx__)))
+#define TIMER4_PWM_H_PORT               (PortE)             /* TIM4_1_OUH_B:PE9   TIM4_1_OVH_B:PE11   TIM4_1_OWH_B:PE13 */
+#define TIMER4_PWM_H_PIN                (Pin09)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -96,15 +85,14 @@
  * Local function prototypes ('static')
  ******************************************************************************/
 static void Timer4CntIrqCallback(void);
-static en_int_src_t GetTimer4CntZeroIntNum(M4_TMR4_TypeDef *TMR4x);
 
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint16_t m_u16OccrValIdx = 0;
-static uint16_t m_au16OccrVal[] = {1 * (TIMER4_CNT_CYCLE_VAL / 4),
-                                   2 * (TIMER4_CNT_CYCLE_VAL / 4),
-                                   3 * (TIMER4_CNT_CYCLE_VAL / 4)};
+static uint16_t m_u16OccrValIdx = 0u;
+static const uint16_t m_au16OccrVal[] = {1u * (TIMER4_CNT_CYCLE_VAL / 4u),
+                                         2u * (TIMER4_CNT_CYCLE_VAL / 4u),
+                                         3u * (TIMER4_CNT_CYCLE_VAL / 4u)};
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -122,48 +110,11 @@ static void Timer4CntIrqCallback(void)
 
     if (m_u16OccrValIdx >= ARRAY_SZ(m_au16OccrVal))
     {
-        m_u16OccrValIdx = 0;
+        m_u16OccrValIdx = 0u;
     }
     else
     {
     }
-}
-
-/**
- *******************************************************************************
- ** \brief Get Timer4 CNT zero interrupt number.
- **
- ** \param [in] TMR4x                   Pointer to Timer4 instance register base
- ** \arg M4_TMR41                       Timer4 unit 1 instance register base
- ** \arg M4_TMR42                       Timer4 unit 2 instance register base
- ** \arg M4_TMR43                       Timer4 unit 3 instance register base
- **
- ** \retval                             Timer4 CNT zero interrupt number
- **
- ******************************************************************************/
-static en_int_src_t GetTimer4CntZeroIntNum(M4_TMR4_TypeDef *TMR4x)
-{
-    en_int_src_t enCntZeroIntNum;
-
-    DDL_ASSERT(IS_VALID_TIMER4(TMR4x));
-
-    if (M4_TMR41 == TMR4x)
-    {
-        enCntZeroIntNum = INT_TMR41_GUDF;
-    }
-    else if (M4_TMR42 == TMR4x)
-    {
-        enCntZeroIntNum = INT_TMR42_GUDF;
-    }
-    else if (M4_TMR43 == TMR4x)
-    {
-        enCntZeroIntNum = INT_TMR43_GUDF;
-    }
-    else
-    {
-    }
-
-    return enCntZeroIntNum;
 }
 
 /**
@@ -177,7 +128,6 @@ static en_int_src_t GetTimer4CntZeroIntNum(M4_TMR4_TypeDef *TMR4x)
  ******************************************************************************/
 int32_t main(void)
 {
-    en_timer4_pwm_ch_t enPwmCh;
     stc_timer4_cnt_init_t stcCntInit;
     stc_timer4_oco_init_t stcOcoInit;
     stc_timer4_pwm_init_t stcPwmInit;
@@ -209,8 +159,8 @@ int32_t main(void)
     /* Set Timer4 OCO IRQ */
     MEM_ZERO_STRUCT(stcIrqRegiCfg);
     stcIrqRegiCfg.enIRQn = Int000_IRQn;
-    stcIrqRegiCfg.pfnCallback = Timer4CntIrqCallback;
-    stcIrqRegiCfg.enIntSrc = GetTimer4CntZeroIntNum(TIMER4_UNIT);
+    stcIrqRegiCfg.pfnCallback = &Timer4CntIrqCallback;
+    stcIrqRegiCfg.enIntSrc = TIMER4_CNT_ZERO_INT_NUM;
     enIrqRegistration(&stcIrqRegiCfg);
     NVIC_SetPriority(stcIrqRegiCfg.enIRQn, DDL_IRQ_PRIORITY_DEFAULT);
     NVIC_ClearPendingIRQ(stcIrqRegiCfg.enIRQn);
@@ -223,7 +173,7 @@ int32_t main(void)
     stcOcoInit.enOcoIntCmd = Disable;
     TIMER4_OCO_Init(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, &stcOcoInit); /* Initialize OCO high channel */
 
-    if ((Timer4OcoOuh == TIMER4_OCO_HIGH_CH) || (Timer4OcoOvh == TIMER4_OCO_HIGH_CH) || (Timer4OcoOwh == TIMER4_OCO_HIGH_CH))
+    if (!(TIMER4_OCO_HIGH_CH % 2))
     {
         /* ocmr[15:0] = 0x030F */
         stcHighChCmpMode.enCntZeroMatchOpState = OcoOpOutputHold;
@@ -242,32 +192,12 @@ int32_t main(void)
 
         TIMER4_OCO_SetHighChCompareMode(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, &stcHighChCmpMode);  /* Set OCO high channel compare mode */
     }
-    else
-    {
-    }
 
     /* Set OCO compare value */
     TIMER4_OCO_WriteOccr(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, m_au16OccrVal[m_u16OccrValIdx++]);
 
     /* Enable OCO */
     TIMER4_OCO_OutputCompareCmd(TIMER4_UNIT, TIMER4_OCO_HIGH_CH, Enable);
-
-    /* Timer4 PWM: Get pwm couple channel */
-    if (Timer4OcoOuh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmU;
-    }
-    else if (Timer4OcoOvh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmV;
-    }
-    else if (Timer4OcoOwh == TIMER4_OCO_HIGH_CH)
-    {
-        enPwmCh = Timer4PwmW;
-    }
-    else
-    {
-    }
 
     /* Initialize PWM I/O */
     PORT_SetFunc(TIMER4_PWM_H_PORT, TIMER4_PWM_H_PIN, Func_Tim4, Disable);
@@ -277,7 +207,7 @@ int32_t main(void)
     stcPwmInit.enClkDiv = PwmPlckDiv1;
     stcPwmInit.enOutputState = PwmHPwmLHold;
     stcPwmInit.enMode = PwmThroughMode;
-    TIMER4_PWM_Init(TIMER4_UNIT, enPwmCh, &stcPwmInit); /* Initialize timer4 pwm */
+    TIMER4_PWM_Init(TIMER4_UNIT, TIMER4_PWM_CH, &stcPwmInit); /* Initialize timer4 pwm */
 
     /* Clear && Start CNT */
     TIMER4_CNT_ClearCountVal(TIMER4_UNIT);

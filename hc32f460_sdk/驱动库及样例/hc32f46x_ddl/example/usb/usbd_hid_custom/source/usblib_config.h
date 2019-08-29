@@ -86,30 +86,30 @@ extern "C"
  ******************************************************************************/
 
 /*! File folder on-off define */
-#define USBLIB_DEVICE_CORE                          DDL_ON
-#define USBLIB_HOST_CORE                            DDL_OFF
-#define USBLIB_DEVICE_CLASS                         DDL_ON
-#define USBLIB_HOST_CLASS                           DDL_OFF
+#define USBLIB_DEVICE_CORE                          (DDL_ON)
+#define USBLIB_HOST_CORE                            (DDL_OFF)
+#define USBLIB_DEVICE_CLASS                         (DDL_ON)
+#define USBLIB_HOST_CLASS                           (DDL_OFF)
 
 /*! ctl_drv file on-off define */
-#define CTL_DRV_USB_CORE                            DDL_ON
-#define CTL_DRV_USB_OTG                             DDL_ON
-#define CTL_DRV_USB_DCD                             DDL_ON
-#define CTL_DRV_USB_DCD_INT                         DDL_ON
-#define CTL_DRV_USB_HCD                             DDL_OFF
-#define CTL_DRV_USB_HCD_INT                         DDL_OFF
+#define CTL_DRV_USB_CORE                            (DDL_ON)
+#define CTL_DRV_USB_OTG                             (DDL_ON)
+#define CTL_DRV_USB_DCD                             (DDL_ON)
+#define CTL_DRV_USB_DCD_INT                         (DDL_ON)
+#define CTL_DRV_USB_HCD                             (DDL_OFF)
+#define CTL_DRV_USB_HCD_INT                         (DDL_OFF)
 
 /*! device class on-off define */
-#define DEVICE_CLASS_AUDIO                          DDL_OFF
-#define DEVICE_CLASS_HID_MOUSE                      DDL_OFF
-#define DEVICE_CLASS_MSC                            DDL_OFF
-#define DEVICE_CLASS_CDC_VCP                        DDL_OFF
-#define DEVICE_CLASS_HID_CUSTOM                     DDL_ON
-#define DEVICE_CLASS_HID_CDC_WRAPPER                DDL_OFF
+#define DEVICE_CLASS_AUDIO                          (DDL_OFF)
+#define DEVICE_CLASS_HID_MOUSE                      (DDL_OFF)
+#define DEVICE_CLASS_MSC                            (DDL_OFF)
+#define DEVICE_CLASS_CDC_VCP                        (DDL_OFF)
+#define DEVICE_CLASS_HID_CUSTOM                     (DDL_ON)
+#define DEVICE_CLASS_HID_CDC_WRAPPER                (DDL_OFF)
 
 /*! host class on-off define */
-#define HOST_CLASS_HID                              DDL_OFF
-#define HOST_CLASS_MSC                              DDL_OFF
+#define HOST_CLASS_HID                              (DDL_OFF)
+#define HOST_CLASS_MSC                              (DDL_OFF)
 
 /*******************************************************************************
  * Global variable definitions ('extern')

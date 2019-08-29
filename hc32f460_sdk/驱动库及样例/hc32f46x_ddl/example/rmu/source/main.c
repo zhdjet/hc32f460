@@ -76,28 +76,28 @@
 #define RAM_ECC_RESET               (11u)
 #define CLK_FREQ_ERR_RESET          (12u)
 #define XTAL_ERR_RESET              (13u)
-#define NORMAL_RESET               (0xFFu)
+#define NORMAL_RESET                (0xFFu)
 
-#define RESET_MODE                  NORMAL_RESET
+#define RESET_MODE                  (NORMAL_RESET)
 
 /* Indicate led definition. */
-#define LED0_PORT                   PortE
-#define LED0_PIN                    Pin06
-#define LED0_ON()                   PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                  PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()               PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_PORT                   (PortE)
+#define LED0_PIN                    (Pin06)
+#define LED0_ON()                   (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                  (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()               (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 #if (RESET_MODE == MPU_ERR_RESET)
-#define MPU_TYPE                    SMPU1Region
-#define MPU_RIGION_NUM              MpuRegionNum0
-#define MPU_RIGION_SIZE             MpuRegionSize32Byte
+#define MPU_TYPE                    (SMPU1Region)
+#define MPU_RIGION_NUM              (MpuRegionNum0)
+#define MPU_RIGION_SIZE             (MpuRegionSize32Byte)
 
-#define DMA_UNIT                    M4_DMA1
-#define DMA_CH                      DmaCh0
-#define DMA_TRG_SEL                 EVT_AOS_STRG
+#define DMA_UNIT                    (M4_DMA1)
+#define DMA_CH                      (DmaCh0)
+#define DMA_TRG_SEL                 (EVT_AOS_STRG)
 #define DMA_TRNCNT                  (2u)
 #define DMA_BLKSIZE                 (64u)
-#define DMA_RPTSIZE                 DMA_BLKSIZE
+#define DMA_RPTSIZE                 (DMA_BLKSIZE)
 #endif
 
 /*******************************************************************************
@@ -157,7 +157,7 @@ int32_t main(void)
     stc_rmu_rstcause_t stcResetFlag;
     Ddl_UartInit();
     LedConfig();
-    Ddl_Delay1ms(10);
+    Ddl_Delay1ms(10u);
 
     RMU_GetResetCause(&stcResetFlag);
     RMU_ClrResetFlag();

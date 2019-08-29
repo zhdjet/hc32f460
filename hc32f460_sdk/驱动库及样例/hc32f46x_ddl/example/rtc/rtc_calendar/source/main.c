@@ -61,12 +61,12 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0 Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED0_TOGGLE()                   PORT_Toggle(LED0_PORT, LED0_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED0_TOGGLE()                   (PORT_Toggle(LED0_PORT, LED0_PIN))
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -79,7 +79,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static uint8_t u8SecIntFlag = 0;
+static uint8_t u8SecIntFlag = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -93,7 +93,7 @@ static uint8_t u8SecIntFlag = 0;
  ** \retval None
  **
  ******************************************************************************/
-void RtcPeriod_IrqCallback(void)
+static void RtcPeriod_IrqCallback(void)
 {
     u8SecIntFlag = 1u;
 }
@@ -107,7 +107,7 @@ void RtcPeriod_IrqCallback(void)
  ** \retval None
  **
  ******************************************************************************/
-void Rtc_CalendarConfig(void)
+static void Rtc_CalendarConfig(void)
 {
     stc_rtc_date_time_t stcRtcDateTimeCfg;
 
@@ -115,13 +115,13 @@ void Rtc_CalendarConfig(void)
     MEM_ZERO_STRUCT(stcRtcDateTimeCfg);
 
     /* calendar configuration */
-    stcRtcDateTimeCfg.u8Year = 18;
-    stcRtcDateTimeCfg.u8Month = 10;
-    stcRtcDateTimeCfg.u8Day = 10;
+    stcRtcDateTimeCfg.u8Year = 18u;
+    stcRtcDateTimeCfg.u8Month = 10u;
+    stcRtcDateTimeCfg.u8Day = 10u;
     stcRtcDateTimeCfg.u8Weekday = RtcWeekdayWednesday;
-    stcRtcDateTimeCfg.u8Hour = 23;
-    stcRtcDateTimeCfg.u8Minute = 59;
-    stcRtcDateTimeCfg.u8Second = 55;
+    stcRtcDateTimeCfg.u8Hour = 23u;
+    stcRtcDateTimeCfg.u8Minute = 59u;
+    stcRtcDateTimeCfg.u8Second = 55u;
     if (RTC_SetDateTime(RtcDataFormatDec, &stcRtcDateTimeCfg, Enable, Enable) != Ok)
     {
         printf("write calendar failed!\r\n");
@@ -137,7 +137,7 @@ void Rtc_CalendarConfig(void)
  ** \retval None
  **
  ******************************************************************************/
-void Rtc_DisplayWeekday(uint8_t u8Weekday)
+static void Rtc_DisplayWeekday(uint8_t u8Weekday)
 {
     switch (u8Weekday)
     {
@@ -176,7 +176,7 @@ void Rtc_DisplayWeekday(uint8_t u8Weekday)
  ** \retval None
  **
  ******************************************************************************/
-void Xtal32_ClockConfig(void)
+static void Xtal32_ClockConfig(void)
 {
     stc_clk_xtal32_cfg_t stcXtal32Cfg;
 
@@ -185,7 +185,7 @@ void Xtal32_ClockConfig(void)
 
     /* Stop xtal32 */
     CLK_Xtal32Cmd(Disable);
-    Ddl_Delay1ms(100);
+    Ddl_Delay1ms(100u);
     /* Configuration xtal32 structure */
     stcXtal32Cfg.enFastStartup = Disable;
     stcXtal32Cfg.enDrv = ClkXtal32HighDrv;
@@ -194,7 +194,7 @@ void Xtal32_ClockConfig(void)
     /* Startup xtal32 */
     CLK_Xtal32Cmd(Enable);
     /* wait for xtal32 running */
-    Ddl_Delay1ms(3000);
+    Ddl_Delay1ms(3000u);
 }
 
 /**
@@ -206,7 +206,7 @@ void Xtal32_ClockConfig(void)
  ** \retval None
  **
  ******************************************************************************/
-void Rtc_Config(void)
+static void Rtc_Config(void)
 {
     stc_rtc_init_t stcRtcInit;
     stc_irq_regi_conf_t stcIrqRegiConf;
@@ -218,7 +218,7 @@ void Rtc_Config(void)
     /* Configure interrupt of rtc period */
     stcIrqRegiConf.enIntSrc = INT_RTC_PRD;
     stcIrqRegiConf.enIRQn = Int006_IRQn;
-    stcIrqRegiConf.pfnCallback = RtcPeriod_IrqCallback;
+    stcIrqRegiConf.pfnCallback = &RtcPeriod_IrqCallback;
     enIrqRegistration(&stcIrqRegiConf);
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);
     NVIC_SetPriority(stcIrqRegiConf.enIRQn, DDL_IRQ_PRIORITY_15);
@@ -231,27 +231,28 @@ void Rtc_Config(void)
         if (RTC_DeInit() == ErrorTimeout)
         {
             printf("reset rtc failed!\r\n");
-            return;
         }
+        else
+        {
+            /* Configuration rtc structure */
+            stcRtcInit.enClkSource = RtcClkXtal32;
+            stcRtcInit.enPeriodInt = RtcPeriodIntOneSec;
+            stcRtcInit.enTimeFormat = RtcTimeFormat24Hour;
+            stcRtcInit.enCompenWay = RtcOutputCompenDistributed;
+            stcRtcInit.enCompenEn = Disable;
+            stcRtcInit.u16CompenVal = 0u;
+            RTC_Init(&stcRtcInit);
 
-        /* Configuration rtc structure */
-        stcRtcInit.enClkSource = RtcClkXtal32;
-        stcRtcInit.enPeriodInt = RtcPeriodIntOneSec;
-        stcRtcInit.enTimeFormat = RtcTimeFormat24Hour;
-        stcRtcInit.enCompenWay = RtcOutputCompenDistributed;
-        stcRtcInit.enCompenEn = Disable;
-        stcRtcInit.u16CompenVal = 0;
-        RTC_Init(&stcRtcInit);
+            /* Enable period interrupt */
+            RTC_IrqCmd(RtcIrqPeriod, Enable);
+            /* Startup rtc count */
+            RTC_Cmd(Enable);
 
-        /* Enable period interrupt */
-        RTC_IrqCmd(RtcIrqPeriod, Enable);
-        /* Startup rtc count */
-        RTC_Cmd(Enable);
-
-        /* wait for rtc running */
-        Ddl_Delay1ms(1);
-        /* Update time after RTC startup */
-        Rtc_CalendarConfig();
+            /* wait for rtc running */
+            Ddl_Delay1ms(1u);
+            /* Update time after RTC startup */
+            Rtc_CalendarConfig();
+        }
     }
 }
 
@@ -289,7 +290,7 @@ int32_t main(void)
     {
         if (1u == u8SecIntFlag)
         {
-            u8SecIntFlag = 0;
+            u8SecIntFlag = 0u;
             LED0_TOGGLE();
             /* Get current time */
             if (RTC_GetDateTime(RtcDataFormatDec, &stcCurrDateTime) != Ok)

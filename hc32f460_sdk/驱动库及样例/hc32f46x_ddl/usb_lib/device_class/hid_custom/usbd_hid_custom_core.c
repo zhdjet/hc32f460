@@ -44,8 +44,8 @@
  **
  ** A detailed description is available at
  ** @link
-		This file provides the CUSTOM HID core functions.
-	@endlink
+        This file provides the CUSTOM HID core functions.
+    @endlink
  **
  **   - 2019-07-23  1.0  wangmin First version for USB demo.
  **
@@ -113,19 +113,19 @@ uint8_t  USBD_CUSTOM_HID_EP0_RxReady (void  *pdev);
  ******************************************************************************/
 USBD_Class_cb_TypeDef  USBD_CUSTOMHID_cb =
 {
-    USBD_CUSTOM_HID_Init,
-    USBD_CUSTOM_HID_DeInit,
-    USBD_CUSTOM_HID_Setup,
+    &USBD_CUSTOM_HID_Init,
+    &USBD_CUSTOM_HID_DeInit,
+    &USBD_CUSTOM_HID_Setup,
     NULL, /*EP0_TxSent*/
-    USBD_CUSTOM_HID_EP0_RxReady, /*EP0_RxReady*/ /* STATUS STAGE IN */
-    USBD_CUSTOM_HID_DataIn, /*DataIn*/
-    USBD_CUSTOM_HID_DataOut, /*DataOut*/
+    &USBD_CUSTOM_HID_EP0_RxReady, /*EP0_RxReady*/ /* STATUS STAGE IN */
+    &USBD_CUSTOM_HID_DataIn, /*DataIn*/
+    &USBD_CUSTOM_HID_DataOut, /*DataOut*/
     NULL, /*SOF */
     NULL,
     NULL,
-    USBD_CUSTOM_HID_GetCfgDesc,
+    &USBD_CUSTOM_HID_GetCfgDesc,
 #ifdef USB_OTG_HS_CORE
-    USBD_HID_GetCfgDesc, /* use same config as per FS */
+    &USBD_HID_GetCfgDesc, /* use same config as per FS */
 #endif
 };
 
@@ -134,21 +134,21 @@ USBD_Class_cb_TypeDef  USBD_CUSTOMHID_cb =
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_AltSet  __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_AltSet  __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_Protocol  __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_Protocol  __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
     #pragma data_alignment=4
   #endif
 #endif /* USB_OTG_HS_INTERNAL_DMA_ENABLED */
-__USB_ALIGN_BEGIN static uint32_t  USBD_HID_IdleState __USB_ALIGN_END = 0;
+__USB_ALIGN_BEGIN static uint32_t  USBD_HID_IdleState __USB_ALIGN_END = 0u;
 
 #ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
   #if defined ( __ICCARM__ ) /*!< IAR Compiler */
@@ -167,7 +167,7 @@ __USB_ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[USB_CUSTOM_HID_CONFIG_D
     0x01,         /*bConfigurationValue: Configuration value*/
     0x00,         /*iConfiguration: Index of string descriptor describing
     the configuration*/
-    0x80 | SELF_POWERED,         /*bmAttributes: bus powered and Support Remote Wake-up */
+    (uint8_t)0x80 | (uint8_t)SELF_POWERED,         /*bmAttributes: bus powered and Support Remote Wake-up */
     0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
 
     /************** Descriptor of HID interface ****************/
@@ -224,12 +224,12 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
   /* 6 */
 
   /* Led 1 */
-  0x85, LED1_REPORT_ID,  /*     REPORT_ID (1)		     */
-  0x09, 0x01,            /*     USAGE (LED 1)	             */
+  0x85, LED1_REPORT_ID,  /*     REPORT_ID (1)              */
+  0x09, 0x01,            /*     USAGE (LED 1)              */
   0x15, 0x00,            /*     LOGICAL_MINIMUM (0)        */
   0x25, 0x01,            /*     LOGICAL_MAXIMUM (1)        */
   0x75, 0x08,            /*     REPORT_SIZE (8)            */
-  0x95, LED1_REPORT_COUNT, /*     REPORT_COUNT (1)           */
+  0x95, LED1_REPORT_COUNT, /*     REPORT_COUNT (1)         */
   0xB1, 0x82,             /*    FEATURE (Data,Var,Abs,Vol) */
 
   0x85, LED1_REPORT_ID,  /*     REPORT_ID (1)              */
@@ -238,12 +238,12 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
   /* 26 */
 
   /* Led 2 */
-  0x85, LED2_REPORT_ID,  /*     REPORT_ID 2		     */
-  0x09, 0x02,            /*     USAGE (LED 2)	             */
+  0x85, LED2_REPORT_ID,  /*     REPORT_ID 2                */
+  0x09, 0x02,            /*     USAGE (LED 2)              */
   0x15, 0x00,            /*     LOGICAL_MINIMUM (0)        */
   0x25, 0x01,            /*     LOGICAL_MAXIMUM (1)        */
   0x75, 0x08,            /*     REPORT_SIZE (8)            */
-  0x95, LED2_REPORT_COUNT, /*     REPORT_COUNT (1)           */
+  0x95, LED2_REPORT_COUNT, /*     REPORT_COUNT (1)         */
   0xB1, 0x82,             /*    FEATURE (Data,Var,Abs,Vol) */
 
   0x85, LED2_REPORT_ID,  /*     REPORT_ID (2)              */
@@ -252,12 +252,12 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
   /* 46 */
 
   /* Led 3 */
-  0x85, LED3_REPORT_ID,  /*     REPORT_ID (3)		     */
-  0x09, 0x03,            /*     USAGE (LED 3)	             */
+  0x85, LED3_REPORT_ID,  /*     REPORT_ID (3)              */
+  0x09, 0x03,            /*     USAGE (LED 3)              */
   0x15, 0x00,            /*     LOGICAL_MINIMUM (0)        */
   0x25, 0x01,            /*     LOGICAL_MAXIMUM (1)        */
   0x75, 0x08,            /*     REPORT_SIZE (8)            */
-  0x95, LED3_REPORT_COUNT, /*     REPORT_COUNT (1)           */
+  0x95, LED3_REPORT_COUNT, /*     REPORT_COUNT (1)         */
   0xB1, 0x82,             /*    FEATURE (Data,Var,Abs,Vol) */
 
   0x85, LED3_REPORT_ID,  /*     REPORT_ID (3)              */
@@ -266,12 +266,12 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
   /* 66 */
 
   /* Led 4 */
-  0x85, LED4_REPORT_ID,  /*     REPORT_ID 4)		     */
-  0x09, 0x04,            /*     USAGE (LED 4)	             */
+  0x85, LED4_REPORT_ID,  /*     REPORT_ID 4)               */
+  0x09, 0x04,            /*     USAGE (LED 4)              */
   0x15, 0x00,            /*     LOGICAL_MINIMUM (0)        */
   0x25, 0x01,            /*     LOGICAL_MAXIMUM (1)        */
   0x75, 0x08,            /*     REPORT_SIZE (8)            */
-  0x95, LED4_REPORT_COUNT, /*     REPORT_COUNT (1)           */
+  0x95, LED4_REPORT_COUNT, /*     REPORT_COUNT (1)         */
   0xB1, 0x82,            /*     FEATURE (Data,Var,Abs,Vol) */
 
   0x85, LED4_REPORT_ID,  /*     REPORT_ID (4)              */
@@ -299,7 +299,7 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
   0xb1, 0x83,            /*     FEATURE (Cnst,Var,Abs,Vol) */
   /* 114 */
 
-  0xc0 	                 /*     END_COLLECTION	             */
+  0xc0                   /*     END_COLLECTION               */
 
 };
 
@@ -307,9 +307,9 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
-uint8_t Report_buf[2];
-__IO uint32_t IsReportAvailable = 0;
-uint8_t USBD_HID_Report_ID = 0;
+uint8_t Report_buf[2u];
+__IO uint32_t IsReportAvailable = 0ul;
+uint8_t USBD_HID_Report_ID = 0u;
 
 /**
  *******************************************************************************
@@ -338,7 +338,7 @@ uint8_t  USBD_CUSTOM_HID_Init (void  *pdev,
     DCD_EP_PrepareRx(pdev,
                      HID_OUT_EP,
                      Report_buf,
-                     2);
+                     2u);
     DCD_SetEPStatus (pdev , HID_OUT_EP , USB_OTG_EP_RX_VALID);
 
     return USBD_OK;
@@ -372,9 +372,10 @@ uint8_t  USBD_CUSTOM_HID_DeInit (void  *pdev,
 uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req)
 {
-    uint8_t USBD_HID_Report_LENGTH=0;
-    uint16_t len = 0;
+    uint8_t USBD_HID_Report_LENGTH=0u;
+    uint16_t len = 0u;
     uint8_t  *pbuf = NULL;
+    uint8_t u8Ret = USBD_OK;
 
     switch (req->bmRequest & USB_REQ_TYPE_MASK)
     {
@@ -387,7 +388,7 @@ uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev,
                 case CUSTOM_HID_REQ_GET_PROTOCOL:
                     USBD_CtlSendData (pdev,
                     (uint8_t *)&USBD_HID_Protocol,
-                    1);
+                    1u);
                     break;
                 case CUSTOM_HID_REQ_SET_IDLE:
                     USBD_HID_IdleState = (uint8_t)(req->wValue >> 8);
@@ -395,33 +396,39 @@ uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev,
                 case CUSTOM_HID_REQ_GET_IDLE:
                     USBD_CtlSendData (pdev,
                                     (uint8_t *)&USBD_HID_IdleState,
-                                    1);
+                                    1u);
                     break;
                 case CUSTOM_HID_REQ_SET_REPORT:
-                    IsReportAvailable = 1;
+                    IsReportAvailable = 1u;
                     USBD_HID_Report_ID = (uint8_t)(req->wValue);
                     USBD_HID_Report_LENGTH = (uint8_t)(req->wLength);
-                    USBD_CtlPrepareRx (pdev, Report_buf, USBD_HID_Report_LENGTH);
-
+                    USBD_CtlPrepareRx (pdev, Report_buf, (uint16_t)USBD_HID_Report_LENGTH);
+                    break;//C-STAT
                 default:
-                    USBD_CtlError (pdev, req);
-                    return USBD_FAIL;
+                    USBD_CtlError (pdev);
+                    u8Ret = USBD_FAIL;
+                    break;
             }
             break;
         case USB_REQ_TYPE_STANDARD:
             switch (req->bRequest)
             {
                 case USB_REQ_GET_DESCRIPTOR:
-                    if( req->wValue >> 8 == CUSTOM_HID_REPORT_DESC)
+                    if( req->wValue >> 8u == CUSTOM_HID_REPORT_DESC)
                     {
                         len = __MIN(CUSTOM_HID_REPORT_DESC_SIZE , req->wLength);
                         pbuf = (uint8_t*)CUSTOM_HID_ReportDesc;
                     }
-                    else if( req->wValue >> 8 == CUSTOM_HID_DESCRIPTOR_TYPE)
+                    else if( req->wValue >> 8u == CUSTOM_HID_DESCRIPTOR_TYPE)
                     {
-                        pbuf = (uint8_t*)USBD_CUSTOM_HID_CfgDesc + 0x12;
+                        pbuf = (uint8_t*)USBD_CUSTOM_HID_CfgDesc + 0x12u;
                         len = __MIN(USB_CUSTOM_HID_DESC_SIZ , req->wLength);
                     }
+                    else
+                    {
+                        //
+                    }
+
                     USBD_CtlSendData (pdev,
                                         pbuf,
                                         len);
@@ -429,14 +436,15 @@ uint8_t  USBD_CUSTOM_HID_Setup (void  *pdev,
                 case USB_REQ_GET_INTERFACE :
                     USBD_CtlSendData (pdev,
                                         (uint8_t *)&USBD_HID_AltSet,
-                                        1);
+                                        1u);
                     break;
                 case USB_REQ_SET_INTERFACE :
                     USBD_HID_AltSet = (uint8_t)(req->wValue);
                     break;
             }
+            break;
     }
-    return USBD_OK;
+    return u8Ret;
 }
 
 /**
@@ -453,7 +461,7 @@ uint8_t USBD_CUSTOM_HID_SendReport(USB_OTG_CORE_HANDLE  *pdev,
 {
     if (pdev->dev.device_status == USB_OTG_CONFIGURED )
     {
-        DCD_EP_Tx (pdev, HID_IN_EP, report, len);
+        DCD_EP_Tx (pdev, HID_IN_EP, report, (uint32_t)len);
     }
     return USBD_OK;
 }
@@ -468,7 +476,7 @@ uint8_t USBD_CUSTOM_HID_SendReport(USB_OTG_CORE_HANDLE  *pdev,
  ******************************************************************************/
 static uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
 {
-    *length = sizeof (USBD_CUSTOM_HID_CfgDesc);
+    *length = (uint8_t)sizeof (USBD_CUSTOM_HID_CfgDesc);
     return USBD_CUSTOM_HID_CfgDesc;
 }
 
@@ -487,7 +495,10 @@ uint8_t  USBD_CUSTOM_HID_DataIn (void  *pdev,
     be caused by  a new transfer before the end of the previous transfer */
     DCD_EP_Flush(pdev, HID_IN_EP);
 
-    if (epnum == (HID_IN_EP & ~0x80)) PrevXferDone = 1;
+    if (epnum == (HID_IN_EP & (uint8_t)~0x80u))
+    {
+        PrevXferDone = 1u;
+    }
 
     return USBD_OK;
 }
@@ -498,7 +509,7 @@ uint8_t  USBD_CUSTOM_HID_DataOut (void  *pdev,
     en_flag_status_t Led_State;
     if (epnum == HID_OUT_EP)
     {
-        if (Report_buf[1] == 0)
+        if (Report_buf[1] == 0u)
         {
             Led_State = Reset;
         }
@@ -531,7 +542,7 @@ uint8_t  USBD_CUSTOM_HID_DataOut (void  *pdev,
         }
     }
 
-    DCD_EP_PrepareRx(pdev,HID_OUT_EP,Report_buf,2);
+    DCD_EP_PrepareRx(pdev,HID_OUT_EP,Report_buf,2u);
     DCD_SetEPStatus (pdev , HID_OUT_EP , USB_OTG_EP_RX_VALID);
 
     return USBD_OK;
@@ -549,10 +560,10 @@ uint8_t USBD_CUSTOM_HID_EP0_RxReady(void *pdev)
 {
     en_flag_status_t Led_State;
 
-    if (IsReportAvailable == 1)
+    if (IsReportAvailable == 1u)
     {
-        IsReportAvailable = 0;
-        if (Report_buf[1] == 0)
+        IsReportAvailable = 0u;
+        if (Report_buf[1] == 0u)
         {
             Led_State = Reset;
         }

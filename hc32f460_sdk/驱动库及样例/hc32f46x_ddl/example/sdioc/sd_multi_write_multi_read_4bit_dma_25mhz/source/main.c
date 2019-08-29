@@ -62,44 +62,47 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* LED0(D23: red color) Port/Pin definition */
-#define LED0_PORT                       PortE
-#define LED0_PIN                        Pin06
+#define LED0_PORT                       (PortE)
+#define LED0_PIN                        (Pin06)
 
 /* LED1(D26: green color) Port/Pin definition */
-#define LED1_PORT                       PortA
-#define LED1_PIN                        Pin07
+#define LED1_PORT                       (PortA)
+#define LED1_PIN                        (Pin07)
 
 /* LED0 & LED1 */
-#define LED0_ON()                       PORT_SetBits(LED0_PORT, LED0_PIN)
-#define LED0_OFF()                      PORT_ResetBits(LED0_PORT, LED0_PIN)
-#define LED1_ON()                       PORT_SetBits(LED1_PORT, LED1_PIN)
-#define LED1_OFF()                      PORT_ResetBits(LED1_PORT, LED1_PIN)
+#define LED0_ON()                       (PORT_SetBits(LED0_PORT, LED0_PIN))
+#define LED0_OFF()                      (PORT_ResetBits(LED0_PORT, LED0_PIN))
+#define LED1_ON()                       (PORT_SetBits(LED1_PORT, LED1_PIN))
+#define LED1_OFF()                      (PORT_ResetBits(LED1_PORT, LED1_PIN))
 
 /* SDIOC Port/Pin definition */
-#define SDIOC_CD_PORT                   PortE
-#define SDIOC_CD_PIN                    Pin14
+#define SDIOC_CD_PORT                   (PortE)
+#define SDIOC_CD_PIN                    (Pin14)
 
-#define SDIOC_CK_PORT                   PortC
-#define SDIOC_CK_PIN                    Pin12
+#define SDIOC_CK_PORT                   (PortC)
+#define SDIOC_CK_PIN                    (Pin12)
 
-#define SDIOC_CMD_PORT                  PortD
-#define SDIOC_CMD_PIN                   Pin02
+#define SDIOC_CMD_PORT                  (PortD)
+#define SDIOC_CMD_PIN                   (Pin02)
 
-#define SDIOC_D0_PORT                   PortC
-#define SDIOC_D0_PIN                    Pin08
+#define SDIOC_D0_PORT                   (PortC)
+#define SDIOC_D0_PIN                    (Pin08)
 
-#define SDIOC_D1_PORT                   PortC
-#define SDIOC_D1_PIN                    Pin09
+#define SDIOC_D1_PORT                   (PortC)
+#define SDIOC_D1_PIN                    (Pin09)
 
-#define SDIOC_D2_PORT                   PortC
-#define SDIOC_D2_PIN                    Pin10
+#define SDIOC_D2_PORT                   (PortC)
+#define SDIOC_D2_PIN                    (Pin10)
 
-#define SDIOC_D3_PORT                   PortC
-#define SDIOC_D3_PIN                    Pin11
+#define SDIOC_D3_PORT                   (PortC)
+#define SDIOC_D3_PIN                    (Pin11)
 
 /* SD sector && count */
 #define SD_SECTOR_START                 (0u)
 #define SD_SECTOR_COUNT                 (4u)
+
+/* SDIOC unit */
+#define SDIOC_UNIT                      (M4_SDIOC1)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -115,28 +118,6 @@ static en_result_t SdiocInitPins(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-static stc_sdcard_init_t m_stcCardInitCfg =
-{
-    SdiocBusWidth4Bit,
-    SdiocClk25M,
-    SdiocNormalSpeedMode,
-};
-
-static stc_sdcard_dma_init_t m_stcDmaInitCfg =
-{
-    M4_DMA1,
-    DmaCh0,
-};
-
-static stc_sd_handle_t m_stcSdhandle =
-{
-    M4_SDIOC1,
-    SdCardDmaMode,
-    &m_stcDmaInitCfg,
-};
-
-static uint32_t m_u32WriteBlocks[512];
-static uint32_t m_u32ReadBlocks[ARRAY_SZ(m_u32WriteBlocks)];
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -206,11 +187,11 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1;
-    stcMpllCfg.plln = 50;
-    stcMpllCfg.PllpDiv = 4;
-    stcMpllCfg.PllqDiv = 4;
-    stcMpllCfg.PllrDiv = 4;
+    stcMpllCfg.pllmDiv = 1u;
+    stcMpllCfg.plln = 50u;
+    stcMpllCfg.PllpDiv = 4u;
+    stcMpllCfg.PllqDiv = 4u;
+    stcMpllCfg.PllrDiv = 4u;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -272,14 +253,30 @@ int32_t main(void)
 {
     uint32_t i;
     en_result_t enTestResult = Ok;
+    static stc_sd_handle_t stcSdhandle;
+    static uint32_t au32WriteBlocks[512];
+    static uint32_t au32ReadBlocks[ARRAY_SZ(au32WriteBlocks)];
+    stc_sdcard_init_t stcCardInitCfg =
+    {
+        SdiocBusWidth4Bit,
+        SdiocClk25M,
+        SdiocNormalSpeedMode,
+        NULL,
+    };
+
+    stc_sdcard_dma_init_t stcDmaInitCfg =
+    {
+        M4_DMA1,
+        DmaCh0,
+    };
 
     /* Write buffer data */
-    for (i = 0; i < ARRAY_SZ(m_u32WriteBlocks); i++)
+    for (i = 0u; i < ARRAY_SZ(au32WriteBlocks); i++)
     {
-        m_u32WriteBlocks[i] = i;
+        au32WriteBlocks[i] = i;
     }
 
-    MEM_ZERO_STRUCT(m_u32ReadBlocks);
+    MEM_ZERO_STRUCT(au32ReadBlocks);
 
     /* Initialize Clock */
     ClkInit();
@@ -291,71 +288,53 @@ int32_t main(void)
     SdiocInitPins();
 
     /* Initialize SD card */
-    if (Ok != SDCARD_Init(&m_stcSdhandle, &m_stcCardInitCfg))
+    stcSdhandle.SDIOCx = SDIOC_UNIT;
+    stcSdhandle.enDevMode = SdCardDmaMode;
+    stcSdhandle.pstcDmaInitCfg = &stcDmaInitCfg;
+    if (Ok != SDCARD_Init(&stcSdhandle, &stcCardInitCfg))
     {
         enTestResult = Error;
-    }
-    else
-    {
     }
 
     /* Erase SD card */
-    if (Ok != SDCARD_Erase(&m_stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, 20000))
+    if (Ok != SDCARD_Erase(&stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, 20000u))
     {
         enTestResult = Error;
-    }
-    else
-    {
     }
 
     /* Read SD card */
-    if (Ok != SDCARD_ReadBlocks(&m_stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)m_u32ReadBlocks, 2000))
+    if (Ok != SDCARD_ReadBlocks(&stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)au32ReadBlocks, 2000u))
     {
         enTestResult = Error;
     }
-    else
-    {
-    }
 
     /* Check whether data value is OxFFFFFFFF or 0x00000000 after erase SD card */
-    for (i = 0; i < ARRAY_SZ(m_u32WriteBlocks); i++)
+    for (i = 0u; i < ARRAY_SZ(au32WriteBlocks); i++)
     {
-        if ((m_u32ReadBlocks[i] != 0xFFFFFFFFul) &&
-            (m_u32ReadBlocks[i] != 0x00000000ul))
+        if ((au32ReadBlocks[i] != 0xFFFFFFFFul) &&
+            (au32ReadBlocks[i] != 0x00000000ul))
         {
             enTestResult = Error;
             break;
         }
-        else
-        {
-        }
     }
 
     /* Write SD card */
-    if (Ok != SDCARD_WriteBlocks(&m_stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)m_u32WriteBlocks, 2000))
+    if (Ok != SDCARD_WriteBlocks(&stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)au32WriteBlocks, 2000u))
     {
         enTestResult = Error;
-    }
-    else
-    {
     }
 
     /* Read SD card */
-    if (Ok != SDCARD_ReadBlocks(&m_stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)m_u32ReadBlocks, 20000))
+    if (Ok != SDCARD_ReadBlocks(&stcSdhandle, SD_SECTOR_START, SD_SECTOR_COUNT, (uint8_t *)au32ReadBlocks, 20000u))
     {
         enTestResult = Error;
-    }
-    else
-    {
     }
 
     /* Compare read/write data */
-    if (0 != memcmp(m_u32WriteBlocks, m_u32ReadBlocks, sizeof(m_u32ReadBlocks)))
+    if (0 != memcmp(au32WriteBlocks, au32ReadBlocks, sizeof(au32ReadBlocks)))
     {
         enTestResult = Error;
-    }
-    else
-    {
     }
 
     if (Ok == enTestResult)

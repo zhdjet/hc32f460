@@ -61,39 +61,39 @@
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 /* KEY0 (SW2)*/
-#define  SW2_PORT   PortD
-#define  SW2_PIN    Pin03
+#define  SW2_PORT           (PortD)
+#define  SW2_PIN            (Pin03)
 /* KEY1 (SW4)*/
-#define  SW4_PORT   PortD
-#define  SW4_PIN    Pin04
+#define  SW4_PORT           (PortD)
+#define  SW4_PIN            (Pin04)
 /* KEY2 (SW3)*/
-#define  SW3_PORT   PortD
-#define  SW3_PIN    Pin05
+#define  SW3_PORT           (PortD)
+#define  SW3_PIN            (Pin05)
 /* KEY3 (SW5)*/
-#define  SW5_PORT   PortD
-#define  SW5_PIN    Pin06
+#define  SW5_PORT           (PortD)
+#define  SW5_PIN            (Pin06)
 
 /* LED0 Port/Pin definition */
-#define  LED0_PORT        PortE
-#define  LED0_PIN         Pin06
+#define  LED0_PORT          (PortE)
+#define  LED0_PIN           (Pin06)
 
 /* LED1 Port/Pin definition */
-#define  LED1_PORT        PortD
-#define  LED1_PIN         Pin07
+#define  LED1_PORT          (PortD)
+#define  LED1_PIN           (Pin07)
 
 /* LED2 Port/Pin definition */
-#define  LED2_PORT        PortB
-#define  LED2_PIN         Pin05
+#define  LED2_PORT          (PortB)
+#define  LED2_PIN           (Pin05)
 
 /* LED3 Port/Pin definition */
-#define  LED3_PORT        PortB
-#define  LED3_PIN         Pin09
+#define  LED3_PORT          (PortB)
+#define  LED3_PIN           (Pin09)
 
 /* LED0~1 toggle definition */
-#define  LED0_TOGGLE()    PORT_Toggle(LED0_PORT, LED0_PIN)
-#define  LED1_TOGGLE()    PORT_Toggle(LED1_PORT, LED1_PIN)
-#define  LED2_TOGGLE()    PORT_Toggle(LED2_PORT, LED2_PIN)
-#define  LED3_TOGGLE()    PORT_Toggle(LED3_PORT, LED3_PIN)
+#define  LED0_TOGGLE()      (PORT_Toggle(LED0_PORT, LED0_PIN))
+#define  LED1_TOGGLE()      (PORT_Toggle(LED1_PORT, LED1_PIN))
+#define  LED2_TOGGLE()      (PORT_Toggle(LED2_PORT, LED2_PIN))
+#define  LED3_TOGGLE()      (PORT_Toggle(LED3_PORT, LED3_PIN))
 
 //#define SCMA_ValidPeriod  1
 
@@ -123,25 +123,25 @@ void Timer6_CallBack(void)
 {
     static uint8_t i;
 
-    if( 0 == i)
+    if( 0u == i)
     {
-        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x3000);
+        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x3000u);
        #ifdef SCMA_ValidPeriod
-        Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompC, 0x3000);
+        Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompC, 0x3000u);
        #endif
 
-        i = 1;
+        i = 1u;
     }
     else
     {
-        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x6000);
+        Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, 0x6000u);
       #ifdef SCMA_ValidPeriod
-        Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompC, 0x6000);
+        Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompC, 0x6000u);
       #endif
-        i = 0;
+        i = 0u;
     }
 
-    M4_TMR61->STFLR_f.UDFF = 0;
+    M4_TMR61->STFLR_f.UDFF = 0u;
 }
 
 void ADC1A_CallBack(void)
@@ -181,11 +181,11 @@ static void SysClkIni(void)
     CLK_HrcCmd(Enable);       //Enable HRC
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2;   //HRC 16M / 2
-    stcMpllCfg.plln =42;      //8M*42 = 336M
-    stcMpllCfg.PllpDiv = 2;   //MLLP = 168M
-    stcMpllCfg.PllqDiv = 2;   //MLLQ = 168M
-    stcMpllCfg.PllrDiv = 2;   //MLLR = 168M
+    stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
+    stcMpllCfg.plln    =42ul;   //8M*42 = 336M
+    stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
+    stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
+    stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
@@ -198,7 +198,10 @@ static void SysClkIni(void)
     CLK_MpllCmd(Enable);
 
     /* Wait MPLL ready. */
-    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy));
+    while(Set != CLK_GetFlagStatus(ClkFlagMPLLRdy))
+    {
+        ;
+    }
 
     /* Switch system clock source to MPLL. */
     CLK_SetSysClkSource(CLKSysSrcMPLL);
@@ -241,36 +244,39 @@ void Config_Adc(void)
     ADC_Init(M4_ADC1 ,&stcAdcInit);
 
     stcBaseCfg.u32Channel     = ADC1_CH0 | ADC1_CH1 | ADC1_CH2;
-    stcBaseCfg.u8Sequence     = AdcSequence_A;
+    stcBaseCfg.u8Sequence     = ADC_SEQ_A;
     stcBaseCfg.pu8SampTime    = u8Adc1SampTime;
-    ADC_ConfigAdcChannel(M4_ADC1, &stcBaseCfg);
+    ADC_AddAdcChannel(M4_ADC1, &stcBaseCfg);
 
 #ifdef SCMA_ValidPeriod
-    stcAdcTrigCfg.u8Sequence  = AdcSequence_A;
+    stcAdcTrigCfg.u8Sequence  = ADC_SEQ_A;
     stcAdcTrigCfg.enTrgSel    = AdcTrgsel_TRGX0;
     stcAdcTrigCfg.enInTrg0    = EVT_TMR61_SCMA;
     ADC_ConfigTriggerSrc(M4_ADC1, &stcAdcTrigCfg);
-    ADC_TriggerSrcCmd(M4_ADC1,AdcSequence_A, Enable);
+    ADC_TriggerSrcCmd(M4_ADC1,ADC_SEQ_A, Enable);
 #else
-    stcAdcTrigCfg.u8Sequence  = AdcSequence_A;
+    stcAdcTrigCfg.u8Sequence  = ADC_SEQ_A;
     stcAdcTrigCfg.enTrgSel    = AdcTrgsel_TRGX0;
     stcAdcTrigCfg.enInTrg0    = EVT_TMR61_GUDF;
     ADC_ConfigTriggerSrc(M4_ADC1, &stcAdcTrigCfg);
-    ADC_TriggerSrcCmd(M4_ADC1,AdcSequence_A, Enable);
+    ADC_TriggerSrcCmd(M4_ADC1,ADC_SEQ_A, Enable);
 #endif
 
     /* Enable ADC1 sequence A interrupt */
-    ADC_SeqITCmd(M4_ADC1, AdcSequence_A, Enable);
+    ADC_SeqITCmd(M4_ADC1, ADC_SEQ_A, Enable);
 
     /* Config ADC1 interrupt */
     stcAdcIrqCfg.enIntSrc    = INT_ADC1_EOCA;
     stcAdcIrqCfg.enIRQn      = Int004_IRQn;        ///< [Int000_IRQn, Int031_IRQn] [Int116_IRQn, Int121_IRQn] [Int142_IRQn]
-    stcAdcIrqCfg.pfnCallback = ADC1A_CallBack;
+    stcAdcIrqCfg.pfnCallback = &ADC1A_CallBack;
     enIrqRegResult = enIrqRegistration(&stcAdcIrqCfg);
 
     if (Ok != enIrqRegResult)
     {
-        while (1u);
+        while (1u)
+        {
+            ;
+        }
     }
 
     NVIC_ClearPendingIRQ(stcAdcIrqCfg.enIRQn);
@@ -328,10 +334,10 @@ int32_t main(void)
     stcTIM6BaseCntCfg.enCntClkDiv = Timer6PclkDiv1;                     //Count clock: pclk
     Timer6_Init(M4_TMR61, &stcTIM6BaseCntCfg);                           //timer6 PWM frequency, count mode and clk config
 
-    u16Period = 0x8340;
+    u16Period = 0x8340u;
     Timer6_SetPeriod(M4_TMR61, Timer6PeriodA, u16Period);                //period set
 
-    u16Compare = 0x3000;
+    u16Compare = 0x3000u;
     Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareA, u16Compare);  //Set General Compare RegisterA Value
     Timer6_SetGeneralCmpValue(M4_TMR61, Timer6GenCompareC, u16Compare);  //Set General Compare RegisterC Value as buffer register of GCMAR
 
@@ -342,7 +348,7 @@ int32_t main(void)
     //Timer6_SetGeneralBuf(M4_TMR61, Timer6PWMB, &stcGCMPBufCfg);        //GCMBR buffer transfer set
 
 
-    u16Compare = 0x3000;
+    u16Compare = 0x3000u;
     Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompA, u16Compare);
     Timer6_SetSpecialCmpValue(M4_TMR61, Timer6SpclCompC, u16Compare);
 
@@ -372,8 +378,8 @@ int32_t main(void)
     stcTIM6PWMxCfg.enDisVal   = Timer6PWMxDisValLow;
     Timer6_PortOutputConfig(M4_TMR61, Timer6PWMB, &stcTIM6PWMxCfg);
 
-    Timer6_SetDeadTimeValue(M4_TMR61, Timer6DeadTimUpAR, 3360);     // Set dead time value (up count)
-    //Timer6_SetDeadTimeValue(M4_TMR61, Timer6DeadTimDwnAR, 3360);  // Set dead time value (down count)
+    Timer6_SetDeadTimeValue(M4_TMR61, Timer6DeadTimUpAR, 3360u);     // Set dead time value (up count)
+    //Timer6_SetDeadTimeValue(M4_TMR61, Timer6DeadTimDwnAR, 3360u);  // Set dead time value (down count)
 
     stcDeadTimeCfg.bEnDeadtime     = true;  //Enable Hardware DeadTime
     stcDeadTimeCfg.bEnDtBufUp      = false; //Disable buffer transfer
@@ -406,7 +412,7 @@ int32_t main(void)
 
     stcIrqRegiConf.enIRQn = Int002_IRQn;                    //Register INT_TMR61_GUDF Int to Vect.No.002
     stcIrqRegiConf.enIntSrc = INT_TMR61_GUDF;               //Select Event interrupt function
-    stcIrqRegiConf.pfnCallback = Timer6_CallBack;           //Callback function
+    stcIrqRegiConf.pfnCallback = &Timer6_CallBack;           //Callback function
     enIrqRegistration(&stcIrqRegiConf);                     //Registration IRQ
 
     NVIC_ClearPendingIRQ(stcIrqRegiConf.enIRQn);            //Clear Pending

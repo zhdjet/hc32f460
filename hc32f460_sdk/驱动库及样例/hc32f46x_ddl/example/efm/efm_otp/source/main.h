@@ -76,7 +76,7 @@ __root const uint32_t u32Lock[15] @ 0x03000FC0 =
 #else
 #error "unsupported compiler!!"
 #endif
-{0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
 #if defined (__CC_ARM)

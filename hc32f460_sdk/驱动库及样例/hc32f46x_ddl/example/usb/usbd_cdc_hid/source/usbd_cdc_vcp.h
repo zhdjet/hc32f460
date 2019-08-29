@@ -84,9 +84,9 @@ typedef struct
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define CDC_COMM                        M4_USART4
-#define DEFAULT_CONFIG                  0
-#define OTHER_CONFIG                    1
+#define CDC_COMM                        (M4_USART4)
+#define DEFAULT_CONFIG                  0u
+#define OTHER_CONFIG                    1u
 
 /*******************************************************************************
  * Global variable definitions ('extern')
@@ -95,8 +95,7 @@ typedef struct
 /*******************************************************************************
  * Global function prototypes (definition in C source)
  ******************************************************************************/
-void UsartErrIrqCallback(void);
-void UsartRxIrqCallback(void);
+
 
 #ifdef __cplusplus
 }

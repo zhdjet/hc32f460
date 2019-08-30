@@ -327,7 +327,6 @@ typedef struct stc_pwc_pwr_mode_cfg
     en_pwc_iortn_t          enIoRetain;     ///< IO retain.
     en_functional_state_t   enVPll;         ///< Enable or disable PLL vcc.
     en_functional_state_t   enVHrc;         ///< Enable or disable HRC vcc.
-    en_pwc_stopdas_t        enStpDrvAbi;    ///< Driver ability while enter stop mode.
     en_pwc_drvability_sca_t enDrvAbility;   ///< Driver ability scale.
     en_pwc_dvoltage_sca_t   enDynVol;       ///< Dynamic voltage.
     en_pwc_waketime_sel_t   enPwrDWkupTm;   ///< The power down wake up time select.
@@ -567,31 +566,41 @@ typedef struct stc_pwc_pvd_cfg
  ******************************************************************************/
 void PWC_PowerModeCfg(const stc_pwc_pwr_mode_cfg_t* pstcPwrMdCfg);
 void PWC_EnterPowerDownMd(void);
+
 void PWC_PdWakeup0Cmd(uint32_t u32Wkup0Event, en_functional_state_t enNewState);
 void PWC_PdWakeup1Cmd(uint32_t u32Wkup1Event, en_functional_state_t enNewState);
 void PWC_PdWakeup2Cmd(uint32_t u32Wkup2Event, en_functional_state_t enNewState);
 void PWC_PdWkupEdgeCfg(const stc_pwc_wkup_edge_cfg_t* pstcWkupEdgeCfg);
+
 en_flag_status_t PWC_GetWakeup0Flag(uint8_t u8WkupFlag);
 en_flag_status_t PWC_GetWakeup1Flag(uint8_t u8WkupFlag);
 void PWC_ClearWakeup0Flag(uint8_t u8WkupFlag);
 void PWC_ClearWakeup1Flag(uint8_t u8WkupFlag);
 void PWC_PwrMonitorCmd(en_functional_state_t enNewState);
+
 void PWC_Fcg0PeriphClockCmd(uint32_t u32Fcg0Periph, en_functional_state_t enNewState);
 void PWC_Fcg1PeriphClockCmd(uint32_t u32Fcg1Periph, en_functional_state_t enNewState);
 void PWC_Fcg2PeriphClockCmd(uint32_t u32Fcg2Periph, en_functional_state_t enNewState);
 void PWC_Fcg3PeriphClockCmd(uint32_t u32Fcg3Periph, en_functional_state_t enNewState);
+
 en_result_t PWC_StopModeCfg(const stc_pwc_stop_mode_cfg_t*  pstcStpMdCfg);
 void PWC_StopWkupCmd(uint32_t u32Wkup0Event, en_functional_state_t enNewState);
+
 void PWC_EnterStopMd(void);
 void PWC_EnterSleepMd(void);
+
 void PWC_RamCfg(const stc_pwc_ram_cfg_t* pstcRamCfg);
 void PWC_Xtal32CsCmd(en_functional_state_t enNewState);
 void PWC_WktmControl(const stc_pwc_wktm_ctl_t* pstcWktmCtl);
+
 void PWC_PvdCfg(const stc_pwc_pvd_cfg_t* pstcPvdCfg);
 void PWC_Pvd1Cmd(en_functional_state_t enNewState);
 void PWC_Pvd2Cmd(en_functional_state_t enNewState);
 void PWC_ExVccCmd(en_functional_state_t enNewState);
 en_flag_status_t PWC_GetPvdFlag(en_pwc_pvd_flag_t enPvdFlag);
+
+void PWC_HrcPwrCmd(en_functional_state_t enNewState);
+void PWC_PllPwrCmd(en_functional_state_t enNewState);
 
 void PWC_IrqClkBackup(void);
 void PWC_IrqClkRecover(void);

@@ -73,7 +73,7 @@
 #define ENABLE_FCG0_REG_WRITE()             (M4_MSTP->FCG0PC = 0xa5a50001u)
 #define DISABLE_FCG0_REG_WRITE()            (M4_MSTP->FCG0PC = 0xa5a50000u)
 
-#define ENABLE_PWR_REG0_WRITE()             (M4_SYSREG->PWR_FPRC = 0xa501u)
+#define ENABLE_PWR_REG0_WRITE()             (M4_SYSREG->PWR_FPRC = 0xa503u)
 #define DISABLE_PWR_REG0_WRITE()            (M4_SYSREG->PWR_FPRC = 0xa500u)
 
 #define ENABLE_PWR_REG_WRITE()              (M4_SYSREG->PWR_FPRC = 0xa502u)
@@ -289,7 +289,6 @@ uint8_t     u8SysClkSrc = 1u;
  ** \arg    enVPll                      Enable or disable PLL VCC.
  ** \arg    enVHrc                      Enable or disable Hrc VCC.
  ** \arg    enIoRetain                  The IO state while power down.
- ** \arg    enStpDrvAbi                 The driver ability while enter stop mode.
  ** \arg    enDynVol                    The dynamic voltage.
  ** \arg    enPwrDWkupTm                The wake_up timer while power down.
  **
@@ -306,24 +305,22 @@ void PWC_PowerModeCfg(const stc_pwc_pwr_mode_cfg_t* pstcPwrMdCfg)
     DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcPwrMdCfg->enVPll));
     DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcPwrMdCfg->enVHrc));
     DDL_ASSERT(IS_PWC_PWR_DWON_IO_STATE(pstcPwrMdCfg->enIoRetain));
-    DDL_ASSERT(IS_PWC_STP_DRIVER_ABILITY(pstcPwrMdCfg->enStpDrvAbi));
     DDL_ASSERT(IS_PWC_DRIVER_ABILITY(pstcPwrMdCfg->enDrvAbility));
     DDL_ASSERT(IS_PWC_DYNAMIC_VOLTAGE(pstcPwrMdCfg->enDynVol));
     DDL_ASSERT(IS_PWC_PWR_DOWN_WKUP_TIM(pstcPwrMdCfg->enPwrDWkupTm));
 
     ENABLE_PWR_REG_WRITE();
 
-    M4_SYSREG->PWR_PWRC0 = (pstcPwrMdCfg->enPwrDownMd          |
-                           ((~pstcPwrMdCfg->enRLdo) << 2)      |
-                           ((~pstcPwrMdCfg->enRetSram) << 3)   |
-                           (pstcPwrMdCfg->enIoRetain << 4));
+    M4_SYSREG->PWR_PWRC0 = (pstcPwrMdCfg->enPwrDownMd                                       |
+                           (uint8_t)(((Enable == pstcPwrMdCfg->enRLdo) ? 0u : 1u) << 2u)    |
+                           (uint8_t)(((Enable == pstcPwrMdCfg->enRetSram) ? 0u : 1u) << 3u) |
+                           (pstcPwrMdCfg->enIoRetain << 4u));
 
-//    M4_SYSREG->PWR_PWRC1 = ((~pstcPwrMdCfg->enVPll)            |
-//                           ((~pstcPwrMdCfg->enVHrc) << 1)      |
-//                           (pstcPwrMdCfg->enStpDrvAbi << 6));
+    M4_SYSREG->PWR_PWRC1_f.VHRCSD = ((Enable == pstcPwrMdCfg->enVHrc) ? 0u : 1u);
+    M4_SYSREG->PWR_PWRC1_f.VPLLSD = ((Enable == pstcPwrMdCfg->enVPll) ? 0u : 1u);
 
     M4_SYSREG->PWR_PWRC2 = (pstcPwrMdCfg->enDrvAbility         |
-                           (pstcPwrMdCfg->enDynVol << 4));
+                           (pstcPwrMdCfg->enDynVol << 4u));
 
     M4_SYSREG->PWR_PWRC3_f.PDTS = pstcPwrMdCfg->enPwrDWkupTm;
 
@@ -864,7 +861,7 @@ en_result_t PWC_StopModeCfg(const stc_pwc_stop_mode_cfg_t*  pstcStpMdCfg)
     DDL_ASSERT(IS_PWC_STOP_MODE_FLASH(pstcStpMdCfg->enStopFlash));
     DDL_ASSERT(IS_PWC_STOP_MODE_CLK(pstcStpMdCfg->enStopClk));
 
-    ENABLE_PWR_REG_WRITE();
+    ENABLE_PWR_REG0_WRITE();
 
     M4_SYSREG->PWR_STPMCR = (pstcStpMdCfg->enStopFlash          |
                             (pstcStpMdCfg->enStopClk << 1u));
@@ -879,18 +876,17 @@ en_result_t PWC_StopModeCfg(const stc_pwc_stop_mode_cfg_t*  pstcStpMdCfg)
         }
         else
         {
-            ENABLE_PWR_REG0_WRITE();
             /* Disable PLL */
             M4_SYSREG->CMU_PLLCR_f.MPLLOFF = 1u;
-            DISABLE_PWR_REG0_WRITE();
         }
     }
 
+    /* Hrc power should be enable. */
     M4_SYSREG->PWR_PWRC1_f.VHRCSD = 0u;
     M4_SYSREG->PWR_PWRC1_f.VPLLSD = ((Enable == pstcStpMdCfg->enPll) ? 0u : 1u);
     M4_SYSREG->PWR_PWRC1_f.STPDAS = pstcStpMdCfg->enStpDrvAbi;
 
-    DISABLE_PWR_REG_WRITE();
+    DISABLE_PWR_REG0_WRITE();
 
     return enRet;
 }
@@ -1235,8 +1231,49 @@ en_flag_status_t PWC_GetPvdFlag(en_pwc_pvd_flag_t enPvdFlag)
     return ((1u == u8flag) ? Set : Reset);
 }
 
+/**
+ *******************************************************************************
+ ** \brief  Enable or disable HRC power.
+ **
+ ** \param  [in] enNewState             The HRC power state.
+ ** \arg    Enable                      Enable HRC power.
+ ** \arg    Disable                     Disable HRC power.
+ **
+ ** \retval None
+ **
+ ******************************************************************************/
+void PWC_HrcPwrCmd(en_functional_state_t enNewState)
+{
+    DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewState));
 
+    ENABLE_PVD_REG_WRITE();
 
+     M4_SYSREG->PWR_PWRC1_f.VHRCSD = ((Enable == enNewState) ? 0u : 1u);
+
+    DISABLE_PVD_REG_WRITE();
+}
+
+/**
+ *******************************************************************************
+ ** \brief  Enable or disable PLL power.
+ **
+ ** \param  [in] enNewState             The PLL power state.
+ ** \arg    Enable                      Enable PLL power.
+ ** \arg    Disable                     Disable PLL power.
+ **
+ ** \retval None
+ **
+ ******************************************************************************/
+void PWC_PllPwrCmd(en_functional_state_t enNewState)
+{
+    DDL_ASSERT(IS_FUNCTIONAL_STATE(enNewState));
+
+    ENABLE_PVD_REG_WRITE();
+
+     M4_SYSREG->PWR_PWRC1_f.VPLLSD = ((Enable == enNewState) ? 0u : 1u);
+
+    DISABLE_PVD_REG_WRITE();
+}
 /**
  *******************************************************************************
  ** \brief NVIC backup and disable before entry from stop mode

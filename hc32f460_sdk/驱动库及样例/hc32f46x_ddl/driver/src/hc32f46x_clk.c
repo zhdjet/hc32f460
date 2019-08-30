@@ -115,6 +115,7 @@
 #define DEFAULT_FCG1                        (0xFFFFFFFFul)
 #define DEFAULT_FCG2                        (0xFFFFFFFFul)
 #define DEFAULT_FCG3                        (0xFFFFFFFFul)
+#define FCG2_WITHOUT_EMB                    (0xFFFF7FFFul)
 
 #define FCG0_OFFSET_FCM                     (16ul)
 #define FCG1_OFFSET_CAN                     (0ul)
@@ -447,7 +448,7 @@ en_result_t CLK_XtalCmd(en_functional_state_t enNewState)
         {
             status = CLK_GetFlagStatus(ClkFlagXTALRdy);
             timeout++;
-        }while((timeout < CLK_XTAL_TIMEOUT) && (status != ((Enable == enNewState) ? Set : Reset)));
+        }while((timeout < CLK_XTAL_TIMEOUT) && (status != Set));
     }
 
     DISABLE_CLOCK_REG_WRITE();
@@ -859,7 +860,7 @@ en_result_t CLK_MpllCmd(en_functional_state_t enNewState)
         {
             status = CLK_GetFlagStatus(ClkFlagMPLLRdy);
             timeout++;
-        }while((timeout < CLK_MPLL_TIMEOUT) && (status != ((Enable == enNewState) ? Set : Reset)));
+        }while((timeout < CLK_MPLL_TIMEOUT) && (status != Set));
     }
 
     DISABLE_CLOCK_REG_WRITE();
@@ -1321,7 +1322,7 @@ void CLK_SetUsbClkSource(en_clk_usb_source_t enTargetUsbSrc)
                                 BIT_VALUE(FCG1_OFFSET_SPI3) |
                                 BIT_VALUE(FCG1_OFFSET_SPI4));
 
-        M4_MSTP->FCG2 = DEFAULT_FCG2;
+        M4_MSTP->FCG2 = FCG2_WITHOUT_EMB | fcg2;
 
         BIT_SET(M4_MSTP->FCG3,  BIT_VALUE(FCG3_OFFSET_ADC1) |
                                 BIT_VALUE(FCG3_OFFSET_ADC2) |
@@ -1359,13 +1360,7 @@ void CLK_SetUsbClkSource(en_clk_usb_source_t enTargetUsbSrc)
     {
         timeout++;
     }while(timeout < CLK_FCG_STABLE);
-
-    if(M4_SYSREG->PWR_STPMCR_f.CKSMRC == 1u)
-    {
-        M4_SYSREG->CMU_UFSCKCFGR_f.USBCKS = ClkUsbSrcSysDiv4;
-    }
 }
-
 
 /**
  *******************************************************************************
@@ -1388,7 +1383,6 @@ void CLK_SetUsbClkSource(en_clk_usb_source_t enTargetUsbSrc)
  ******************************************************************************/
 void CLK_SetPeriClkSource(en_clk_peri_source_t enTargetPeriSrc)
 {
-    __IO uint32_t timeout = 0ul;
     DDL_ASSERT(IS_PERICLK_SOURCE(enTargetPeriSrc));
 
     ENABLE_CLOCK1_REG_WRITE();
@@ -1397,18 +1391,6 @@ void CLK_SetPeriClkSource(en_clk_peri_source_t enTargetPeriSrc)
     M4_SYSREG->CMU_PERICKSEL_f.PERICKSEL = enTargetPeriSrc;
 
     DISABLE_CLOCK1_REG_WRITE();
-
-    if(CLKSysSrcMPLL == M4_SYSREG->CMU_CKSWR_f.CKSW)
-    {
-        /* Wait stable after switch adc clock source.
-        Only current system clock source or target system clock source is MPLL
-        need to wait stable. */
-        timeout = 0ul;
-        do
-        {
-            timeout++;
-        }while(timeout < CLK_USBCLK_STABLE);
-    }
 }
 
 /**

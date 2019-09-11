@@ -684,6 +684,7 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
                          u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
+                            DmaChEnState =  DMA_IDLE;
                             return ErrorTimeout;
                         }
                     }
@@ -700,6 +701,7 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
                          u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
+                            DmaChEnState =  DMA_IDLE;
                             return ErrorTimeout;
                         }
                     }
@@ -716,6 +718,7 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
                          u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
+                            DmaChEnState =  DMA_IDLE;
                             return ErrorTimeout;
                         }
                     }
@@ -732,6 +735,7 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
                          u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
+                            DmaChEnState =  DMA_IDLE;
                             return ErrorTimeout;
                         }
                     }

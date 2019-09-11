@@ -70,6 +70,7 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
+#define DMA_CNT                             (10u)
 #define DMA_IDLE                            (0u)
 #define DMA_BUSY                            (1u)
 
@@ -677,11 +678,15 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
             if(((pstcDmaReg->CHEN & 0x01ul) == 0x01ul) && (u8Ch != DmaCh0))
             {
                 u32Cnt = pstcDmaReg->DTCTL0_f.CNT;
-                if(pstcDmaReg->MONDTCTL0_f.CNT < u32Cnt)
+                if(pstcDmaReg->MONDTCTL0_f.CNT > DMA_CNT)
+                {
+                    /* not wait. */ 
+                }
+                else if(pstcDmaReg->MONDTCTL0_f.CNT < u32Cnt)
                 {
                     while(Reset != (pstcDmaReg->CHEN & 0x01ul))
                     {
-                         u16Timeout++;
+                        u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
                             DmaChEnState =  DMA_IDLE;
@@ -693,12 +698,16 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
             if(((pstcDmaReg->CHEN & 0x02ul) == 0x02ul) && (u8Ch != DmaCh1))
             {
                 u32Cnt = pstcDmaReg->DTCTL1_f.CNT;
-                if(pstcDmaReg->MONDTCTL1_f.CNT < u32Cnt)
+                if(pstcDmaReg->MONDTCTL1_f.CNT > DMA_CNT)
+                {
+                    /* not wait. */ 
+                }
+                else if(pstcDmaReg->MONDTCTL1_f.CNT < u32Cnt)
                 {
                     u16Timeout = 0u;
                     while(Reset != (pstcDmaReg->CHEN & 0x02ul))
                     {
-                         u16Timeout++;
+                        u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
                             DmaChEnState =  DMA_IDLE;
@@ -711,11 +720,15 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
             {
                 u16Timeout = 0u;
                 u32Cnt = pstcDmaReg->DTCTL2_f.CNT;
-                if(pstcDmaReg->MONDTCTL2_f.CNT < u32Cnt)
+                if(pstcDmaReg->MONDTCTL2_f.CNT > DMA_CNT)
+                {
+                    /* not wait. */ 
+                }
+                else if(pstcDmaReg->MONDTCTL2_f.CNT < u32Cnt)
                 {
                     while(Reset != (pstcDmaReg->CHEN & 0x04ul))
                     {
-                         u16Timeout++;
+                        u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
                             DmaChEnState =  DMA_IDLE;
@@ -728,11 +741,15 @@ en_result_t DMA_ChannelCmd(M4_DMA_TypeDef* pstcDmaReg, uint8_t u8Ch, en_function
             {
                 u16Timeout = 0u;
                 u32Cnt = pstcDmaReg->DTCTL3_f.CNT;
-                if(pstcDmaReg->MONDTCTL3_f.CNT < u32Cnt)
+                if(pstcDmaReg->MONDTCTL3_f.CNT > DMA_CNT)
+                {
+                    /* not wait. */ 
+                }
+                else if(pstcDmaReg->MONDTCTL3_f.CNT < u32Cnt)
                 {
                     while(Reset != (pstcDmaReg->CHEN & 0x08ul))
                     {
-                         u16Timeout++;
+                        u16Timeout++;
                         if(u16Timeout > DMATIMEOUT1)
                         {
                             DmaChEnState =  DMA_IDLE;

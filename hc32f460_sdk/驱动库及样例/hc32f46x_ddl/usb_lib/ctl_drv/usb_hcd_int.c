@@ -773,13 +773,15 @@ static uint32_t USB_OTG_USBH_handle_rx_qlvl_ISR (USB_OTG_CORE_HANDLE *pdev)
     uint8_t                       u8Tmp = 0u;   /* C-STAT */
     uint8_t*                      pu8Tmp = (void  *)0u;  /* C-STAT */
     uint8_t                       u8ChannelNumTmp = 0u;  /* MISRAC 2004*/
+    uint32_t                      u32Tmp;
 
     /* Disable the Rx Status Queue Level interrupt */
     intmsk.d32 = 0ul;
     intmsk.b.rxstsqlvl = 1u;
     USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, intmsk.d32, 0ul);
 
-    grxsts.b = *(__IO stc_bUSB_OTG_GRXSTS_t*)&USB_OTG_READ_REG32(&pdev->regs.GREGS->GRXSTSP);  /* C-STAT */
+    u32Tmp = USB_OTG_READ_REG32(&pdev->regs.GREGS->GRXSTSP);
+    grxsts.b = *(__IO stc_bUSB_OTG_GRXSTS_t*)&u32Tmp;
     channelnum = (uint8_t)grxsts.b.chnum;
     u8Tmp = channelnum;   /* C-STAT */
     hcchar.d32 = USB_OTG_READ_REG32(&pdev->regs.HC_REGS[u8Tmp]->HCCHAR);  /* C-STAT */

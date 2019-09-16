@@ -1,5 +1,9 @@
 version     date            comment
-1.1.0       Aug 29, 2019    1. modify DDL code for C-STAT and MISRA-2004 warning. 
+1.1.0       
+            Sept 16,2019    1. Modify startup file for KEIL project.
+                            2. Fix bug when using KEIL compiler.(USBFS Register GRXSTSP is read for multiple times.)
+
+            Aug 29, 2019    1. modify DDL code for C-STAT and MISRA-2004 warning. 
                             2. add RAM3 wait-time in startup_hc32f46x.s
 
 1.0.4

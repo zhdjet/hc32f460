@@ -743,6 +743,7 @@ static uint32_t DCD_HandleRxStatusQueueLevel_ISR(USB_OTG_CORE_HANDLE *pdev)
     USB_OTG_GINTMSK_TypeDef  int_mask;
     USB_OTG_DRXSTS_TypeDef   status;
     USB_OTG_EP *ep;
+    uint32_t u32Tmp;
 
     /* Disable the Rx Status Queue Level interrupt */
     int_mask.d32 = 0ul;
@@ -750,7 +751,9 @@ static uint32_t DCD_HandleRxStatusQueueLevel_ISR(USB_OTG_CORE_HANDLE *pdev)
     USB_OTG_MODIFY_REG32( &pdev->regs.GREGS->GINTMSK, int_mask.d32, 0ul);
 
     /* Get the Status from the top of the FIFO */
-    status.b = *(__IO stc_bUSB_OTG_DRXSTS_t*)&USB_OTG_READ_REG32( &pdev->regs.GREGS->GRXSTSP ); /* C-STAT */
+    //status.b = *(__IO stc_bUSB_OTG_DRXSTS_t*)&USB_OTG_READ_REG32( &pdev->regs.GREGS->GRXSTSP ); /* C-STAT */
+    u32Tmp = USB_OTG_READ_REG32( &pdev->regs.GREGS->GRXSTSP );
+    status.b = *(__IO stc_bUSB_OTG_DRXSTS_t*)&u32Tmp; /* C-STAT */
     ep = &pdev->dev.out_ep[status.b.epnum];
 
     switch (status.b.pktsts)

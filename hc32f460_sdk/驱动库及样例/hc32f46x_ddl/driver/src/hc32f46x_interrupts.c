@@ -2217,147 +2217,214 @@ void IRQ129_Handler(void)
     uint32_t VSSEL129 =M4_INTC->VSSEL129;
     uint32_t u32Tmp1 = 0ul;
     uint32_t u32Tmp2 = 0ul;
-    /* DMA1 ch.0 Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKTC0)
+    
+    if (Set == bM4_DMA1_CH0CTL_IE)
     {
-        if ((Set == bM4_DMA1_INTSTAT1_TC0) && (VSSEL129 & BIT_MASK_00))
+        /* DMA1 ch.0 Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKTC0)
         {
-            Dma1Tc0_IrqHandler();
+            if ((Set == bM4_DMA1_INTSTAT1_TC0) && (VSSEL129 & BIT_MASK_00))
+            {
+                Dma1Tc0_IrqHandler();
+            }
+        }
+        /* DMA1 ch.0 Block Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKBTC0)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC0) && (VSSEL129 & BIT_MASK_08))
+            {
+                Dma1Btc0_IrqHandler();
+            }
+        }
+        /* DMA1 ch.0 Transfer/Request Error */
+        u32Tmp1 = M4_DMA1->INTSTAT0 & 0x00010001ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA1->INTMASK0) & 0x00010001ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_16))
+        {
+            Dma1Err0_IrqHandler();
         }
     }
-    /* DMA1 ch.1 Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKTC1)
+    if (Set == bM4_DMA1_CH1CTL_IE)
     {
-        if ((Set == bM4_DMA1_INTSTAT1_TC1)  && (VSSEL129 & BIT_MASK_01))
+        /* DMA1 ch.1 Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKTC1)
         {
-            Dma1Tc1_IrqHandler();
+            if ((Set == bM4_DMA1_INTSTAT1_TC1)  && (VSSEL129 & BIT_MASK_01))
+            {
+                Dma1Tc1_IrqHandler();
+            }
+        }
+        /* DMA1 ch.1 Block Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKBTC1)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC1) && (VSSEL129 & BIT_MASK_09))
+            {
+                Dma1Btc1_IrqHandler();
+            }
+        }
+        /* DMA1 ch.1 Transfer/Request Error */
+        u32Tmp1 = M4_DMA1->INTSTAT0 & 0x00020002ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA1->INTMASK0) & 0x00020002ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_16))
+        {
+            Dma1Err1_IrqHandler();
         }
     }
-    /* DMA1 ch.2 Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKTC2)
+    if (Set == bM4_DMA1_CH2CTL_IE)
     {
-        if ((Set == bM4_DMA1_INTSTAT1_TC2)  && (VSSEL129 & BIT_MASK_02))
+        /* DMA1 ch.2 Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKTC2)
         {
-            Dma1Tc2_IrqHandler();
+            if ((Set == bM4_DMA1_INTSTAT1_TC2)  && (VSSEL129 & BIT_MASK_02))
+            {
+                Dma1Tc2_IrqHandler();
+            }
+        }
+        /* DMA1 ch.2 Block Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKBTC2)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC2) && (VSSEL129 & BIT_MASK_10))
+            {
+                Dma1Btc2_IrqHandler();
+            }
+        }
+        /* DMA1 ch.2 Transfer/Request Error */
+        u32Tmp1 = M4_DMA1->INTSTAT0 & 0x00040004ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA1->INTMASK0) & 0x00040004ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_16))
+        {
+            Dma1Err2_IrqHandler();
         }
     }
-    /* DMA1 ch.3 Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKTC3)
+    if (Set == bM4_DMA1_CH3CTL_IE)
     {
-        if ((Set == bM4_DMA1_INTSTAT1_TC3)  && (VSSEL129 & BIT_MASK_03))
+        /* DMA1 ch.3 Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKTC3)
         {
-            Dma1Tc3_IrqHandler();
+            if ((Set == bM4_DMA1_INTSTAT1_TC3)  && (VSSEL129 & BIT_MASK_03))
+            {
+                Dma1Tc3_IrqHandler();
+            }
+        }
+        /* DMA1 ch.3 Block Tx completed */
+        if (Reset == bM4_DMA1_INTMASK1_MSKBTC3)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC3) && (VSSEL129 & BIT_MASK_11))
+            {
+                Dma1Btc3_IrqHandler();
+            }
+        }
+        /* DMA1 ch.3 Transfer/Request Error */
+        u32Tmp1 = M4_DMA1->INTSTAT0 & 0x00080008ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA1->INTMASK0) & 0x00080008ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_16))
+        {
+            Dma1Err3_IrqHandler();
         }
     }
-    /* DMA2 ch.0 Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKTC0)
+    if (Set == bM4_DMA2_CH0CTL_IE)
     {
-        if ((Set == bM4_DMA2_INTSTAT1_TC0) && (VSSEL129 & BIT_MASK_04))
+        /* DMA2 ch.0 Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKTC0)
         {
-            Dma2Tc0_IrqHandler();
+            if ((Set == bM4_DMA2_INTSTAT1_TC0) && (VSSEL129 & BIT_MASK_04))
+            {
+                Dma2Tc0_IrqHandler();
+            }
+        }
+        /* DMA2 ch.0 Block Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKBTC0)
+        {
+            if ((Set == bM4_DMA2_INTSTAT1_BTC0) && (VSSEL129 & BIT_MASK_12))
+            {
+                Dma2Btc0_IrqHandler();
+            }
+        }
+        /* DMA2 Ch.0 Transfer/Request Error */
+        u32Tmp1 = M4_DMA2->INTSTAT0 & 0x00010001ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA2->INTMASK0) & 0x00010001ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_17))
+        {
+            Dma2Err0_IrqHandler();
         }
     }
-    /* DMA2 ch.1 Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKTC1)
+    if (Set == bM4_DMA2_CH1CTL_IE)
     {
-        if ((Set == bM4_DMA2_INTSTAT1_TC1) && (VSSEL129 & BIT_MASK_05))
+        /* DMA2 ch.1 Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKTC1)
         {
-            Dma2Tc1_IrqHandler();
+            if ((Set == bM4_DMA2_INTSTAT1_TC1) && (VSSEL129 & BIT_MASK_05))
+            {
+                Dma2Tc1_IrqHandler();
+            }
+        }
+        /* DMA2 ch.1 Block Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKBTC1)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC1) && (VSSEL129 & BIT_MASK_13))
+            {
+                Dma2Btc1_IrqHandler();
+            }
+        }
+        /* DMA2 Ch.1 Transfer/Request Error */
+        u32Tmp1 = M4_DMA2->INTSTAT0 & 0x00020002ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA2->INTMASK0) & 0x00020002ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_17))
+        {
+            Dma2Err1_IrqHandler();
         }
     }
-    /* DMA2 ch.2 Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKTC2)
+    if (Set == bM4_DMA2_CH2CTL_IE)
     {
-        if ((Set == bM4_DMA2_INTSTAT1_TC2) && (VSSEL129 & BIT_MASK_06))
+        /* DMA2 ch.2 Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKTC2)
         {
-            Dma2Tc2_IrqHandler();
+            if ((Set == bM4_DMA2_INTSTAT1_TC2) && (VSSEL129 & BIT_MASK_06))
+            {
+                Dma2Tc2_IrqHandler();
+            }
+        }
+        /* DMA2 ch.2 Block Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKBTC2)
+        {
+            if ((Set == bM4_DMA1_INTSTAT1_BTC2) && (VSSEL129 & BIT_MASK_14))
+            {
+                Dma2Btc2_IrqHandler();
+            }
+        }
+        /* DMA2 Ch.2 Transfer/Request Error */
+        u32Tmp1 = M4_DMA2->INTSTAT0 & 0x00040004ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA2->INTMASK0) & 0x00040004ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_17))
+        {
+            Dma2Err2_IrqHandler();
         }
     }
-    /* DMA2 ch.3 Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKTC3)
+    if (Set == bM4_DMA2_CH3CTL_IE)
     {
-        if ((Set == bM4_DMA2_INTSTAT1_TC3) && (VSSEL129 & BIT_MASK_07))
+        /* DMA2 ch.3 Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKTC3)
         {
-            Dma2Tc3_IrqHandler();
+            if ((Set == bM4_DMA2_INTSTAT1_TC3) && (VSSEL129 & BIT_MASK_07))
+            {
+                Dma2Tc3_IrqHandler();
+            }
         }
-    }
-    /* DMA1 ch.0 Block Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKBTC0)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC0) && (VSSEL129 & BIT_MASK_08))
+        /* DMA2 ch.3 Block Tx completed */
+        if (Reset == bM4_DMA2_INTMASK1_MSKBTC3)
         {
-            Dma1Btc0_IrqHandler();
+            if ((Set == bM4_DMA1_INTSTAT1_BTC3) && (VSSEL129 & BIT_MASK_15))
+            {
+                Dma2Btc3_IrqHandler();
+            }
         }
-    }
-    /* DMA1 ch.1 Block Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKBTC1)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC1) && (VSSEL129 & BIT_MASK_09))
+        /* DMA2 Ch.3 Transfer/Request Error */
+        u32Tmp1 = M4_DMA2->INTSTAT0 & 0x00080008ul;
+        u32Tmp2 = (uint32_t)(~(M4_DMA2->INTMASK0) & 0x00080008ul);
+        if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_17))
         {
-            Dma1Btc1_IrqHandler();
+            Dma2Err3_IrqHandler();
         }
-    }
-    /* DMA1 ch.2 Block Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKBTC2)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC2) && (VSSEL129 & BIT_MASK_10))
-        {
-            Dma1Btc2_IrqHandler();
-        }
-    }
-    /* DMA1 ch.3 Block Tx completed */
-    if (Reset == bM4_DMA1_INTMASK1_MSKBTC3)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC3) && (VSSEL129 & BIT_MASK_11))
-        {
-            Dma1Btc3_IrqHandler();
-        }
-    }
-    /* DMA2 ch.0 Block Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKBTC0)
-    {
-        if ((Set == bM4_DMA2_INTSTAT1_BTC0) && (VSSEL129 & BIT_MASK_12))
-        {
-            Dma2Btc0_IrqHandler();
-        }
-    }
-    /* DMA2 ch.1 Block Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKBTC1)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC1) && (VSSEL129 & BIT_MASK_13))
-        {
-            Dma2Btc1_IrqHandler();
-        }
-    }
-    /* DMA2 ch.2 Block Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKBTC2)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC2) && (VSSEL129 & BIT_MASK_14))
-        {
-            Dma2Btc2_IrqHandler();
-        }
-    }
-    /* DMA2 ch.3 Block Tx completed */
-    if (Reset == bM4_DMA2_INTMASK1_MSKBTC3)
-    {
-        if ((Set == bM4_DMA1_INTSTAT1_BTC3) && (VSSEL129 & BIT_MASK_15))
-        {
-            Dma2Btc3_IrqHandler();
-        }
-    }
-    /* DMA1 Transfer/Request Error */
-    u32Tmp1 = M4_DMA1->INTSTAT0 & 0x000F000Ful;
-    u32Tmp2 = (uint32_t)(~(M4_DMA1->INTMASK0) & 0x000F000Ful);
-    if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_16))
-    {
-        Dma1Err_IrqHandler();
-    }
-    /* DMA2 Transfer/Request Error */
-    u32Tmp1 = M4_DMA2->INTSTAT0 & 0x000F000Ful;
-    u32Tmp2 = (uint32_t)(~(M4_DMA2->INTMASK0) & 0x000F000Ful);
-    if ((u32Tmp1 & u32Tmp2) && (VSSEL129 & BIT_MASK_17))
-    {
-        Dma2Err_IrqHandler();
     }
     /* EFM program/erase Error */
     if (Set == bM4_EFM_FITE_PEERRITE)
@@ -3577,18 +3644,22 @@ void IRQ141_Handler(void)
     {
         I2c3Err_IrqHandler();
     }
-
     /* LVD Ch.1 detected */
-    if((Set == bM4_SYSREG_PWR_PVDDSR_PVD1DETFLG) && (VSSEL141 & BIT_MASK_17))
+    if (Set == bM4_SYSREG_PWR_PVDCR1_PVD1IRE)
     {
-        Lvd1_IrqHandler();
+        if((Set == bM4_SYSREG_PWR_PVDDSR_PVD1DETFLG) && (VSSEL141 & BIT_MASK_17))
+        {
+            Lvd1_IrqHandler();
+        }
     }
-    /* LVD Ch.2 detected */
-    if((Set == bM4_SYSREG_PWR_PVDDSR_PVD2DETFLG) && (VSSEL141 & BIT_MASK_18))
+    if (Set == bM4_SYSREG_PWR_PVDCR1_PVD2IRE)
     {
-        Lvd2_IrqHandler();
+        /* LVD Ch.2 detected */
+        if((Set == bM4_SYSREG_PWR_PVDDSR_PVD2DETFLG) && (VSSEL141 & BIT_MASK_18))
+        {
+            Lvd2_IrqHandler();
+        }
     }
-
     /* Freq. calculate error detected */
     if(Set == bM4_FCM_RIER_ERRIE)
     {

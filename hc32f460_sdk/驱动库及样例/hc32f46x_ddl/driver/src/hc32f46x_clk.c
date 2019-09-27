@@ -1097,7 +1097,8 @@ void CLK_SysClkConfig(const stc_clk_sysclk_cfg_t *pstcSysclkCfg)
                                 ((uint32_t)pstcSysclkCfg->enPclk3Div << 12u)   |
                                 ((uint32_t)pstcSysclkCfg->enPclk4Div << 16u)   |
                                 ((uint32_t)pstcSysclkCfg->enExclkDiv << 20u)   |
-                                ((uint32_t)pstcSysclkCfg->enHclkDiv << 24u));
+                                ((uint32_t)pstcSysclkCfg->enHclkDiv << 24u)    |
+                                ((uint32_t)pstcSysclkCfg->enHclkDiv << 28u));
 
         DISABLE_CLOCK_REG_WRITE();
 

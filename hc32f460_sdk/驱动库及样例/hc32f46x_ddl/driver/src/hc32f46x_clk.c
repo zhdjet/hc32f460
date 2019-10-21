@@ -1848,6 +1848,32 @@ void CLK_ClearFcmFlag(en_clk_fcm_flag_t enFcmFlag)
     }
 }
 
+/**
+ *******************************************************************************
+ ** \brief  Clear the XTAL error flag.
+ **
+ ** \param  None
+ **
+ ** \retval None
+ **
+ ** \note   The system clock should not be XTAL before call this function.
+ **
+ ******************************************************************************/
+void CLK_ClearXtalStdFlag(void)
+{
+    /* Enable register write. */
+    ENABLE_CLOCK_REG_WRITE();
+
+    if(Set == M4_SYSREG->CMU_XTALSTDSR_f.XTALSTDF)
+    {
+        /* Clear the XTAL STD flag */
+        M4_SYSREG->CMU_XTALSTDSR_f.XTALSTDF = Reset;
+    }
+
+    /* Disbale register write. */
+    DISABLE_CLOCK_REG_WRITE();
+}
+
 
 //@} // CmuGroup
 

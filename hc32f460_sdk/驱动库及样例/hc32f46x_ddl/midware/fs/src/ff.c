@@ -195,9 +195,11 @@ static void mem_set (void* dst, int val, int cnt) {
 static int mem_cmp (const void* dst, const void* src, int cnt) {
     const char *d = (const char *)dst, *s = (const char *)src;
     int r = 0u;
-    while (((r = *d++ - *s++) == 0u) && cnt)
+    while(cnt--)
     {
-        cnt--;
+        r = *d++ - *s++;
+        if (0u != r)
+            break;
     }
     return r;
 }

@@ -1,23 +1,7 @@
 version     date            comment
-1.1.1
-            Nov 1,2019      1. Fix bug for mem_cmp function in ff.c.
-                            2. Correct access width from u32 to u16 of GPIO regs: PODR, POER, POSR, PORR, POTR
+1.1.0
+            Oct 30,2019     1.Fix bug for QSPI_PrefetchCmd Function.
 
-            Oct 30,2019     1. Fix bug for QSPI_PrefetchCmd Function.
-
-            Oct  21,2019    1.Add function CLK_ClearXtalStdFlg to clk.c
-                            2.Modified function PWC_EnterPowerDownMd #add 30 clock cycle after set PWDN
-                            3.Fix bug for I2S_ClrErrFlag function
-
-            Oct  10,2019    1.Move PWC_EnterPowerDownMd func to ran for IAR
-      
-            Oct  9, 2019    1.Modified Set function(transfer count, block size, src/dest address etc.) in dma.c
-
-            Sept 27,2019    1.Fixed bug for function CLK_SysClkConfig # CMU_SCFGR register reserved bits 31~28 should be equal with bits 27~24 
-
-            Sept 25,2019    1. Add examples of Timer6 module.
-                            2. Add Trigger source config API of Timer6
-1.1.0       
             Sept 16,2019    1. Modify startup file for KEIL project.
                             2. Fix bug when using KEIL compiler.(USBFS Register GRXSTSP is read for multiple times.)
 

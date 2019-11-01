@@ -1,6 +1,7 @@
 version     date            comment
 1.1.0
-            Oct 30,2019     1.Fix bug for QSPI_PrefetchCmd Function.
+            Nov 1,2019      1. Fix bug for mem_cmp function in ff.c.
+            Oct 30,2019     1. Fix bug for QSPI_PrefetchCmd Function.
 
             Sept 16,2019    1. Modify startup file for KEIL project.
                             2. Fix bug when using KEIL compiler.(USBFS Register GRXSTSP is read for multiple times.)

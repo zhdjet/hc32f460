@@ -199,9 +199,8 @@ void I2C_EEI_Callback(void)
         /* Enable stop and NACK interrupt */
         I2C_IntCmd(I2C_CH, I2C_CR2_STOPIE | I2C_CR2_NACKIE, Enable);
     }
-
     /* If NACK interrupt occurred */
-    if(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
+    else if(Set == I2C_GetStatus(I2C_CH, I2C_SR_NACKDETECTF))
     {
         /* clear NACK flag*/
         I2C_ClearStatus(I2C_CH, I2C_CLR_NACKFCLR);
@@ -230,7 +229,7 @@ void I2C_EEI_Callback(void)
                       I2C_CR2_STOPIE | I2C_CR2_NACKIE,                         \
                       Disable);
         /* Clear STOPF flag */
-        I2C_ClearStatus(I2C_CH, I2C_CLR_STOPFCLR);
+        I2C_ClearStatus(I2C_CH, I2C_CLR_STOPFCLR | I2C_CLR_NACKFCLR);
     }
 }
 

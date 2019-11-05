@@ -1,5 +1,8 @@
 version     date            comment
 1.1.1
+            Nov  5,2019     1.modify for USBLIB:  re-open usb clock in DCD_SessionRequest_ISR function
+                            2.Fix bug for example i2c_slave_irq
+
             Nov 1,2019      1. Fix bug for mem_cmp function in ff.c.
                             2. Correct access width from u32 to u16 of GPIO regs: PODR, POER, POSR, PORR, POTR
 

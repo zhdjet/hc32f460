@@ -322,6 +322,8 @@ uint32_t USBD_OTG_ISR_Handler (USB_OTG_CORE_HANDLE *pdev)
 static uint32_t DCD_SessionRequest_ISR(USB_OTG_CORE_HANDLE *pdev)
 {
     USB_OTG_GINTSTS_TypeDef  gintsts;
+    USB_OTG_PCGCCTL_TypeDef  power;
+
     USBD_DCD_INT_fops->DevConnected (pdev);
 
     printf("SessionRequest !!\n");
@@ -329,6 +331,16 @@ static uint32_t DCD_SessionRequest_ISR(USB_OTG_CORE_HANDLE *pdev)
     gintsts.d32 = 0ul;
     gintsts.b.vbusvint = 1u;
     USB_OTG_WRITE_REG32 (&pdev->regs.GREGS->GINTSTS, gintsts.d32);
+
+    if(pdev->cfg.low_power)
+    {
+        /* un-gate USB Core clock */
+        power.d32 = USB_OTG_READ_REG32(&pdev->regs.PCGCCTL);
+        power.b.gatehclk = 0u;
+        power.b.stoppclk = 0u;
+        USB_OTG_WRITE_REG32(pdev->regs.PCGCCTL, power.d32);
+    }
+
     return 1ul;
 }
 

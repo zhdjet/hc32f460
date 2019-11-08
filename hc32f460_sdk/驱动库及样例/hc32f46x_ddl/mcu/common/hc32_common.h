@@ -171,15 +171,22 @@ typedef enum en_result
 #endif
 
 /*! Weak and Align compiler definition */
-#if defined (__ICCARM__)                ///< IAR Compiler
-#define __WEAKDEF                       __weak
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
+  #ifndef __WEAKDEF
+    #define __WEAKDEF   __attribute__((weak))
+  #endif /* __WEAKDEF */
+  #ifndef __ALIGN_BEGIN
+    #define __ALIGN_BEGIN    __attribute__ ((aligned (4)))
+  #endif /* __ALIGN_BEGIN */
+#elif defined (__ICCARM__)                ///< IAR Compiler
+#define __WEAKDEF                       __weak        
 #define __ALIGN_BEGIN                   _Pragma("data_alignment=4")
 #elif defined (__CC_ARM)                ///< ARM Compiler
 #define __WEAKDEF                       __attribute__((weak))
 #define __ALIGN_BEGIN                   __align(4)
 #else
 #error  "unsupported compiler!!"
-#endif
+#endif  /* __GNUC__ */
 
 /*! Pointer correspond to zero value */
 #if !defined (NULL)

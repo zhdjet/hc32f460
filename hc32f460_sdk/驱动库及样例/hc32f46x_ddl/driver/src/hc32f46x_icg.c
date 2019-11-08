@@ -81,7 +81,9 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-#if defined (__CC_ARM)
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
+const uint32_t u32ICG[] __attribute__((section(".icg_sec"))) =
+#elif defined (__CC_ARM)
 const uint32_t u32ICG[] __attribute__((at(0x400))) =
 #elif defined (__ICCARM__)
 __root const uint32_t u32ICG[] @ 0x400 =

@@ -232,6 +232,15 @@ __USB_ALIGN_BEGIN uint8_t usbd_cdc_CfgDesc[USB_CDC_CONFIG_DESC_SIZ]  __USB_ALIGN
     0xC0,   /* bmAttributes: self powered */
     0x32,   /* MaxPower 0 mA */
 
+    /* IAD */
+    0x08,    /* bLength: Interface Descriptor size */
+    0x0b,    /* INTERFACE ASSOCIATION Descriptor */
+    0x00,    /* Interface number of the first interface that is associated with this function */
+    0x02,    /* Number of contiguous interfaces that are associated with this function */
+    0x02,    /* Class code: Communication Interface Class*/
+    0x02,    /* Subclass code: Abstract Control Model */
+    0x01,    /* protocol: Common AT commands */
+    0x04,
     /*---------------------------------------------------------------------------*/
 
     /*Interface Descriptor */

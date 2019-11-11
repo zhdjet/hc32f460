@@ -1,5 +1,7 @@
 version     date            comment
 1.1.1
+            Nov  11,2019    1.modify for USBLIB: Add IAD descriptor for VCP device.
+
             Nov  8,2019     1.Added support for GCC.
 
             Nov  5,2019     1.modify for USBLIB:  re-open usb clock in DCD_SessionRequest_ISR function

@@ -40,7 +40,7 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file app.c
+/** \file main.c
  **
  ** A detailed description is available at
  ** @link

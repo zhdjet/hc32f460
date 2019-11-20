@@ -1,6 +1,9 @@
 version     date            comment
 1.1.1
-            Nov  11,2019    1.modify for USBLIB: Add IAD descriptor for VCP device.
+            Nov 19,2019     1. add hid_msc composite device demo
+                            2. MISRAC2004 for some source files
+            
+            Nov 11,2019     1.modify for USBLIB: Add IAD descriptor for VCP device.
 
             Nov  8,2019     1.Added support for GCC.
 

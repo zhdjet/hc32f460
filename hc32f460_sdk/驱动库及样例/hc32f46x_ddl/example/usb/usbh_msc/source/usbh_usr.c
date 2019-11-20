@@ -236,7 +236,7 @@ void USBH_USR_Init(void)
 
 /**
  *******************************************************************************
- ** \brief  Displays the message on LCD on device attached
+ ** \brief  Displays the message on terminal via printf
  ** \param  None
  ** \retval None
  ******************************************************************************/

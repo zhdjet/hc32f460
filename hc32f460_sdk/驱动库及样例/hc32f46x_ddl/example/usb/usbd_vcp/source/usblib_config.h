@@ -106,6 +106,7 @@ extern "C"
 #define DEVICE_CLASS_CDC_VCP                        (DDL_ON)
 #define DEVICE_CLASS_HID_CUSTOM                     (DDL_OFF)
 #define DEVICE_CLASS_HID_CDC_WRAPPER                (DDL_OFF)
+#define DEVICE_CLASS_HID_MSC_WRAPPER                (DDL_OFF)
 
 /*! host class on-off define */
 #define HOST_CLASS_HID                              (DDL_OFF)

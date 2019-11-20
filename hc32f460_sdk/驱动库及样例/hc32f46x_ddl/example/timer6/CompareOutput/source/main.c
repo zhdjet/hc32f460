@@ -147,7 +147,7 @@ static void SysClkIni(void)
     stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
     stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
 
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;//ClkSysclkDiv1;  // Max 168MHz   (timer6 cnt)
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz   (timer6 cnt)
     stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz    (timer6 logic)
     stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
     stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
@@ -158,7 +158,7 @@ static void SysClkIni(void)
 
     /* MPLL config. */
     stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
-    stcMpllCfg.plln    =42ul;   //8M*42 = 336M
+    stcMpllCfg.plln    = 42ul;  //8M*42 = 336M
     stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
     stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
     stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
@@ -214,12 +214,6 @@ int32_t main(void)
 
     PORT_SetFunc(PortE, Pin09, Func_Tim6, Disable);    //Timer61 PWMA
     PORT_SetFunc(PortE, Pin08, Func_Tim6, Disable);    //Timer61 PWMB
-
-    //PORT_SetFunc(PortE, Pin11, Func_Tim6, Disable);  //Timer62 PWMA
-    //PORT_SetFunc(PortE, Pin10, Func_Tim6, Disable);  //Timer62 PWMB
-
-    //PORT_SetFunc(PortE, Pin13, Func_Tim6, Disable);  //Timer63 PWMA
-    //PORT_SetFunc(PortE, Pin12, Func_Tim6, Disable);  //Timer63 PWMB
 
     stcTIM6BaseCntCfg.enCntMode   = Timer6CntSawtoothMode;              //Sawtooth wave mode
     stcTIM6BaseCntCfg.enCntDir    = Timer6CntDirUp;                     //Counter counting up

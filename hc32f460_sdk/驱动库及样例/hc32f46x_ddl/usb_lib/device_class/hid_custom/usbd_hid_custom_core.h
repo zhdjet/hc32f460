@@ -105,6 +105,8 @@
  * Global variable definitions ('extern')
  ******************************************************************************/
 extern USBD_Class_cb_TypeDef  USBD_CUSTOMHID_cb;
+extern uint8_t Report_buf[2u];
+extern uint8_t Send_Buf[2u];
 
 /*******************************************************************************
   Global function prototypes (definition in C source)

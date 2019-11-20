@@ -308,6 +308,7 @@ __USB_ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc[CUSTOM_HID_REPORT_DESC_SI
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
 uint8_t Report_buf[2u];
+uint8_t Send_Buf[2u];
 __IO uint32_t IsReportAvailable = 0ul;
 uint8_t USBD_HID_Report_ID = 0u;
 

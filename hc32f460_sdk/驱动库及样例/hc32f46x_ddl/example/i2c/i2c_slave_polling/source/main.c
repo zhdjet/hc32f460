@@ -340,13 +340,13 @@ int32_t  main(void)
 
     while(1)
     {
-        /* Wait salve address matched*/
+        /* Wait slave address matched*/
         while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_SLADDR0F))
         {
             ;
         }
 
-        I2C_ClearStatus(I2C_CH, I2C_CLR_SLADDR0FCLR);
+        I2C_ClearStatus(I2C_CH, I2C_CLR_SLADDR0FCLR|I2C_CLR_STOPFCLR|I2C_CLR_NACKFCLR);
 
         if(Reset == I2C_GetStatus(I2C_CH, I2C_SR_TRA))
         {

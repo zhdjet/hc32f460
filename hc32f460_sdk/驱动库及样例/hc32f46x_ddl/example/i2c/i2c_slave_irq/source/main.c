@@ -181,7 +181,7 @@ void I2C_EEI_Callback(void)
     /* If start interrupt occurred */
     if(Set == I2C_GetStatus(I2C_CH, I2C_SR_SLADDR0F))
     {
-        I2C_ClearStatus(I2C_CH, I2C_CLR_SLADDR0FCLR);
+        I2C_ClearStatus(I2C_CH, I2C_CLR_SLADDR0FCLR|I2C_CLR_STOPFCLR|I2C_CLR_NACKFCLR);
         /* Enable Tx or Rx function*/
         if(Set == I2C_GetStatus(I2C_CH, I2C_SR_TRA))
         {

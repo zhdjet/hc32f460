@@ -1,5 +1,7 @@
 version     date            comment
 1.1.1
+            Nov 22,2019     1.Fix bug for I2C slave example: Clear STOP and NACK flag after address flag detected.
+
             Nov 19,2019     1. add hid_msc composite device demo
                             2. MISRAC2004 for some source files
             

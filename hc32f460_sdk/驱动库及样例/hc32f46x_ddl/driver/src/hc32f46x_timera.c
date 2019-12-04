@@ -1412,11 +1412,9 @@ en_result_t TIMERA_HwTriggerInit(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_t
         TIMERAx->HCONR_f.HCLE2 = pstcHwTriggerInit->stcHwClear.enSpecifyEventClearEn;
         TIMERAx->HCONR_f.HCLE3 = pstcHwTriggerInit->stcHwClear.enAnotherUnitTrigRisingClearEn;
         TIMERAx->HCONR_f.HCLE4 = pstcHwTriggerInit->stcHwClear.enAnotherUnitTrigFallingClearEn;
-        if (M4_TMRA3 == TIMERAx)
-        {
-            TIMERAx->HCONR_f.HCLE5 = pstcHwTriggerInit->stcHwClear.enChannel3RisingClearEn;
-            TIMERAx->HCONR_f.HCLE6 = pstcHwTriggerInit->stcHwClear.enChannel3FallingClearEn;
-        }
+        TIMERAx->HCONR_f.HCLE5 = pstcHwTriggerInit->stcHwClear.enChannel3RisingClearEn;
+        TIMERAx->HCONR_f.HCLE6 = pstcHwTriggerInit->stcHwClear.enChannel3FallingClearEn;
+
         enRet = Ok;
     }
 
@@ -1546,11 +1544,9 @@ en_result_t TIMERA_HwClearConfig(M4_TMRA_TypeDef *TIMERAx, const stc_timera_hw_c
         TIMERAx->HCONR_f.HCLE2 = pstcHwClear->enSpecifyEventClearEn;
         TIMERAx->HCONR_f.HCLE3 = pstcHwClear->enAnotherUnitTrigRisingClearEn;
         TIMERAx->HCONR_f.HCLE4 = pstcHwClear->enAnotherUnitTrigFallingClearEn;
-        if (M4_TMRA3 == TIMERAx)
-        {
-            TIMERAx->HCONR_f.HCLE5 = pstcHwClear->enChannel3RisingClearEn;
-            TIMERAx->HCONR_f.HCLE6 = pstcHwClear->enChannel3FallingClearEn;
-        }
+        TIMERAx->HCONR_f.HCLE5 = pstcHwClear->enChannel3RisingClearEn;
+        TIMERAx->HCONR_f.HCLE6 = pstcHwClear->enChannel3FallingClearEn;
+
         enRet = Ok;
     }
 

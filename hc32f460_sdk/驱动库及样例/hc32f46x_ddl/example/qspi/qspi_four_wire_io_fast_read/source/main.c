@@ -544,7 +544,7 @@ int32_t main(void)
             u8ExIntFlag = 0u;
             LED0_OFF();
             LED1_OFF();
-            /* Swtich to standard read mode */
+            /* Switch to standard read mode */
             stcQspiCommProtocol.enReadMode = QspiReadModeStandard;
             QSPI_CommProtocolConfig(&stcQspiCommProtocol);
             /* Erase sector */

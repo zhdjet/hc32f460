@@ -261,9 +261,9 @@ static int8_t SCSI_ReadCapacity10(uint8_t lun, uint8_t *params)
     }else
     {
 
-        MSC_BOT_Data[0] = (uint8_t)(SCSI_blk_nbr - 1u >> 24u);
-        MSC_BOT_Data[1] = (uint8_t)(SCSI_blk_nbr - 1u >> 16u);
-        MSC_BOT_Data[2] = (uint8_t)(SCSI_blk_nbr - 1u >> 8u);
+        MSC_BOT_Data[0] = (uint8_t)((SCSI_blk_nbr - 1u) >> 24u);
+        MSC_BOT_Data[1] = (uint8_t)((SCSI_blk_nbr - 1u) >> 16u);
+        MSC_BOT_Data[2] = (uint8_t)((SCSI_blk_nbr - 1u) >> 8u);
         MSC_BOT_Data[3] = (uint8_t)(SCSI_blk_nbr - 1u);
 
         MSC_BOT_Data[4] = (uint8_t)(SCSI_blk_size >> 24u);
@@ -304,9 +304,9 @@ static int8_t SCSI_ReadFormatCapacity(uint8_t lun, uint8_t *params)
     }else
     {
         MSC_BOT_Data[3]  = 0x08u;
-        MSC_BOT_Data[4]  = (uint8_t)(blk_nbr - 1u >> 24u);
-        MSC_BOT_Data[5]  = (uint8_t)(blk_nbr - 1u >> 16u);
-        MSC_BOT_Data[6]  = (uint8_t)(blk_nbr - 1u >> 8u);
+        MSC_BOT_Data[4]  = (uint8_t)((blk_nbr - 1u) >> 24u);
+        MSC_BOT_Data[5]  = (uint8_t)((blk_nbr - 1u) >> 16u);
+        MSC_BOT_Data[6]  = (uint8_t)((blk_nbr - 1u) >> 8u);
         MSC_BOT_Data[7]  = (uint8_t)(blk_nbr - 1u);
 
         MSC_BOT_Data[8]  = 0x02u;

@@ -475,7 +475,7 @@ uint8_t USBD_CUSTOM_HID_SendReport(USB_OTG_CORE_HANDLE  *pdev,
  ** \param  length : pointer data length
  ** \retval pointer to descriptor buffer
  ******************************************************************************/
-static uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
+uint8_t  *USBD_CUSTOM_HID_GetCfgDesc (uint8_t speed, uint16_t *length)
 {
     *length = (uint8_t)sizeof (USBD_CUSTOM_HID_CfgDesc);
     return USBD_CUSTOM_HID_CfgDesc;

@@ -820,7 +820,7 @@ void USBD_GetString(uint8_t *desc, uint8_t *unicode, uint16_t *len)
         unicode[idx++] = (uint8_t)*len;
         unicode[idx++] =  USB_DESC_TYPE_STRING;
 
-        while (*desc != (uint8_t)NULL)
+        while (*desc != (uint8_t)0u)
         {
             unicode[idx++] = *desc++;
             unicode[idx++] =  0x00u;  /* MISRAC 2004*/
@@ -839,7 +839,7 @@ static uint8_t USBD_GetLen(uint8_t *buf)
 {
     uint8_t  len = 0u;
 
-    while (*buf != (uint8_t)NULL)
+    while (*buf != (uint8_t)0u)
     {
         len++;
         buf++;

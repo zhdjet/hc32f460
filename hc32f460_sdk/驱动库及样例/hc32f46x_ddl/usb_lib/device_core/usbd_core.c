@@ -235,7 +235,7 @@ static uint8_t USBD_DataOutStage(USB_OTG_CORE_HANDLE *pdev , uint8_t epnum)
                 //printf("out end\n");
                 if (ep->xfer_count > ep->rem_data_len)
                 {
-                    printf("%d %d\n",ep->xfer_count, ep->rem_data_len);
+                    printf("%ld %ld\n",ep->xfer_count, ep->rem_data_len);
                 }
                 ep->rem_data_len = 0u;
                 if((pdev->dev.class_cb->EP0_RxReady != NULL)&&

@@ -182,7 +182,8 @@ USB_OTG_STS USB_OTG_WritePacket(USB_OTG_CORE_HANDLE *pdev,
         fifo = pdev->regs.DFIFO[ch_ep_num];
         for (i = 0ul; i < count32b; i++)
         {
-            USB_OTG_WRITE_REG32( fifo, *((__packed uint32_t *)src) );
+            //USB_OTG_WRITE_REG32( fifo, *((__packed uint32_t *)src) );
+            USB_OTG_WRITE_REG32( fifo, *((uint32_t *)src) );
             //src+=4ul;   /* C-STAT */
             u32pAdr = (uint32_t)src;
             src = (uint8_t*)(u32pAdr+4ul);
@@ -212,7 +213,8 @@ void *USB_OTG_ReadPacket(USB_OTG_CORE_HANDLE *pdev,
 
     for ( i = 0ul; i < count32b; i++)
     {
-        *(__packed uint32_t *)dest = USB_OTG_READ_REG32(fifo);
+        //*(__packed uint32_t *)dest = USB_OTG_READ_REG32(fifo);
+        *(uint32_t *)dest = USB_OTG_READ_REG32(fifo);
         //dest += 4ul;   /* MISRAC 2004*/
         u32pAdr = (uint32_t)dest;
         dest = (uint8_t*)(u32pAdr + 4ul);

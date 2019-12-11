@@ -1,5 +1,8 @@
 version     date            comment
 1.1.1
+            Dec 10,2019     1. Modify USBLIB for GCC compiler.
+                            2. Add Timeout function for timer0 driver.
+
             Dec 6,2019      1. Modify the wrong word of QSPI example.
 
             Dec 4,2019      1. Fix bug for TIMERA_HwTriggerInit and TIMERA_HwClearConfig Function.

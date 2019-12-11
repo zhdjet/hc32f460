@@ -142,7 +142,7 @@ static void SysClkIni(void)
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
-    /* Use Xtal32 as MPLL source. */
+    /* Use Xtal as MPLL source. */
     stcXtalCfg.enMode = ClkXtalModeOsc;
     stcXtalCfg.enDrv = ClkXtalLowDrv;
     stcXtalCfg.enFastStartup = Enable;
@@ -214,6 +214,8 @@ int32_t main(void)
     /* Get pclk1 */
     CLK_GetClockFreq(&stcClkTmp);
     u32Pclk1 = stcClkTmp.pclk1Freq;
+    /* Enable XTAL32 */
+    CLK_Xtal32Cmd(Disable);
 
     /* Timer0 peripheral enable */
     ENABLE_TMR0();

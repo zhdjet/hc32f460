@@ -318,8 +318,8 @@ void USBH_USR_Device_DescAvailable(void *DeviceDesc)
     USBH_DevDesc_TypeDef *hs;
     hs = DeviceDesc;
 
-    printf("VID : %04Xh\n" , (uint32_t)(*hs).idVendor);
-    printf("PID : %04Xh\n" , (uint32_t)(*hs).idProduct);
+    printf("VID : %04lXh\n" , (uint32_t)(*hs).idVendor);
+    printf("PID : %04lXh\n" , (uint32_t)(*hs).idProduct);
 }
 
 /**
@@ -479,9 +479,9 @@ int USBH_USR_MSC_Application(void)
                 return(-1);
             }
             printf("> File System initialized.\n");
-            printf("> Disk capacity : %d Bytes\n", USBH_MSC_Param.MSCapacity * \
+            printf("> Disk capacity : %ld Bytes\n", USBH_MSC_Param.MSCapacity * \
               USBH_MSC_Param.MSPageLength);
-            printf("> Disk capacity : %d * %d = %d Bytes\n",
+            printf("> Disk capacity : %ld * %d = %ld Bytes\n",
                 USBH_MSC_Param.MSCapacity,
                 USBH_MSC_Param.MSPageLength,
                 USBH_MSC_Param.MSCapacity * \
@@ -708,7 +708,7 @@ static uint8_t Image_Browser (char* path)
     //printf(" USB OTG FS MSC Host\n");
 #endif
     printf ("     USB Host Library v2.1.0\n" );
-    printf("> Disk capacity : %d * %d = %d Bytes\n",
+    printf("> Disk capacity : %ld * %d = %ld Bytes\n",
         USBH_MSC_Param.MSCapacity,
         USBH_MSC_Param.MSPageLength,
         USBH_MSC_Param.MSCapacity * \

@@ -100,7 +100,7 @@ uint8_t  USBD_HID_DeInit (void  *pdev,
                                  uint8_t cfgidx);
 uint8_t  USBD_HID_Setup (void  *pdev,
                                 USB_SETUP_REQ *req);
-uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
+static uint8_t  *USBD_HID_GetCfgDesc (uint8_t speed, uint16_t *length);
 uint8_t  USBD_HID_DataIn (void  *pdev, uint8_t epnum);
 uint8_t  USBD_HID_DataOut (void  *pdev, uint8_t epnum);
 /*******************************************************************************

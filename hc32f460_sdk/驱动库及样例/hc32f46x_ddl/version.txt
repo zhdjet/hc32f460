@@ -3,6 +3,8 @@ version     date            comment
             Dec 12,2019     1. Add AsyncDelay for timer0 driver.
                             2. Check operation result when switch speed for SD midware.
                             3. Remove limit of 4 bytes align for SD write/read buffer.
+                            4. Dmac.c typo
+                            5. Delete some duplicate files
 
             Dec 11,2019     1. Fix bug for TIMERA_OrthogonalCodingInit function.
 

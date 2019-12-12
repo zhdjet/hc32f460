@@ -901,7 +901,7 @@ en_flag_status_t DMA_GetChFlag(M4_DMA_TypeDef* pstcDmaReg, en_dma_ch_flag_t enDm
             u32IntStat = (pstcDmaReg->CHSTAT_f.CHACT & DMACH2);
             break;
         case DmaCh3Sta:
-            u32IntStat = (pstcDmaReg->CHSTAT_f.CHACT & DMACH0);
+            u32IntStat = (pstcDmaReg->CHSTAT_f.CHACT & DMACH3);
             break;
         default:
             break;

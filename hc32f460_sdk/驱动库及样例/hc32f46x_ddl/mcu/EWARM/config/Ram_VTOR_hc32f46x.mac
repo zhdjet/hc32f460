@@ -6,10 +6,10 @@ execUserReset()
      
     __hwResetWithStrategy(0, 2);
 
-    __writeMemory32(0x20000000, 0xE000ED08, "Memory"); //Vector table remap at 0x20000000
+    __writeMemory32(0x1FFF8000, 0xE000ED08, "Memory"); //Vector table remap at 0x1FFF8000
 }
 
 execUserPreload()
 {
-    __writeMemory32(0x20000000, 0xE000ED08, "Memory"); //Vector table remap at 0x20000000
+    __writeMemory32(0x1FFF8000, 0xE000ED08, "Memory"); //Vector table remap at 0x1FFF8000
 }

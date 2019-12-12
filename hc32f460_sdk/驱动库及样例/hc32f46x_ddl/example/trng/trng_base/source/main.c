@@ -130,7 +130,7 @@ int32_t main(void)
     {
         /* Start TRNG, check TRNG and get random number. */
         TRNG_Generate(m_au32Random, 2u, TIMEOUT_10MS);
-        printf("\nRand number: 0x%.8x 0x%.8x.", m_au32Random[0u], m_au32Random[1u]);
+        printf("\nRand number: 0x%.8lx 0x%.8lx.", m_au32Random[0u], m_au32Random[1u]);
         Ddl_Delay1ms(100u);
     }
 }

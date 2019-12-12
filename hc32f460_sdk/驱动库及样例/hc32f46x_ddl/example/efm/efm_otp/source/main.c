@@ -61,7 +61,7 @@
 /*******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-#define EFM_OTP     (Enable)
+#define EFM_OTP     (true)
 
 /*******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -74,9 +74,11 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-#if (EFM_OTP == Enable)
+#if (EFM_OTP == true)
 
-#if defined (__CC_ARM)
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
+const uint8_t u8tmp[15 * 64] __attribute__((section(".otp_sec"))) =
+#elif defined (__CC_ARM)
 const uint8_t u8tmp[15 * 64] __attribute__((at(0x03000C00))) =
 #elif defined (__ICCARM__)
 __root const uint8_t u8tmp[15 * 64] @ 0x03000C00 =
@@ -147,7 +149,9 @@ __root const uint8_t u8tmp[15 * 64] @ 0x03000C00 =
 
 };
 
-#if defined (__CC_ARM)
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
+const uint32_t u32Lock[15] __attribute__((section(".otp_lock_sec"))) =
+#elif defined (__CC_ARM)
 const uint32_t u32Lock[15] __attribute__((at(0x03000FC0))) =
 #elif defined (__ICCARM__)
 __root const uint32_t u32Lock[15] @ 0x03000FC0 =

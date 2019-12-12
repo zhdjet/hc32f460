@@ -101,7 +101,14 @@ static void DmaInit(void);
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-#if defined (__ICCARM__)                /* IAR Compiler */
+#if defined ( __GNUC__ ) && !defined (__CC_ARM) /* GNU Compiler */
+__attribute__ ((aligned (DMA_BLKSIZE)))
+static uint8_t m_au8SrcBuf[DMA_BLKSIZE];
+
+__attribute__ ((aligned (DMA_BLKSIZE)))
+static uint8_t m_au8DstBuf[DMA_BLKSIZE];
+
+#elif defined (__ICCARM__)                /* IAR Compiler */
 #pragma data_alignment=8192
 static uint8_t m_au8SrcBuf[DMA_BLKSIZE];
 

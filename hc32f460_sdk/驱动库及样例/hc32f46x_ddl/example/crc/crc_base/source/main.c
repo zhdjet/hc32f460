@@ -127,14 +127,14 @@ int32_t main(void)
         u32InitVal = 0xFFFFFFFFu;
         CRC_Init(CRC_SEL_32B | CRC_REFIN_ENABLE | CRC_REFOUT_ENABLE | CRC_XOROUT_DISABLE);
         u32Checksum = CRC_Calculate32B(u32InitVal, au32Data, 2u);
-        printf("\nCRC32 result = %.8x", u32Checksum);
+        printf("\nCRC32 result = %.8lx", u32Checksum);
         bFlag = CRC_Check32B(u32InitVal, u32Checksum, au32Data, 2u);
         printf("\nCRC32 flag = %d", bFlag);
 
         /* Changes the CRC configuration. */
         CRC_Init(CRC_SEL_32B | CRC_REFIN_DISABLE | CRC_REFOUT_DISABLE | CRC_XOROUT_ENABLE);
         u32Checksum = CRC_Calculate32B(u32InitVal, au32Data, 2u);
-        printf("\nCRC32 result = %.8x", u32Checksum);
+        printf("\nCRC32 result = %.8lx", u32Checksum);
         bFlag = CRC_Check32B(u32InitVal, u32Checksum, au32Data, 2u);
         printf("\nCRC32 flag = %d", bFlag);
     }

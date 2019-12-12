@@ -91,7 +91,8 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-
+__IO uint16_t u16cmp = 0u;
+__IO uint16_t u16cnt = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -191,8 +192,7 @@ int32_t main(void)
     stc_tim0_base_init_t stcTimerCfg;
     stc_irq_regi_conf_t stcIrqRegiConf;
     stc_port_init_t stcPortInit;
-    __IO uint16_t u16cmp = 0u;
-    __IO uint16_t u16cnt = 0u;
+
     uint32_t u32Pclk1;
     stc_clk_freq_t stcClkTmp;
     uint32_t u32tmp;
@@ -214,8 +214,9 @@ int32_t main(void)
     /* Get pclk1 */
     CLK_GetClockFreq(&stcClkTmp);
     u32Pclk1 = stcClkTmp.pclk1Freq;
+
     /* Enable XTAL32 */
-    CLK_Xtal32Cmd(Disable);
+    CLK_Xtal32Cmd(Enable);
 
     /* Timer0 peripheral enable */
     ENABLE_TMR0();

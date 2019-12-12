@@ -94,6 +94,7 @@
  * Local variable definitions ('static')
  ******************************************************************************/
 static uint16_t u16CmpLast = 0u;
+static __IO uint16_t u16Campture = 0u;
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -106,7 +107,7 @@ static uint16_t u16CmpLast = 0u;
 void Timer0_TriggerCallBack(void)
 {
     uint16_t tmp;
-    __IO uint16_t u16Campture = 0u;
+
     tmp = TIMER0_GetCmpReg(TMR_UNIT,Tim0_ChannelB);
 
     u16Campture = tmp - u16CmpLast;

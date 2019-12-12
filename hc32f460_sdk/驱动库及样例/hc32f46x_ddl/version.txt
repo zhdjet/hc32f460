@@ -1,5 +1,9 @@
 version     date            comment
 1.1.1
+            Dec 12,2019     1. Add AsyncDelay for timer0 driver.
+                            2. Check operation result when switch speed for SD midware.
+                            3. Remove limit of 4 bytes align for SD write/read buffer.
+
             Dec 11,2019     1. Fix bug for TIMERA_OrthogonalCodingInit function.
 
             Dec 10,2019     1. Modify USBLIB for GCC compiler.
@@ -9,32 +13,32 @@ version     date            comment
 
             Dec 4,2019      1. Fix bug for TIMERA_HwTriggerInit and TIMERA_HwClearConfig Function.
 
-            Nov 22,2019     1.Fix bug for I2C slave example: Clear STOP and NACK flag after address flag detected.
+            Nov 22,2019     1. Fix bug for I2C slave example: Clear STOP and NACK flag after address flag detected.
 
             Nov 19,2019     1. add hid_msc composite device demo
                             2. MISRAC2004 for some source files
-            
-            Nov 11,2019     1.modify for USBLIB: Add IAD descriptor for VCP device.
 
-            Nov  8,2019     1.Added support for GCC.
+            Nov 11,2019     1. modify for USBLIB: Add IAD descriptor for VCP device.
 
-            Nov  5,2019     1.modify for USBLIB:  re-open usb clock in DCD_SessionRequest_ISR function
-                            2.Fix bug for example i2c_slave_irq
+            Nov  8,2019     1. Added support for GCC.
+
+            Nov  5,2019     1. modify for USBLIB:  re-open usb clock in DCD_SessionRequest_ISR function
+                            2. Fix bug for example i2c_slave_irq
 
             Nov 1,2019      1. Fix bug for mem_cmp function in ff.c.
                             2. Correct access width from u32 to u16 of GPIO regs: PODR, POER, POSR, PORR, POTR
 
             Oct 30,2019     1. Fix bug for QSPI_PrefetchCmd Function.
 
-            Oct  21,2019    1.Add function CLK_ClearXtalStdFlg to clk.c
-                            2.Modified function PWC_EnterPowerDownMd #add 30 clock cycle after set PWDN
-                            3.Fix bug for I2S_ClrErrFlag function
+            Oct  21,2019    1. Add function CLK_ClearXtalStdFlg to clk.c
+                            2. Modified function PWC_EnterPowerDownMd #add 30 clock cycle after set PWDN
+                            3. Fix bug for I2S_ClrErrFlag function
 
-            Oct  10,2019    1.Move PWC_EnterPowerDownMd func to ran for IAR
+            Oct  10,2019    1. Move PWC_EnterPowerDownMd func to ran for IAR
       
-            Oct  9, 2019    1.Modified Set function(transfer count, block size, src/dest address etc.) in dma.c
+            Oct  9, 2019    1. Modified Set function(transfer count, block size, src/dest address etc.) in dma.c
 
-            Sept 27,2019    1.Fixed bug for function CLK_SysClkConfig # CMU_SCFGR register reserved bits 31~28 should be equal with bits 27~24 
+            Sept 27,2019    1. Fixed bug for function CLK_SysClkConfig # CMU_SCFGR register reserved bits 31~28 should be equal with bits 27~24 
 
             Sept 25,2019    1. Add examples of Timer6 module.
                             2. Add Trigger source config API of Timer6
@@ -46,18 +50,18 @@ version     date            comment
                             2. add RAM3 wait-time in startup_hc32f46x.s
 
 1.0.4
-            July 31, 2019   1.Fix bug for i2c_at24c02 example.
+            July 31, 2019   1. Fix bug for i2c_at24c02 example.
 
-            July 29, 2019   1.modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
-                            2.modify the port configuration for USB example.
+            July 29, 2019   1. modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
+                            2. modify the port configuration for USB example.
 
-            July 25, 2019   1.Modify usb_core.c, Configuration FIFO for each IN ENDPOINT.
-                            2.Add device class hid_custom.
-                              Add device class composite device(HID + CDC)
-                            3.modify device class name from "hid" to "hid_mouse".
-                              modify device class name from "vcp" to "cdc_vcp"
-                            4.Add example hid_custom.
-                              Add example composite device cdc_hid
+            July 25, 2019   1. Modify usb_core.c, Configuration FIFO for each IN ENDPOINT.
+                            2. Add device class hid_custom.
+                               Add device class composite device(HID + CDC)
+                            3. modify device class name from "hid" to "hid_mouse".
+                               modify device class name from "vcp" to "cdc_vcp"
+                            4. Add example hid_custom.
+                               Add example composite device cdc_hid
 
             July 16, 2019   1. modified CMP driver enumeration en_cmp_inp4_sel_t
                             2. modify spelling mistake for "position"

@@ -807,6 +807,12 @@ static en_result_t SdCardSetBusWidth(stc_sd_handle_t *handle)
  ******************************************************************************/
 static en_result_t SdCardSetSpeed(stc_sd_handle_t *handle)
 {
+    uint8_t au8TempBuf[64] = {0};
+    uint32_t u32TimeCount = 2000 * (SystemCoreClock / 8u / 1000u);
+    __IO uint32_t u32Count = u32TimeCount;
+    en_flag_status_t enStatus = Reset;
+    en_flag_status_t enIrqFlag = Reset;
+
     en_result_t enCmdRet = ErrorInvalidParameter;
     stc_sdioc_data_cfg_t stcDataCfg;
     uint32_t u32Arg = SD_SET_FUNCTION_HIGH_SPEED;
@@ -832,7 +838,43 @@ static en_result_t SdCardSetSpeed(stc_sd_handle_t *handle)
                     enCmdRet = SDMMC_Cmd6_SwitchFunc(handle->SDIOCx, u32Arg, (uint32_t *)(&handle->stcCardStatus));
                     if (enCmdRet == Ok)
                     {
-                        Ddl_Delay1ms(10ul);
+                        while (u32Count--)
+                        {
+                            enStatus = SDIOC_GetStatus(handle->SDIOCx, SdiocBufferReadEnble);
+                            enIrqFlag = SDIOC_GetNormalIrqFlag(handle->SDIOCx, SdiocBufferReadReady);
+                            if ((Set == enStatus) && (Set == enIrqFlag))
+                            {
+                                SDIOC_ReadBuffer(handle->SDIOCx, au8TempBuf, sizeof(au8TempBuf));
+                                break;
+                            }
+                        }
+
+                        if (0ul == u32Count)
+                        {
+                            return ErrorTimeout;
+                        }
+
+                        u32Count = u32TimeCount;
+                        while (u32Count--)
+                        {
+                            if (Set == SDIOC_GetNormalIrqFlag(handle->SDIOCx, SdiocTransferComplete))
+                            {
+                                SDIOC_ClearNormalIrqFlag(handle->SDIOCx, SdiocTransferComplete);
+                                break;
+                            }
+                        }
+
+                        if (0ul == u32Count)
+                        {
+                            return ErrorTimeout;
+                        }
+
+                        /* Check whether switch function with error or transfer error occur */
+                        if ((!(au8TempBuf[16] & 0x01)) ||
+                            (Set == SDIOC_GetNormalIrqFlag(handle->SDIOCx, SdiocErrorInt)))
+                        {
+                            enCmdRet = Error;
+                        }
                     }
                 }
             }
@@ -1076,6 +1118,7 @@ static en_result_t SdCardPowerON(stc_sd_handle_t *handle)
  **
  ** \retval Ok                          Card is ready for data
  ** \retval Error                       Card is not ready for data
+ ** \retval ErrorInvalidParameter       NULL == handle
  **
  ******************************************************************************/
 static en_result_t SdCardCheckReayForData(stc_sd_handle_t *handle, uint32_t u32Timeout)
@@ -1084,18 +1127,18 @@ static en_result_t SdCardCheckReayForData(stc_sd_handle_t *handle, uint32_t u32T
 
     if (NULL != handle)
     {
-        enRet = SDMMC_Cmd13_SendStatus(handle->SDIOCx, RelCardAddress(handle), (uint32_t *)(&handle->stcCardStatus));
-        if (enRet == Ok)
+        do
         {
-            for(; (u32Timeout && (false == IsCardReadyForData(handle))); u32Timeout--)
+            enRet = SDMMC_Cmd13_SendStatus(handle->SDIOCx, RelCardAddress(handle), (uint32_t *)(&handle->stcCardStatus));
+            if (Ok != enRet)
             {
-                SDMMC_Cmd13_SendStatus(handle->SDIOCx, RelCardAddress(handle), (uint32_t *)(&handle->stcCardStatus));
+                break;
             }
+        } while ((--u32Timeout) && (false == IsCardReadyForData(handle)));
 
-            if (0u == u32Timeout)
-            {
-                enRet = ErrorTimeout;
-            }
+        if (0u == u32Timeout)
+        {
+            enRet = ErrorTimeout;
         }
     }
 

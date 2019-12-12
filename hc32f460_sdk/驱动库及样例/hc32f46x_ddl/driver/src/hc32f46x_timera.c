@@ -1187,8 +1187,8 @@ en_result_t TIMERA_OrthogonalCodingInit(M4_TMRA_TypeDef *TIMERAx, const stc_time
         DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecTrigRisingEn));
         DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecTrigFallingEn));
         DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecSpecifyEventTriggerEn));
-        DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecAnotherUnitUnderflowEn));
         DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecAnotherUnitOverflowEn));
+        DDL_ASSERT(IS_FUNCTIONAL_STATE(pstcCodingInit->enDecAnotherUnitUnderflowEn));
 
         /* Configure hardware increase event register */
         TIMERAx->HCUPR_f.HCUP0 = pstcCodingInit->enIncClkALowAndClkBRisingEn;
@@ -1217,8 +1217,8 @@ en_result_t TIMERA_OrthogonalCodingInit(M4_TMRA_TypeDef *TIMERAx, const stc_time
         TIMERAx->HCDOR_f.HCDO8 = pstcCodingInit->enDecTrigRisingEn;
         TIMERAx->HCDOR_f.HCDO9 = pstcCodingInit->enDecTrigFallingEn;
         TIMERAx->HCDOR_f.HCDO10 = pstcCodingInit->enDecSpecifyEventTriggerEn;
-        TIMERAx->HCDOR_f.HCDO11 = pstcCodingInit->enDecAnotherUnitUnderflowEn;
-        TIMERAx->HCDOR_f.HCDO12 = pstcCodingInit->enDecAnotherUnitOverflowEn;
+        TIMERAx->HCDOR_f.HCDO11 = pstcCodingInit->enDecAnotherUnitOverflowEn;
+        TIMERAx->HCDOR_f.HCDO12 = pstcCodingInit->enDecAnotherUnitUnderflowEn;
 
         /* Configure filter control register */
         TIMERAx->FCONR_f.NOFICKTG = pstcCodingInit->enTrigClkDiv;

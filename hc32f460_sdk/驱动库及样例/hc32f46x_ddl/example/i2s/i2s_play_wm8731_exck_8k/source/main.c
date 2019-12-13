@@ -115,7 +115,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-const uint16_t *pu16SoundData=&au16PixieDustSoundI2s_8[0];
+const uint16_t *pu16SoundData=(uint16_t *)&au8PixieDustSoundI2s_8[0];
 
 
 /*******************************************************************************
@@ -266,12 +266,12 @@ void I2sTxFifoCallback(void)
     I2S_SendData(I2S_CH, (uint32_t)u16Data);
 
     Adr1 = (uint32_t)pu16SoundData;
-    Adr2 = (uint32_t)&au16PixieDustSoundI2s_8[0];
+    Adr2 = (uint32_t)&au8PixieDustSoundI2s_8[0];
 
-    //if(u32WavLen_8k == (pu16SoundData - &au16PixieDustSoundI2s_8[0]))   /* C-STAT MISRAC2004-17.2 */
+    //if(u32WavLen_8k == (pu16SoundData - &au8PixieDustSoundI2s_8[0]))   /* C-STAT MISRAC2004-17.2 */
     if(u32WavLen_8k <= (Adr1 - Adr2))
     {
-        pu16SoundData = &au16PixieDustSoundI2s_8[0];
+        pu16SoundData = (uint16_t *)&au8PixieDustSoundI2s_8[0];
     }
 }
 

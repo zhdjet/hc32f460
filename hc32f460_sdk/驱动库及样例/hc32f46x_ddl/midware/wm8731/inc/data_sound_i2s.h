@@ -78,8 +78,8 @@ extern "C"
 /*****************************************************************************/
 extern uint32_t u32WavLen_8k;
 extern uint32_t u32WavLen_44k;
-extern const uint16_t au16PixieDustSoundI2s_441[];
-extern const uint16_t au16PixieDustSoundI2s_8[];
+extern const uint8_t au8PixieDustSoundI2s_441[];
+extern const uint8_t au8PixieDustSoundI2s_8[];
 
 /*****************************************************************************/
 /* Global function prototypes ('extern', definition in C source)             */

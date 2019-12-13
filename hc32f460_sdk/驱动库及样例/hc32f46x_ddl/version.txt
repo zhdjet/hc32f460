@@ -1,5 +1,7 @@
 version     date            comment
 1.1.1
+            Dec 13,2019     1. Modify media data for i2s_play_wm8731_44k and i2s_play_wm8731_exck_8k example.
+
             Dec 12,2019     1. Add AsyncDelay for timer0 driver.
                             2. Check operation result when switch speed for SD midware.
                             3. Remove limit of 4 bytes align for SD write/read buffer.

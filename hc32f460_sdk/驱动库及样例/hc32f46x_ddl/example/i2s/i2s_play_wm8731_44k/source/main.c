@@ -115,7 +115,7 @@
 /*******************************************************************************
  * Local variable definitions ('static')
  ******************************************************************************/
-const uint16_t *pu16SoundData = &au16PixieDustSoundI2s_441[0];
+const uint16_t *pu16SoundData = (uint16_t *)&au8PixieDustSoundI2s_441[0];
 
 /*******************************************************************************
  * Function implementation - global ('extern') and local ('static')
@@ -258,11 +258,11 @@ void I2sTxFifoCallback(void)
     I2S_SendData(I2S_CH, (uint32_t)u16Data);
 
     Adr1 = (uint32_t)pu16SoundData;
-    Adr2 = (uint32_t)&au16PixieDustSoundI2s_441[0];
+    Adr2 = (uint32_t)&au8PixieDustSoundI2s_441[0];
     //if(u32WavLen_44k <= ((uint32_t)pu16SoundData - (uint32_t)&au16PixieDustSoundI2s_441[0]))  /* C-STAT MISRAC2004-17.2 */
     if(u32WavLen_44k <= (Adr1 - Adr2))
     {
-        pu16SoundData = &au16PixieDustSoundI2s_441[0];
+        pu16SoundData = (uint16_t *)&au8PixieDustSoundI2s_441[0];
     }
 }
 
@@ -335,7 +335,7 @@ int32_t main(void)
     stcWm8731Reg.PDC_f.CLKOUTPD     = 0u;       // Disable CLKOUT power down
     stcWm8731Reg.PDC_f.POWEROFF     = 0u;       // Disable power off mode
     /* Digital audio interface format */
-    stcWm8731Reg.DAIF_f.FORMAT      = 1u;       // 0: MSB-First, right justified, 1: MSB-first, left justified, 2: I2S-format, 3: DSP mode
+    stcWm8731Reg.DAIF_f.FORMAT      = 2u;       // 0: MSB-First, right justified, 1: MSB-first, left justified, 2: I2S-format, 3: DSP mode
     stcWm8731Reg.DAIF_f.IWL         = 0u;       // 0: 16 bits, 1: 20 bits, 2: 24 bits, 3: 32 bits
     stcWm8731Reg.DAIF_f.LRP         = 0u;       // 1: right channel DAC data when DACLRC (WS) is high,  0: right channel DAC data when DACLRC (WS) is low
     stcWm8731Reg.DAIF_f.LRSWAP      = 0u;       // 1: swap left channel and right channel, 0: don't swap

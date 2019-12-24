@@ -442,9 +442,9 @@
       <FilePath>..\source\usbh_usr.c</FilePath>
     </File>
     <File>
-      <FileName>usbh_usr_lcd.c</FileName>
+      <FileName>usbh_usr_print.c</FileName>
       <FileType>1</FileType>
-      <FilePath>..\source\usbh_usr_lcd.c</FilePath>
+      <FilePath>..\source\usbh_usr_print.c</FilePath>
     </File>
     <File>
       <FileName>usb_bsp_template.c</FileName>
@@ -997,9 +997,9 @@
       <FilePath>..\source\usbh_usr.c</FilePath>
     </File>
     <File>
-      <FileName>usbh_usr_lcd.c</FileName>
+      <FileName>usbh_usr_print.c</FileName>
       <FileType>1</FileType>
-      <FilePath>..\source\usbh_usr_lcd.c</FilePath>
+      <FilePath>..\source\usbh_usr_print.c</FilePath>
     </File>
     <File>
       <FileName>usb_bsp_template.c</FileName>

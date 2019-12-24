@@ -152,6 +152,38 @@ static void SysClkIni(void)
 }
 
 /**
+ ******************************************************************************
+ ** \brief  Initialize the LEDs
+ **
+ ** \param  None
+ **
+ ** \return None
+ ******************************************************************************/
+static void LedPortIni(void)
+{
+    stc_port_init_t stcPortInit;
+
+    /* configuration structure initialization */
+    MEM_ZERO_STRUCT(stcPortInit);
+
+    stcPortInit.enPinMode = Pin_Mode_Out;
+    stcPortInit.enExInt = Enable;
+    stcPortInit.enPullUp = Enable;
+
+    /* LED0 Port/Pin initialization */
+    PORT_Init(LED0_PORT, LED0_PIN, &stcPortInit);
+
+    /* LED1 Port/Pin initialization */
+    PORT_Init(LED1_PORT, LED1_PIN, &stcPortInit);
+
+    /* LED2 Port/Pin initialization */
+    PORT_Init(LED2_PORT, LED2_PIN, &stcPortInit);
+
+    /* LED3 Port/Pin initialization */
+    PORT_Init(LED3_PORT, LED3_PIN, &stcPortInit);
+}
+
+/**
  *******************************************************************************
  ** \brief  Initilizes BSP configurations
  ** \param  None
@@ -166,6 +198,7 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
     Ddl_UartInit();
     printf("USBFS start !!\n");
 
+    LedPortIni();
     /* port config */
     /* Disable digital function for DM DP */
     MEM_ZERO_STRUCT(stcPortInit);

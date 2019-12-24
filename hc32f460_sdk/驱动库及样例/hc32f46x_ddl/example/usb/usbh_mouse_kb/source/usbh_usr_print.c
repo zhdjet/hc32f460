@@ -1,5 +1,5 @@
-/*****************************************************************************
- * Copyright (C) 2016, Huada Semiconductor Co.,Ltd All rights reserved.
+/******************************************************************************
+ * Copyright (C) 2016, Huada Semiconductor Co.,Ltd. All rights reserved.
  *
  * This software is owned and published by:
  * Huada Semiconductor Co.,Ltd ("HDSC").
@@ -40,81 +40,113 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file usb_bsp.h
+/** \file usbh_usr_print.c
  **
  ** A detailed description is available at
- ** @link Specific api's relative to the used hardware platform @endlink
+ ** @link
+        This file includes the user application layer.
+    @endlink
  **
- **   - 2018-12-26  1.0  wangmin First version for USB demo.
+ **   - 2019-12-13  1.0  zhangxl First version for USB hid mouse & keyboard demo.
  **
  ******************************************************************************/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
 
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include <stdint.h>
-#include "usb_core.h"
+#include "usbh_usr_print.h"
 #include "usb_conf.h"
+#include "hc32_ddl.h"
 
 /*******************************************************************************
- * Global type definitions ('typedef')
+ * Local type definitions ('typedef')
  ******************************************************************************/
 
 /*******************************************************************************
- * Global pre-processor symbols/macros ('#define')
- ******************************************************************************/
-/* KEY0 */
-#define  SW2_PORT       (PortD)
-#define  SW2_PIN        (Pin03)
-
-/* LED0 Port/Pin definition */
-#define  LED0_PORT      (PortE)
-#define  LED0_PIN       (Pin06)
-
-/* LED1 Port/Pin definition */
-#define  LED1_PORT      (PortA)
-#define  LED1_PIN       (Pin07)
-
-/* LED2 Port/Pin definition */
-#define  LED2_PORT      (PortB)
-#define  LED2_PIN       (Pin05)
-
-/* LED3 Port/Pin definition */
-#define  LED3_PORT      (PortB)
-#define  LED3_PIN       (Pin09)
-
-/* LED0~3 toggle definition */
-#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
-#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
-#define  LED2_TOGGLE()    (PORT_Toggle(LED2_PORT, LED2_PIN))
-#define  LED3_TOGGLE()    (PORT_Toggle(LED3_PORT, LED3_PIN))
-
-/* LED0~3 Control definition */
-#define  LED0_CTL(x)      ((Reset != (x))?PORT_SetBits(LED0_PORT, LED0_PIN):PORT_ResetBits(LED0_PORT, LED0_PIN))
-#define  LED1_CTL(x)      ((Reset != (x))?PORT_SetBits(LED1_PORT, LED1_PIN):PORT_ResetBits(LED1_PORT, LED1_PIN))
-#define  LED2_CTL(x)      ((Reset != (x))?PORT_SetBits(LED2_PORT, LED2_PIN):PORT_ResetBits(LED2_PORT, LED2_PIN))
-#define  LED3_CTL(x)      ((Reset != (x))?PORT_SetBits(LED3_PORT, LED3_PIN):PORT_ResetBits(LED3_PORT, LED3_PIN))
-
-/*******************************************************************************
- * Global variable definitions ('extern')
+ * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 
 /*******************************************************************************
-  Global function prototypes (definition in C source)
+ * Global variable definitions (declared in header file with 'extern')
  ******************************************************************************/
-void BSP_Init(void);
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-#endif
 
-#endif //__USB_BSP__H__
+/*******************************************************************************
+ * Local function prototypes ('static')
+ ******************************************************************************/
+
+/*******************************************************************************
+ * Local variable definitions ('static')
+ ******************************************************************************/
+
+/*******************************************************************************
+ * Function implementation - global ('extern') and local ('static')
+ ******************************************************************************/
+/**
+* @brief  HID_MOUSE_UpdatePosition
+*         The function is to handle mouse scroll to upadte the mouse position
+*         on display window
+* @param   x : USB HID Mouse X co-ordinate
+* @param   y :  USB HID Mouse Y co-ordinate
+* @retval None
+*/
+void HID_MOUSE_UpdatePosition (int8_t x, int8_t y)
+{
+    printf("X: %d, Y: %d\r\n",x,y);
+}
+
+/**
+* @brief  HID_MOUSE_ButtonPressed
+*         The function is to handle mouse button press
+* @param  button_idx : mouse button pressed
+* @retval None
+*/
+void HID_MOUSE_ButtonPressed(uint8_t button_idx)
+{
+    switch (button_idx)
+    {
+        /* Left Button Pressed */
+        case 0 :
+            printf("L Pressed!\r\n");
+            break;
+
+        /* Right Button Pressed */
+        case 1 :
+            printf("R Pressed!\r\n");
+            break;
+
+        /* Middle button Pressed */
+        case 2 :
+            printf("M Pressed!\r\n");
+            break;
+    }
+}
+
+/**
+* @brief  HID_Mouse_ButtonReleased
+*         The function is to handle mouse button release
+* @param  button_idx : mouse button released
+* @retval None
+*/
+void HID_MOUSE_ButtonReleased(uint8_t button_idx)
+{
+    switch (button_idx)
+    {
+        /* Left Button Released */
+        case 0 :
+            printf("L Released!\r\n");
+            break;
+
+        /* Right Button Released */
+        case 1 :
+            printf("R Released!\r\n");
+            break;
+
+        /* Middle Button Released */
+        case 2 :
+            printf("M Released!\r\n");
+            break;
+    }
+}
 
 /*******************************************************************************
  * EOF (not truncated)

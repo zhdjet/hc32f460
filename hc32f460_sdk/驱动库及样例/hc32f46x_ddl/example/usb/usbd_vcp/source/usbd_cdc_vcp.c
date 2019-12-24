@@ -115,7 +115,7 @@ CDC_IF_Prop_TypeDef VCP_fops =
  ******************************************************************************/
 /**
   * @brief  VCP_Init
-  *         Initializes the Media on the STM32
+  *         Initializes the Media
   * @param  None
   * @retval Result of the opeartion (USBD_OK in all cases)
   */
@@ -173,7 +173,7 @@ static uint16_t VCP_Init(void)
 
 /**
   * @brief  VCP_DeInit
-  *         DeInitializes the Media on the STM32
+  *         DeInitializes the Media
   * @param  None
   * @retval Result of the opeartion (USBD_OK in all cases)
   */

@@ -64,11 +64,11 @@
 #define  SW2_PORT         (PortD)
 #define  SW2_PIN          (Pin03)
 /* KEY1 */
-#define  SW3_PORT         (PortD)
-#define  SW3_PIN          (Pin04)
-/* KEY2 */
 #define  SW4_PORT         (PortD)
-#define  SW4_PIN          (Pin05)
+#define  SW4_PIN          (Pin04)
+/* KEY2 */
+#define  SW3_PORT         (PortD)
+#define  SW3_PIN          (Pin05)
 /* KEY3 */
 #define  SW5_PORT         (PortD)
 #define  SW5_PIN          (Pin06)
@@ -1183,7 +1183,7 @@ void Sw3_Init(void)
     /* Set PD05 as External Int Ch.5 input */
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
-    PORT_Init(SW4_PORT, SW4_PIN, &stcPortInit);
+    PORT_Init(SW3_PORT, SW3_PIN, &stcPortInit);
 
     /* Select External Int Ch.5 */
     stcIrqRegiConf.enIntSrc = INT_PORT_EIRQ5;
@@ -1242,7 +1242,7 @@ void Sw4_Init(void)
     /* Set PD04 as External Int Ch.4 input */
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
-    PORT_Init(SW3_PORT, SW3_PIN, &stcPortInit);
+    PORT_Init(SW4_PORT, SW4_PIN, &stcPortInit);
 
     /* Select External Int Ch.4 */
     stcIrqRegiConf.enIntSrc = INT_PORT_EIRQ4;
@@ -1423,6 +1423,10 @@ int32_t main(void)
     /* configure structure initialization */
     MEM_ZERO_STRUCT(stcNmiConfig);
     MEM_ZERO_STRUCT(stcSwiConfig);
+
+#ifdef  __PRINT_TO_TERMINAL
+    Ddl_UartInit();
+#endif
 
     /* Init LED 0~3 */
     Led_Init();

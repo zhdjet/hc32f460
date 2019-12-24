@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (C) 2016, Huada Semiconductor Co.,Ltd All rights reserved.
+ * Copyright (C) 2016, Huada Semiconductor Co.,Ltd. All rights reserved.
  *
  * This software is owned and published by:
  * Huada Semiconductor Co.,Ltd ("HDSC").
@@ -231,5 +231,3 @@ USBH_Status USBH_MSC_BOT_Abort(USB_OTG_CORE_HANDLE *pdev,
 /*******************************************************************************
  * EOF (not truncated)
  ******************************************************************************/
-
-

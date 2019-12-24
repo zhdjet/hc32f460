@@ -1,5 +1,5 @@
-/*****************************************************************************
- * Copyright (C) 2016, Huada Semiconductor Co.,Ltd All rights reserved.
+/******************************************************************************
+ * Copyright (C) 2016, Huada Semiconductor Co.,Ltd. All rights reserved.
  *
  * This software is owned and published by:
  * Huada Semiconductor Co.,Ltd ("HDSC").

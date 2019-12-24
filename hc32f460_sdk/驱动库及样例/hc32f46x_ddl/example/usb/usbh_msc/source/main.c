@@ -106,16 +106,15 @@ int main (void)
 
     while (1)
     {
-    /* Host Task handler */
+        /* Host Task handler */
         USBH_Process(&USB_OTG_Core, &USB_Host);
         if (i++ == 0x50000ul)
         {
             i = 0ul;
-//          led_toggle(1);
-//          led_toggle(2);
         }
 
-        if (test == 1ul){
+        if (test == 1ul)
+        {
             USB_OTG_PRTSUSP(&USB_OTG_Core);
             test =0ul;
         }

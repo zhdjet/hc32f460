@@ -2031,7 +2031,7 @@
     <name>$PROJ_DIR$\..\source\usbh_usr.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\source\usbh_usr_lcd.c</name>
+    <name>$PROJ_DIR$\..\source\usbh_usr_print.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\..\source\usb_bsp_template.c</name>

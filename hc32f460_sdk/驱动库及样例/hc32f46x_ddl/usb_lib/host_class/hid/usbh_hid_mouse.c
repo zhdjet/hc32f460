@@ -1,5 +1,5 @@
-/*****************************************************************************
- * Copyright (C) 2016, Huada Semiconductor Co.,Ltd All rights reserved.
+/******************************************************************************
+ * Copyright (C) 2016, Huada Semiconductor Co.,Ltd. All rights reserved.
  *
  * This software is owned and published by:
  * Huada Semiconductor Co.,Ltd ("HDSC").
@@ -40,81 +40,92 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file usb_bsp.h
+/** \file usbh_hid_mouse.c
  **
  ** A detailed description is available at
- ** @link Specific api's relative to the used hardware platform @endlink
+ ** @link
+        This file is the application layer for USB Host HID Mouse Handling.
+    @endlink
  **
- **   - 2018-12-26  1.0  wangmin First version for USB demo.
+ **   - 2019-12-13  1.0  zhangxl First version for USB HID mouse demo.
  **
  ******************************************************************************/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
 
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include <stdint.h>
-#include "usb_core.h"
-#include "usb_conf.h"
+#include "usbh_hid_mouse.h"
 
 /*******************************************************************************
- * Global type definitions ('typedef')
+ * Local type definitions ('typedef')
  ******************************************************************************/
 
 /*******************************************************************************
- * Global pre-processor symbols/macros ('#define')
- ******************************************************************************/
-/* KEY0 */
-#define  SW2_PORT       (PortD)
-#define  SW2_PIN        (Pin03)
-
-/* LED0 Port/Pin definition */
-#define  LED0_PORT      (PortE)
-#define  LED0_PIN       (Pin06)
-
-/* LED1 Port/Pin definition */
-#define  LED1_PORT      (PortA)
-#define  LED1_PIN       (Pin07)
-
-/* LED2 Port/Pin definition */
-#define  LED2_PORT      (PortB)
-#define  LED2_PIN       (Pin05)
-
-/* LED3 Port/Pin definition */
-#define  LED3_PORT      (PortB)
-#define  LED3_PIN       (Pin09)
-
-/* LED0~3 toggle definition */
-#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
-#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
-#define  LED2_TOGGLE()    (PORT_Toggle(LED2_PORT, LED2_PIN))
-#define  LED3_TOGGLE()    (PORT_Toggle(LED3_PORT, LED3_PIN))
-
-/* LED0~3 Control definition */
-#define  LED0_CTL(x)      ((Reset != (x))?PORT_SetBits(LED0_PORT, LED0_PIN):PORT_ResetBits(LED0_PORT, LED0_PIN))
-#define  LED1_CTL(x)      ((Reset != (x))?PORT_SetBits(LED1_PORT, LED1_PIN):PORT_ResetBits(LED1_PORT, LED1_PIN))
-#define  LED2_CTL(x)      ((Reset != (x))?PORT_SetBits(LED2_PORT, LED2_PIN):PORT_ResetBits(LED2_PORT, LED2_PIN))
-#define  LED3_CTL(x)      ((Reset != (x))?PORT_SetBits(LED3_PORT, LED3_PIN):PORT_ResetBits(LED3_PORT, LED3_PIN))
-
-/*******************************************************************************
- * Global variable definitions ('extern')
+ * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
 
 /*******************************************************************************
-  Global function prototypes (definition in C source)
+ * Local variable definitions ('static')
  ******************************************************************************/
-void BSP_Init(void);
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
+static void  MOUSE_Init (void);
+static void  MOUSE_Decode(uint8_t *data);
+
+/*******************************************************************************
+ * Global variable definitions (declared in header file with 'extern')
+ ******************************************************************************/
+#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+ #if defined   (__CC_ARM) /*!< ARM Compiler */
+  __align(4)
+ #elif defined ( __ICCARM__ ) /*!< IAR Compiler */
+  #pragma data_alignment=4
+ #elif defined (__GNUC__) /*!< GNU Compiler */
+ #pragma pack(4)
+ #elif defined  (__TASKING__) /*!< TASKING Compiler */
+  __align(4)
+ #endif /* __CC_ARM */
 #endif
 
-#endif //__USB_BSP__H__
+HID_MOUSE_Data_TypeDef HID_MOUSE_Data;
+HID_cb_TypeDef HID_MOUSE_cb =
+{
+    MOUSE_Init,
+    MOUSE_Decode,
+};
+
+/*******************************************************************************
+ * Local variable definitions ('static')
+ ******************************************************************************/
+static void  MOUSE_Init (void);
+static void  MOUSE_Decode(uint8_t *data);
+
+/*******************************************************************************
+ * Local variable definitions ('static')
+ ******************************************************************************/
+/**
+* @brief  MOUSE_Init
+*         Init Mouse State.
+* @param  None
+* @retval None
+*/
+static void  MOUSE_Init ( void)
+{
+    /* Call User Init*/
+    USR_MOUSE_Init();
+}
+
+/**
+* @brief  MOUSE_Decode
+*         Decode Mouse data
+* @param  data : Pointer to Mouse HID data buffer
+* @retval None
+*/
+static void  MOUSE_Decode(uint8_t *data)
+{
+    HID_MOUSE_Data.button = data[0];
+    HID_MOUSE_Data.x      = data[1];
+    HID_MOUSE_Data.y      = data[2];
+    USR_MOUSE_ProcessData(&HID_MOUSE_Data);
+}
 
 /*******************************************************************************
  * EOF (not truncated)

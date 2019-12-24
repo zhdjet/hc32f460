@@ -40,23 +40,21 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file usb_bsp.h
+/** \file usbh_usr_print.h
  **
  ** A detailed description is available at
- ** @link Specific api's relative to the used hardware platform @endlink
+ ** @link Header file for usbh_usr.c @endlink
  **
- **   - 2018-12-26  1.0  wangmin First version for USB demo.
+ **   - 2019-12-13  1.0  zhangxl First version for USB hid mouse & keyboard demo.
  **
  ******************************************************************************/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
+#ifndef __USBH_USR_PRINT_H__
+#define __USBH_USR_PRINT_H__
 
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include <stdint.h>
-#include "usb_core.h"
-#include "usb_conf.h"
+#include "usbh_hid_core.h"
 
 /*******************************************************************************
  * Global type definitions ('typedef')
@@ -65,37 +63,45 @@
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-/* KEY0 */
-#define  SW2_PORT       (PortD)
-#define  SW2_PIN        (Pin03)
+/*Left Button : Report data :0x01*/
+#define HID_MOUSE_BUTTON1                0x01 
+/*Right Button : Report data :0x02*/
+#define HID_MOUSE_BUTTON2                0x02 
+/*Middle Button : Report data : 0x04*/
+#define HID_MOUSE_BUTTON3                0x04 
 
-/* LED0 Port/Pin definition */
-#define  LED0_PORT      (PortE)
-#define  LED0_PIN       (Pin06)
+/* Mouse directions */
+#define MOUSE_TOP_DIR                   0x80
+#define MOUSE_BOTTOM_DIR                0x00
+#define MOUSE_LEFT_DIR                  0x80
+#define MOUSE_RIGHT_DIR                 0x00
 
-/* LED1 Port/Pin definition */
-#define  LED1_PORT      (PortA)
-#define  LED1_PIN       (Pin07)
+#define MOUSE_WINDOW_X                  100
+#define MOUSE_WINDOW_Y                  220
+#define MOUSE_WINDOW_X_MAX              181
+#define MOUSE_WINDOW_Y_MIN              101
+#define MOUSE_WINDOW_HEIGHT             90
+#define MOUSE_WINDOW_WIDTH              128
 
-/* LED2 Port/Pin definition */
-#define  LED2_PORT      (PortB)
-#define  LED2_PIN       (Pin05)
+#define HID_MOUSE_BUTTON_HEIGHT         10
+#define HID_MOUSE_BUTTON_WIDTH          24
+#define HID_MOUSE_BUTTON_XCHORD         201
+#define HID_MOUSE_BUTTON1_YCHORD        220
+#define HID_MOUSE_BUTTON3_YCHORD        166
+#define HID_MOUSE_BUTTON2_YCHORD        116
 
-/* LED3 Port/Pin definition */
-#define  LED3_PORT      (PortB)
-#define  LED3_PIN       (Pin09)
+#define MOUSE_LEFT_MOVE                  1
+#define MOUSE_RIGHT_MOVE                 2
+#define MOUSE_UP_MOVE                    3
+#define MOUSE_DOWN_MOVE                  4
 
-/* LED0~3 toggle definition */
-#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
-#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
-#define  LED2_TOGGLE()    (PORT_Toggle(LED2_PORT, LED2_PIN))
-#define  LED3_TOGGLE()    (PORT_Toggle(LED3_PORT, LED3_PIN))
+#define HID_MOUSE_HEIGHTLSB              2
+#define HID_MOUSE_WIDTHLSB               2
+#define HID_MOUSE_RES_X                  4  
+#define HID_MOUSE_RES_Y                  4
 
-/* LED0~3 Control definition */
-#define  LED0_CTL(x)      ((Reset != (x))?PORT_SetBits(LED0_PORT, LED0_PIN):PORT_ResetBits(LED0_PORT, LED0_PIN))
-#define  LED1_CTL(x)      ((Reset != (x))?PORT_SetBits(LED1_PORT, LED1_PIN):PORT_ResetBits(LED1_PORT, LED1_PIN))
-#define  LED2_CTL(x)      ((Reset != (x))?PORT_SetBits(LED2_PORT, LED2_PIN):PORT_ResetBits(LED2_PORT, LED2_PIN))
-#define  LED3_CTL(x)      ((Reset != (x))?PORT_SetBits(LED3_PORT, LED3_PIN):PORT_ResetBits(LED3_PORT, LED3_PIN))
+#define SMALL_FONT_COLUMN_WIDTH          8
+#define SMALL_FONT_LINE_WIDTH            12
 
 /*******************************************************************************
  * Global variable definitions ('extern')
@@ -104,17 +110,11 @@
 /*******************************************************************************
   Global function prototypes (definition in C source)
  ******************************************************************************/
-void BSP_Init(void);
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-#endif
+void HID_MOUSE_UpdatePosition(int8_t x ,int8_t y);
+void HID_MOUSE_ButtonReleased(uint8_t button_idx);
+void HID_MOUSE_ButtonPressed (uint8_t button_idx);
 
-#endif //__USB_BSP__H__
+#endif /* __USBH_USR_PRINT_H__ */
 
 /*******************************************************************************
  * EOF (not truncated)

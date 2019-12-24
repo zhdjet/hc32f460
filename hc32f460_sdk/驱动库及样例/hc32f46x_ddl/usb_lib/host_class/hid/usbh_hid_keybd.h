@@ -1,5 +1,5 @@
-/*****************************************************************************
- * Copyright (C) 2016, Huada Semiconductor Co.,Ltd All rights reserved.
+/******************************************************************************
+ * Copyright (C) 2016, Huada Semiconductor Co.,Ltd. All rights reserved.
  *
  * This software is owned and published by:
  * Huada Semiconductor Co.,Ltd ("HDSC").
@@ -40,23 +40,25 @@
  * at all times.
  */
 /******************************************************************************/
-/** \file usb_bsp.h
+/** \file usbh_hid_keybd.h
  **
  ** A detailed description is available at
- ** @link Specific api's relative to the used hardware platform @endlink
+ ** @link
+        This file contains all the prototypes for the usbh_hid_keybd.c.
+    @endlink
  **
- **   - 2018-12-26  1.0  wangmin First version for USB demo.
+ **   - 2019-12-13  1.0  zhangxl First version for USB mouse_keyboard demo.
  **
  ******************************************************************************/
-#ifndef __USB_BSP__H__
-#define __USB_BSP__H__
+#ifndef __USBH_HID_KEYBD_H
+#define __USBH_HID_KEYBD_H
 
 /*******************************************************************************
  * Include files
  ******************************************************************************/
-#include <stdint.h>
-#include "usb_core.h"
 #include "usb_conf.h"
+#include "usbh_hid_core.h"
+
 
 /*******************************************************************************
  * Global type definitions ('typedef')
@@ -65,56 +67,32 @@
 /*******************************************************************************
  * Global pre-processor symbols/macros ('#define')
  ******************************************************************************/
-/* KEY0 */
-#define  SW2_PORT       (PortD)
-#define  SW2_PIN        (Pin03)
+#define QWERTY_KEYBOARD
+//#define AZERTY_KEYBOARD
 
-/* LED0 Port/Pin definition */
-#define  LED0_PORT      (PortE)
-#define  LED0_PIN       (Pin06)
+#define  KBD_LEFT_CTRL                                  0x01
+#define  KBD_LEFT_SHIFT                                 0x02
+#define  KBD_LEFT_ALT                                   0x04
+#define  KBD_LEFT_GUI                                   0x08
+#define  KBD_RIGHT_CTRL                                 0x10
+#define  KBD_RIGHT_SHIFT                                0x20
+#define  KBD_RIGHT_ALT                                  0x40
+#define  KBD_RIGHT_GUI                                  0x80
 
-/* LED1 Port/Pin definition */
-#define  LED1_PORT      (PortA)
-#define  LED1_PIN       (Pin07)
-
-/* LED2 Port/Pin definition */
-#define  LED2_PORT      (PortB)
-#define  LED2_PIN       (Pin05)
-
-/* LED3 Port/Pin definition */
-#define  LED3_PORT      (PortB)
-#define  LED3_PIN       (Pin09)
-
-/* LED0~3 toggle definition */
-#define  LED0_TOGGLE()    (PORT_Toggle(LED0_PORT, LED0_PIN))
-#define  LED1_TOGGLE()    (PORT_Toggle(LED1_PORT, LED1_PIN))
-#define  LED2_TOGGLE()    (PORT_Toggle(LED2_PORT, LED2_PIN))
-#define  LED3_TOGGLE()    (PORT_Toggle(LED3_PORT, LED3_PIN))
-
-/* LED0~3 Control definition */
-#define  LED0_CTL(x)      ((Reset != (x))?PORT_SetBits(LED0_PORT, LED0_PIN):PORT_ResetBits(LED0_PORT, LED0_PIN))
-#define  LED1_CTL(x)      ((Reset != (x))?PORT_SetBits(LED1_PORT, LED1_PIN):PORT_ResetBits(LED1_PORT, LED1_PIN))
-#define  LED2_CTL(x)      ((Reset != (x))?PORT_SetBits(LED2_PORT, LED2_PIN):PORT_ResetBits(LED2_PORT, LED2_PIN))
-#define  LED3_CTL(x)      ((Reset != (x))?PORT_SetBits(LED3_PORT, LED3_PIN):PORT_ResetBits(LED3_PORT, LED3_PIN))
+#define  KBR_MAX_NBR_PRESSED                            6
 
 /*******************************************************************************
  * Global variable definitions ('extern')
  ******************************************************************************/
+extern HID_cb_TypeDef HID_KEYBRD_cb;
 
 /*******************************************************************************
-  Global function prototypes (definition in C source)
+ * Global function prototypes (definition in C source)
  ******************************************************************************/
-void BSP_Init(void);
-void USB_OTG_BSP_Init (USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_uDelay (const uint32_t usec);
-void USB_OTG_BSP_mDelay (const uint32_t msec);
-void USB_OTG_BSP_EnableInterrupt (void);
-#ifdef USE_HOST_MODE
-void USB_OTG_BSP_ConfigVBUS(USB_OTG_CORE_HANDLE *pdev);
-void USB_OTG_BSP_DriveVBUS(USB_OTG_CORE_HANDLE *pdev,uint8_t state);
-#endif
+void  USR_KEYBRD_Init (void);
+void  USR_KEYBRD_ProcessData (uint8_t pbuf);
 
-#endif //__USB_BSP__H__
+#endif /* __USBH_HID_KEYBD_H */
 
 /*******************************************************************************
  * EOF (not truncated)

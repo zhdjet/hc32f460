@@ -1,5 +1,7 @@
 version     date            comment
 1.1.1
+            Jan 06,2020     1. Fix bug for CMP CMP_ADC_SetRefVoltPath function.
+
             Dec 30,2019     1. Set FPU function in system initialization stage.
 
             Dec 24,2019     1. Add USB host example -> HID mouse and Keyboard.

@@ -352,6 +352,7 @@ static void AdcChannelConfig(void)
 
     #if (ADC1_INTERNAL_SRC == VREF_TO_ADC1)
         /* VREF to ADC1 */
+        PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_CMP, Enable);
         CMP_ADC_SetRefVoltPath(CmpAdcRefVoltPathVref);
         PWC_PwrMonitorCmd(Enable);
     #endif
@@ -380,6 +381,7 @@ static void AdcChannelConfig(void)
 
     #if (ADC2_INTERNAL_SRC == VREF_TO_ADC2)
         /* VREF to ADC2 */
+        PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_CMP, Enable);
         CMP_ADC_SetRefVoltPath(CmpAdcRefVoltPathVref);
         PWC_PwrMonitorCmd(Enable);
     #endif

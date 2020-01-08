@@ -1,5 +1,10 @@
 version     date            comment
 1.1.1
+            Jan 08,2020     1. Added GCC compiler support.
+                            2. Added Eclipse project files for each example project.
+                            3. Fixed a bug of IS_ADC_TRIG_SRC_EVENT in hc32f46x_adc.c.
+                            4. Fixed a bug of function AdcChannelConfig in ..\example\adc\adc_10_internal_channel\source\main.c.
+
             Jan 06,2020     1. Fix bug for CMP CMP_ADC_SetRefVoltPath function.
 
             Dec 30,2019     1. Set FPU function in system initialization stage.

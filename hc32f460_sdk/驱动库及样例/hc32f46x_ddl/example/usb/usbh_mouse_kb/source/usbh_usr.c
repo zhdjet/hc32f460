@@ -101,21 +101,21 @@ USBH_Usr_cb_TypeDef USR_cb =
 };
 
 /*--------------- Messages ---------------*/
-const uint8_t MSG_HOST_INIT[]          = "> Host Library Initialized\n";
-const uint8_t MSG_DEV_ATTACHED[]       = "> Device Attached\n";
-const uint8_t MSG_DEV_DISCONNECTED[]   = "> Device Disconnected\n";
-const uint8_t MSG_DEV_ENUMERATED[]     = "> Enumeration completed\n";
-const uint8_t MSG_DEV_HIGHSPEED[]      = "> High speed device detected\n";
-const uint8_t MSG_DEV_FULLSPEED[]      = "> Full speed device detected\n";
-const uint8_t MSG_DEV_LOWSPEED[]       = "> Low speed device detected\n";
-const uint8_t MSG_DEV_ERROR[]          = "> Device fault \n";
+const char* MSG_HOST_INIT          = "> Host Library Initialized\n";
+const char* MSG_DEV_ATTACHED       = "> Device Attached\n";
+const char* MSG_DEV_DISCONNECTED   = "> Device Disconnected\n";
+const char* MSG_DEV_ENUMERATED     = "> Enumeration completed\n";
+const char* MSG_DEV_HIGHSPEED      = "> High speed device detected\n";
+const char* MSG_DEV_FULLSPEED      = "> Full speed device detected\n";
+const char* MSG_DEV_LOWSPEED       = "> Low speed device detected\n";
+const char* MSG_DEV_ERROR          = "> Device fault \n";
 
-const uint8_t MSG_MSC_CLASS[]          = "> Mass storage device connected\n";
-const uint8_t MSG_HID_CLASS[]          = "> HID device connected\n";
+const char* MSG_MSC_CLASS          = "> Mass storage device connected\n";
+const char* MSG_HID_CLASS          = "> HID device connected\n";
 
-const uint8_t USB_HID_MouseStatus[]    = "> HID Demo Device : Mouse\n";
-const uint8_t USB_HID_KeybrdStatus[]   = "> HID Demo Device : Keyboard\n";
-const uint8_t MSG_UNREC_ERROR[]        = "> UNRECOVERED ERROR STATE\n";
+const char* USB_HID_MouseStatus    = "> HID Demo Device : Mouse\n";
+const char* USB_HID_KeybrdStatus   = "> HID Demo Device : Keyboard\n";
+const char* MSG_UNREC_ERROR        = "> UNRECOVERED ERROR STATE\n";
 
 /*******************************************************************************
  * Local function prototypes ('static')
@@ -225,9 +225,9 @@ void USBH_USR_Device_DescAvailable(void *DeviceDesc)
     uint8_t temp[50];
     USBH_DevDesc_TypeDef *hs;
     hs = DeviceDesc;
-    sprintf((char *)temp , "VID : %04Xh\n" , (uint32_t)(*hs).idVendor);
+    sprintf((char *)temp , "VID : %04lXh\n" , (uint32_t)(*hs).idVendor);
     printf((void *)temp);
-    sprintf((char *)temp , "PID : %04Xh\n" , (uint32_t)(*hs).idProduct);
+    sprintf((char *)temp , "PID : %04lXh\n" , (uint32_t)(*hs).idProduct);
     printf((void *)temp);
 }
 

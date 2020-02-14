@@ -146,7 +146,7 @@ en_result_t enIrqRegistration(const stc_irq_regi_conf_t *pstcIrqRegiConf)
     //DDL_ASSERT(NULL != pstcIrqRegiConf->pfnCallback);
     DDL_ASSERT(IS_NULL_POINT(pstcIrqRegiConf->pfnCallback));
 
-    /* IRQ032~128 whether out of range */
+    /* IRQ032~127 whether out of range */
     if (((((pstcIrqRegiConf->enIntSrc/32)*6 + 32) > pstcIrqRegiConf->enIRQn) || \
         (((pstcIrqRegiConf->enIntSrc/32)*6 + 37) < pstcIrqRegiConf->enIRQn)) && \
         (pstcIrqRegiConf->enIRQn >= 32))
@@ -3247,17 +3247,17 @@ void IRQ138_Handler(void)
 
     u32Tmp1 = M4_TMR41->RCSR;
     /* Timer4 Ch.1 U phase reload */
-    if ((VSSEL138 & BIT_MASK_08) && (u32Tmp1 & BIT_MASK_00) && (u32Tmp1 & BIT_MASK_04))
+    if ((VSSEL138 & BIT_MASK_08) && (~(u32Tmp1 & BIT_MASK_00)) && (u32Tmp1 & BIT_MASK_04))
     {
         Timer41ReloadU_IrqHandler();
     }
     /* Timer4 Ch.1 V phase reload */
-    if ((VSSEL138 & BIT_MASK_09) && (u32Tmp1 & BIT_MASK_01) && (u32Tmp1 & BIT_MASK_08))
+    if ((VSSEL138 & BIT_MASK_09) && (~(u32Tmp1 & BIT_MASK_01)) && (u32Tmp1 & BIT_MASK_08))
     {
         Timer41ReloadV_IrqHandler();
     }
     /* Timer4 Ch.1 W phase reload */
-    if ((VSSEL138 & BIT_MASK_10) && (u32Tmp1 & BIT_MASK_02) && (u32Tmp1 & BIT_MASK_12))
+    if ((VSSEL138 & BIT_MASK_10) && (~(u32Tmp1 & BIT_MASK_02)) && (u32Tmp1 & BIT_MASK_12))
     {
         Timer41ReloadW_IrqHandler();
     }
@@ -3312,17 +3312,17 @@ void IRQ138_Handler(void)
 
     u32Tmp1 = M4_TMR42->RCSR;
     /* Timer4 Ch.2 U phase reload */
-    if ((VSSEL138 & BIT_MASK_24) && (u32Tmp1 & BIT_MASK_00) && (u32Tmp1 & BIT_MASK_04))
+    if ((VSSEL138 & BIT_MASK_24) && (~(u32Tmp1 & BIT_MASK_00)) && (u32Tmp1 & BIT_MASK_04))
     {
         Timer42ReloadU_IrqHandler();
     }
     /* Timer4 Ch.2 V phase reload */
-    if ((VSSEL138 & BIT_MASK_25) && (u32Tmp1 & BIT_MASK_01) && (u32Tmp1 & BIT_MASK_08))
+    if ((VSSEL138 & BIT_MASK_25) && (~(u32Tmp1 & BIT_MASK_01)) && (u32Tmp1 & BIT_MASK_08))
     {
         Timer42ReloadV_IrqHandler();
     }
     /* Timer4 Ch.2 W phase reload */
-    if ((VSSEL138 & BIT_MASK_26) && (u32Tmp1 & BIT_MASK_02) && (u32Tmp1 & BIT_MASK_12))
+    if ((VSSEL138 & BIT_MASK_26) && (~(u32Tmp1 & BIT_MASK_02)) && (u32Tmp1 & BIT_MASK_12))
     {
         Timer42ReloadW_IrqHandler();
     }
@@ -3388,17 +3388,17 @@ void IRQ139_Handler(void)
 
     u32Tmp1 = M4_TMR43->RCSR;
     /* Timer4 Ch.3 U phase reload */
-    if ((VSSEL139 & BIT_MASK_08) && (u32Tmp1 & BIT_MASK_00) && (u32Tmp1 & BIT_MASK_04))
+    if ((VSSEL139 & BIT_MASK_08) && (~(u32Tmp1 & BIT_MASK_00)) && (u32Tmp1 & BIT_MASK_04))
     {
         Timer41ReloadU_IrqHandler();
     }
     /* Timer4 Ch.3 V phase reload */
-    if ((VSSEL139 & BIT_MASK_09) && (u32Tmp1 & BIT_MASK_01) && (u32Tmp1 & BIT_MASK_08))
+    if ((VSSEL139 & BIT_MASK_09) && (~(u32Tmp1 & BIT_MASK_01)) && (u32Tmp1 & BIT_MASK_08))
     {
         Timer43ReloadV_IrqHandler();
     }
     /* Timer4 Ch.3 W phase reload */
-    if ((VSSEL139 & BIT_MASK_10) && (u32Tmp1 & BIT_MASK_02) && (u32Tmp1 & BIT_MASK_12))
+    if ((VSSEL139 & BIT_MASK_10) && (~(u32Tmp1 & BIT_MASK_02)) && (u32Tmp1 & BIT_MASK_12))
     {
         Timer43ReloadW_IrqHandler();
     }

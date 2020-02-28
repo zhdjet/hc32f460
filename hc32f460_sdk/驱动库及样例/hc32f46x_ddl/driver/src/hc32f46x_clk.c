@@ -104,11 +104,11 @@
 #define CLK_PLL_VCO_OUT_MIN                 (240u*1000u*1000u)
 #define CLK_PLL_VCO_OUT_MAX                 (480u*1000u*1000u)
 
-#define ENABLE_CLOCK_REG_WRITE()            (M4_SYSREG->PWR_FPRC = 0xa501u)
-#define DISABLE_CLOCK_REG_WRITE()           (M4_SYSREG->PWR_FPRC = 0xa500u)
+#define ENABLE_CLOCK_REG_WRITE()            (M4_SYSREG->PWR_FPRC |= 0xa501u)
+#define DISABLE_CLOCK_REG_WRITE()           (M4_SYSREG->PWR_FPRC = (0xa500u | (M4_SYSREG->PWR_FPRC & (uint16_t)(~1u))))
 
-#define ENABLE_CLOCK1_REG_WRITE()           (M4_SYSREG->PWR_FPRC = 0xa502u)
-#define DISABLE_CLOCK1_REG_WRITE()          (M4_SYSREG->PWR_FPRC = 0xa500u)
+#define ENABLE_CLOCK1_REG_WRITE()           (M4_SYSREG->PWR_FPRC |= 0xa502u)
+#define DISABLE_CLOCK1_REG_WRITE()          (M4_SYSREG->PWR_FPRC = (0xa500u | (M4_SYSREG->PWR_FPRC & (uint16_t)(~2u))))
 
 
 #define DEFAULT_FCG0                        (0xFFFFFAEEul)
@@ -543,7 +543,7 @@ en_result_t CLK_Xtal32Cmd(en_functional_state_t enNewState)
  ** \note   None
  **
  ******************************************************************************/
-void CLK_HrcTrim(uint8_t trimValue)
+void CLK_HrcTrim(int8_t trimValue)
 {
     ENABLE_CLOCK_REG_WRITE();
 
@@ -623,7 +623,7 @@ en_result_t CLK_HrcCmd(en_functional_state_t enNewState)
  ** \note   None
  **
  ******************************************************************************/
-void CLK_MrcTrim(uint8_t trimValue)
+void CLK_MrcTrim(int8_t trimValue)
 {
     ENABLE_CLOCK_REG_WRITE();
 
@@ -690,7 +690,7 @@ en_result_t CLK_MrcCmd(en_functional_state_t enNewState)
  ** \note   None
  **
  ******************************************************************************/
-void CLK_LrcTrim(uint8_t trimValue)
+void CLK_LrcTrim(int8_t trimValue)
 {
     ENABLE_CLOCK_REG_WRITE();
 

@@ -927,6 +927,9 @@ static en_result_t SdCardInitHost(const stc_sd_handle_t *handle)
         return ErrorInvalidParameter;
     }
 
+    /* Set mode: SD */
+    SDIOC_SetMode(handle->SDIOCx, SdiocModeSD);
+
     enRet = SDIOC_Init(handle->SDIOCx, handle->pstcCardInitCfg->pstcInitCfg);
 
     return enRet;
@@ -1207,7 +1210,7 @@ static en_result_t DmaSdiocTxConfig(M4_DMA_TypeDef* DMAx,
         DMA_ClearIrqFlag(DMAx, enCh, BlkTrnCpltIrq);
 
         /* Enable peripheral circuit trigger function. */
-        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
         /* Set DMA trigger source. */
         DMA_SetTriggerSrc(DMAx, enCh, enEvtSrc);
@@ -1280,7 +1283,7 @@ static en_result_t DmaSdiocRxConfig(M4_DMA_TypeDef* DMAx,
         DMA_ClearIrqFlag(DMAx, enCh, BlkTrnCpltIrq);
 
         /* Enable peripheral circuit trigger function. */
-        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+        PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
         /* Set DMA trigger source. */
         DMA_SetTriggerSrc(DMAx, enCh, enEvtSrc);

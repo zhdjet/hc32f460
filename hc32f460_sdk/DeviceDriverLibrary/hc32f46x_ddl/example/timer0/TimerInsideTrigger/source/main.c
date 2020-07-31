@@ -169,13 +169,13 @@ static void SysClkIni(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1; 
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -189,7 +189,7 @@ static void SysClkIni(void)
     /* MPLL config. */
     /*system clk = 21M, pclk1 = 10.5M, pclk3 = 5.25M*/
     stcMpllCfg.pllmDiv = 1u;
-    stcMpllCfg.plln =42u;
+    stcMpllCfg.plln = 42u;
     stcMpllCfg.PllpDiv = 16u;
     stcMpllCfg.PllqDiv = 2u;
     stcMpllCfg.PllrDiv = 2u;
@@ -199,7 +199,7 @@ static void SysClkIni(void)
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */
@@ -258,7 +258,7 @@ int32_t main(void)
     TIMER0_IntCmd(TMR_UNIT,Tim0_ChannelB,Enable);
 
     /* Input captrue enable */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
     /*config timer0 trigger function*/
     stcInputCaptruecfg.Tim0_OCMode = Tim0_InputCaptrue;
     stcInputCaptruecfg.Tim0_SelTrigSrc = EVT_PORT_EIRQ3;

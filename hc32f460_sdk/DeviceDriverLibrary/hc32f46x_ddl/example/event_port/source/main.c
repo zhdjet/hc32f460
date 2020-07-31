@@ -101,7 +101,7 @@ int32_t main(void)
     PORT_SetFunc(PortD, (Pin03 | Pin04), Func_Evnpt, Disable);
 
     /* Enable Event port operation clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     /* Set Event Port 4.3 falling edge detect enable */
     MEM_ZERO_STRUCT(stcEPConfig);

@@ -150,13 +150,13 @@ static uint16_t m_au16Adc2Value[ADC2_CHANNEL_COUNT];
 static stc_clk_sysclk_cfg_t m_stcSysclkCfg =
 {
     /* Default system clock division. */
-    .enHclkDiv  = ClkSysclkDiv1,  // Max 168MHz
-    .enExclkDiv = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk0Div = ClkSysclkDiv1,  // Max 168MHz
-    .enPclk1Div = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk2Div = ClkSysclkDiv4,  // Max 60MHz
-    .enPclk3Div = ClkSysclkDiv4,  // Max 42MHz
-    .enPclk4Div = ClkSysclkDiv2,  // Max 84MHz
+    .enHclkDiv  = ClkSysclkDiv1,  // 168MHz
+    .enExclkDiv = ClkSysclkDiv2,  // 84MHz
+    .enPclk0Div = ClkSysclkDiv1,  // 168MHz
+    .enPclk1Div = ClkSysclkDiv2,  // 84MHz
+    .enPclk2Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk3Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk4Div = ClkSysclkDiv2,  // 84MHz
 };
 
 /*******************************************************************************
@@ -258,7 +258,7 @@ static void SystemClockConfig(void)
 
     /* Flash read wait cycle setting. */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* If the system clock frequency is higher than 100MHz and SRAM1, SRAM2, SRAM3 or Ret_SRAM is used,
@@ -465,7 +465,7 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     /* Select EVT_TMR02_GCMA as ADC1 sequence A trigger source. */
     stcTrgCfg.u8Sequence = ADC_SEQ_A;

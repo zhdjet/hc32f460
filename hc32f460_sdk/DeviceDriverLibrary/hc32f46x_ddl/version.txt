@@ -1,5 +1,21 @@
 version     date           comment
 1.1.1
+            Jul 31,2020    1. Synchronize driver register with chip manual.
+
+            Jul 20,2020    1. Add wait RDY at begin of func. EFM_SetErasePgmMode().
+                           2. Modified en_efm_erase_pgm_md_t as #define
+
+            Jul 7,2020     1. Fixed a bug in spi_write_read_flash example.
+                           2. Remove register XTAL32CFGR XTAL32SUPDRV bit
+                           3. Modified func. DMA_ReConfig() function & add func. DMA_ReCfgLlp()
+                           4. Modified func. PWC_PdWakeupEvtEdgeCfg() & add func. PWC_ClearPvdFlag()
+                           5. Modified comment & spell error
+
+            May 21,2020    1. unify EFM wait cycle for all examples
+                           2. KEYSCAN example refine
+
+            Feb 27,2020    1. Driver refine for PWC/CLK
+
             Feb 14,2020    1. Logic error in timer4 reload share irq
 
             Jan 08,2020    1. Added GCC compiler support.
@@ -77,7 +93,7 @@ version     date           comment
 1.0.4
             July 31, 2019  1. Fix bug for i2c_at24c02 example.
 
-            July 29, 2019  1. modify for timer0 driver: can't using synchronous mode when configurating for timer0 UNIT1 channelA.
+            July 29, 2019  1. modify for timer0 driver: timer0 UNIT1 channelA can't configured as synchronous mode.
                            2. modify the port configuration for USB example.
 
             July 25, 2019  1. Modify usb_core.c, Configuration FIFO for each IN ENDPOINT.
@@ -140,7 +156,7 @@ version     date           comment
  1.0.3      May 15, 2019   1. add EFM_ClearFlag at ahead of program & erase
                            2. comment valid check in EFM_ClearFlag
 
-            May 8, 2019    1. usb dirver
+            May 8, 2019    1. usb driver
                               use SPACE instead of TAB
                            2. interrupt
                               typo

@@ -94,13 +94,13 @@ static bool m_bTrngIrqFlag = false;
 static stc_clk_sysclk_cfg_t m_stcSysclkCfg =
 {
     /* Default system clock division. */
-    .enHclkDiv  = ClkSysclkDiv1,  // Max 168MHz
-    .enExclkDiv = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk0Div = ClkSysclkDiv1,  // Max 168MHz
-    .enPclk1Div = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk2Div = ClkSysclkDiv4,  // Max 60MHz
-    .enPclk3Div = ClkSysclkDiv4,  // Max 42MHz
-    .enPclk4Div = ClkSysclkDiv2,  // Max 84MHz
+    .enHclkDiv  = ClkSysclkDiv1,  // 168MHz
+    .enExclkDiv = ClkSysclkDiv2,  // 84MHz
+    .enPclk0Div = ClkSysclkDiv1,  // 168MHz
+    .enPclk1Div = ClkSysclkDiv2,  // 84MHz
+    .enPclk2Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk3Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk4Div = ClkSysclkDiv2,  // 84MHz
 };
 
 /*******************************************************************************
@@ -191,7 +191,7 @@ static void SystemClockConfig(void)
 
     /* Flash read wait cycle setting. */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* If the system clock frequency is higher than 100MHz and SRAM1, SRAM2, SRAM3 or Ret_SRAM is used,
@@ -247,7 +247,7 @@ static void TrngClockConfig(void)
 #if (TRNG_CLK == TRNG_CLK_PCLK4)
     /* PCLK4 is TRNG's clock. */
     /* TRNG's clock frequency below 1MHz(inclusive) if possible will be better. */
-    m_stcSysclkCfg.enPclk4Div = ClkSysclkDiv64;  // Max 84MHz.
+    m_stcSysclkCfg.enPclk4Div = ClkSysclkDiv64;  // 84MHz.
     CLK_SysClkConfig(&m_stcSysclkCfg);
     CLK_SetPeriClkSource(ClkPeriSrcPclk);
 

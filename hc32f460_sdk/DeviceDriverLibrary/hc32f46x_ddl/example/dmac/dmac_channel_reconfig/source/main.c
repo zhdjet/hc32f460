@@ -273,10 +273,6 @@ void Dma_ReCfgInit(void)
     stcDmaReCfg.enDaddrMd = DaddrRep;
     /* source address update DMA_SARx after re_config */
     stcDmaReCfg.enSaddrMd = SaddrRep;
-    /* re_config channel */
-    stcDmaReCfg.enReCfgCh = DMA_CH;
-    /* Disable LLP */
-    stcDmaReCfg.enReCfgLlp = Disable;
     /* re_config destination repeat size */
     stcDmaReCfg.u16DesRptBSize = DMA_RPTB_SIZE + 5u;
     /* re_config source repeat size */
@@ -324,7 +320,7 @@ int32_t main(void)
     DMA_ClearIrqFlag(DMA_UNIT, DMA_CH,TrnCpltIrq);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
 
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_AOS_STRG);
     DMA_SetReConfigTriggerSrc(EVT_PORT_EIRQ3);

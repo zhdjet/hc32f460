@@ -173,7 +173,7 @@ static void SystemClockConfig(void)
 
     /* Flash read wait cycle setting. */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* If the system clock frequency is higher than 100MHz and SRAM1, SRAM2, SRAM3 or Ret_SRAM is used,
@@ -198,13 +198,13 @@ static void SystemClockConfig(void)
     CLK_SetSysClkSource(CLKSysSrcMPLL);
 
     /* Set bus clock division. */
-    stcSysclkCfg.enHclkDiv  = ClkSysclkDiv1;  // Max 168MHz
-    stcSysclkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysclkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysclkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysclkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysclkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysclkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysclkCfg.enHclkDiv  = ClkSysclkDiv1;  // 168MHz
+    stcSysclkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysclkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysclkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysclkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysclkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysclkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysclkCfg);
 }
 
@@ -289,7 +289,7 @@ static void OtsClockConfig(void)
 static void OtsTriggerSrcConfig(void)
 {
     /* 1. Enable AOS. */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     /* 2. Set OTS trigger source. */
     OTS_SetTriggerSrc(OTS_TRG_SRC);

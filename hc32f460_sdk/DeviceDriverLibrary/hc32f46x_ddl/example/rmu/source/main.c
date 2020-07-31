@@ -230,7 +230,7 @@ static void SetResetMode(void)
     stcPvdCfg.stcPvd2Ctl.enPvdIREn = Enable;
     stcPvdCfg.stcPvd2Ctl.enPvdMode = PvdReset;
     stcPvdCfg.stcPvd2Ctl.enPvdCmpOutEn = Enable;
-    stcPvdCfg.enPvd2Level = Pvd2Level26;
+    stcPvdCfg.enPvd2Level = Pvd2Level3;
     PWC_PvdCfg(&stcPvdCfg);
     PWC_Pvd2Cmd(Enable);
 
@@ -476,7 +476,7 @@ static void DmaInit(void)
     DMA_ClearIrqFlag(DMA_UNIT, DMA_CH, TrnCpltIrq);
 
     /* Enable peripheral circuit trigger function. */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
 
     /* Set DMA trigger source. */
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, DMA_TRG_SEL);

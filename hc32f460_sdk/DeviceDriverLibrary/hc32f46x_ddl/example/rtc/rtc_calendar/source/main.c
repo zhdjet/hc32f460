@@ -187,7 +187,6 @@ static void Xtal32_ClockConfig(void)
     CLK_Xtal32Cmd(Disable);
     Ddl_Delay1ms(100u);
     /* Configuration xtal32 structure */
-    stcXtal32Cfg.enFastStartup = Disable;
     stcXtal32Cfg.enDrv = ClkXtal32HighDrv;
     stcXtal32Cfg.enFilterMode = ClkXtal32FilterModeFull;
     CLK_Xtal32Config(&stcXtal32Cfg);

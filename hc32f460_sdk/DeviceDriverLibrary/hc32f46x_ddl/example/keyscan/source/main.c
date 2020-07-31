@@ -249,6 +249,7 @@ void KeyRow0_Init(void)
     /* Set PD12 as External Int Ch.12 input */
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
+    stcPortInit.enPullUp = Enable;
     PORT_Init(KEYIN_PORT, KEYIN0_PIN, &stcPortInit);
 
     /* Select External Int Ch.12 */
@@ -308,6 +309,7 @@ void KeyRow1_Init(void)
     /* Set PD13 as External Int Ch.13 input */
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
+    stcPortInit.enPullUp = Enable;
     PORT_Init(KEYIN_PORT, KEYIN1_PIN, &stcPortInit);
 
     /* Select External Int Ch.13 */
@@ -367,6 +369,7 @@ void KeyRow2_Init(void)
     /* Set PD14 as External Int Ch.14 input */
     MEM_ZERO_STRUCT(stcPortInit);
     stcPortInit.enExInt = Enable;
+    stcPortInit.enPullUp = Enable;
     PORT_Init(KEYIN_PORT, KEYIN2_PIN, &stcPortInit);
 
     /* Select External Int Ch.14 */
@@ -409,7 +412,7 @@ void KeyCol_Init(void)
     MEM_ZERO_STRUCT(stcPortInit);
 
     /* enable internal pull-up */
-    stcPortInit.enPullUp = Enable;
+    //stcPortInit.enPullUp = Enable;
     PORT_Init(KEYOUT_PORT, (KEYOUT0_PIN | KEYOUT1_PIN | KEYOUT2_PIN), &stcPortInit);
 
     /* Set corresponding pins to KEYSCAN function */

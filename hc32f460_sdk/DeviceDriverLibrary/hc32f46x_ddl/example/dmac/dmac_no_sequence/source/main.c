@@ -210,7 +210,7 @@ int32_t main(void)
     DMA_SetDesNseqCfg(DMA_UNIT, DMA_CH, &stcDesNseqCfg);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
     /* Set dma trigger source. */
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_AOS_STRG);
 

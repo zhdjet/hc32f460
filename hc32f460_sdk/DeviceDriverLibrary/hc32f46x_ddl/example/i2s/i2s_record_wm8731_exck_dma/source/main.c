@@ -162,13 +162,13 @@ static void SysClkIni(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 168MHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -181,7 +181,7 @@ static void SysClkIni(void)
 
     /* MPLL config. */
     stcMpllCfg.pllmDiv = 1ul;
-    stcMpllCfg.plln    =42ul;
+    stcMpllCfg.plln    = 42ul;
     stcMpllCfg.PllpDiv = 2ul;
     stcMpllCfg.PllqDiv = 2ul;
     stcMpllCfg.PllrDiv = 2ul;
@@ -190,7 +190,7 @@ static void SysClkIni(void)
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */
@@ -432,7 +432,7 @@ static void Record_DmaConfig(void)
     DMA_ChannelCmd(DMA_UNIT, DMA_CH,Enable);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_I2S3_RXIRQOUT);
 }
 
@@ -487,7 +487,7 @@ static void Play_DmaConfig(void)
     DMA_ChannelCmd(DMA_UNIT, DMA_CH,Enable);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_I2S3_TXIRQOUT);
 }
 

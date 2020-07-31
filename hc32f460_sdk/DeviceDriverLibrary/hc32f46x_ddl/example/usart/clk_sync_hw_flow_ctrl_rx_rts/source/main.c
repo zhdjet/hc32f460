@@ -157,13 +157,13 @@ static void ClkInit(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv  = ClkSysclkDiv1;  /* Max 168MHz */
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  /* Max 84MHz */
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  /* Max 168MHz */
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  /* Max 84MHz */
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  /* Max 60MHz */
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  /* Max 42MHz */
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  /* Max 84MHz */
+    stcSysClkCfg.enHclkDiv  = ClkSysclkDiv1;
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -175,17 +175,17 @@ static void ClkInit(void)
     CLK_XtalCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 1ul;
-    stcMpllCfg.plln = 50ul;
-    stcMpllCfg.PllpDiv = 4ul;
-    stcMpllCfg.PllqDiv = 4ul;
-    stcMpllCfg.PllrDiv = 4ul;
+    stcMpllCfg.pllmDiv = 1u; /* XTAL 8M / 1 */
+    stcMpllCfg.plln = 50u;   /* 8M*50 = 400M */
+    stcMpllCfg.PllpDiv = 4u; /* MLLP = 100M */
+    stcMpllCfg.PllqDiv = 4u; /* MLLQ = 100M */
+    stcMpllCfg.PllrDiv = 4u; /* MLLR = 100M */
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */

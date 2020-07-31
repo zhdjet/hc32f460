@@ -144,7 +144,7 @@ int32_t main(void)
     LedInit();
 
     /* Enable peripheral clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS | PWC_FCG0_PERIPH_DCU1, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS | PWC_FCG0_PERIPH_DCU1, Enable);
 
     /* Initialize DCU */
     MEM_ZERO_STRUCT(stcDcuInit);

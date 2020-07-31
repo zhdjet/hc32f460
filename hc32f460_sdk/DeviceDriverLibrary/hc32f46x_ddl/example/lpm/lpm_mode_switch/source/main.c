@@ -243,10 +243,8 @@ static void StopMode_Init(void)
 static void PowerDownMode_Init(void)
 {
     stc_pwc_pwr_mode_cfg_t  stcPwcPwrMdCfg;
-    stc_pwc_wkup_edge_cfg_t stcPwcWkupEdgCfg;
 
     MEM_ZERO_STRUCT(stcPwcPwrMdCfg);
-    MEM_ZERO_STRUCT(stcPwcWkupEdgCfg);
 
 
     /* Config power down mode. */
@@ -256,7 +254,7 @@ static void PowerDownMode_Init(void)
     stcPwcPwrMdCfg.enRetSram = Disable;
     stcPwcPwrMdCfg.enVHrc = Enable;
     stcPwcPwrMdCfg.enVPll = Enable;
-    stcPwcPwrMdCfg.enDynVol =  Voltage09;
+    stcPwcPwrMdCfg.enRunDrvs =  RunUlowspeed;
     stcPwcPwrMdCfg.enDrvAbility = Ulowspeed;
     stcPwcPwrMdCfg.enPwrDWkupTm = Vcap0047;
 
@@ -265,8 +263,7 @@ static void PowerDownMode_Init(void)
     /* Clear flag. */
     PWC_ClearWakeup0Flag(PWC_NMI_WKUPFLAG);
     /* Falling edge. */
-    stcPwcWkupEdgCfg.enNmiEdge = EdgeFalling;
-    PWC_PdWkupEdgeCfg(&stcPwcWkupEdgCfg);
+    PWC_PdWakeupEvtEdgeCfg(PWC_PDWKUP_EDGE_NMI, EdgeFalling);
     /* Set wake up source NMI. */
     PWC_PdWakeup2Cmd(PWC_PDWKEN2_NMI,Enable);
 }

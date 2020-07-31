@@ -184,13 +184,13 @@ int32_t main(void)
     Led_Init();
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 16MMHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 8 MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 16MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 8 MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 4 MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 4 MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 8 MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Enable HRC. */

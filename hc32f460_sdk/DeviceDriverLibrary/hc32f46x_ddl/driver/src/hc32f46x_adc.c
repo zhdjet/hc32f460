@@ -45,7 +45,7 @@
  ** A detailed description is available at
  ** @link AdcGroup Adc description @endlink
  **
- **   - 2018-11-30  1.0 First version for Device Driver Library of Adc.
+ **   - 2018-11-30  1.0 Wuze First version for Device Driver Library of Adc.
  **
  ******************************************************************************/
 

@@ -128,7 +128,6 @@ static void Xtal32_ClockConfig(void)
     CLK_Xtal32Cmd(Disable);
     Ddl_Delay1ms(100u);
     /* Configuration xtal32 structure */
-    stcXtal32Cfg.enFastStartup = Disable;
     stcXtal32Cfg.enDrv = ClkXtal32HighDrv;
     stcXtal32Cfg.enFilterMode = ClkXtal32FilterModeFull;
     CLK_Xtal32Config(&stcXtal32Cfg);
@@ -149,21 +148,9 @@ static void Xtal32_ClockConfig(void)
  ******************************************************************************/
 static void SystemClk_Init(void)
 {
-    stc_clk_sysclk_cfg_t    stcSysClkCfg;
-    stc_clk_xtal_cfg_t      stcXtalCfg;
+    stc_clk_xtal_cfg_t stcXtalCfg;
 
-    MEM_ZERO_STRUCT(stcSysClkCfg);
     MEM_ZERO_STRUCT(stcXtalCfg);
-
-    /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
-    CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to XTAL. */
     stcXtalCfg.enMode = ClkXtalModeOsc;

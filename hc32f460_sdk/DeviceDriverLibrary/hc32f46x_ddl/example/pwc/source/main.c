@@ -133,8 +133,9 @@ static void Led_Init(void)
  ** \retval None
  **
  ******************************************************************************/
-void Lvd1_IrqHandler(void)
+void Pvd1_IrqHandler(void)
 {
+    PWC_ClearPvdFlag(PvdU1);
     PORT_Unlock();
     LED0_ON();
     PORT_Lock();
@@ -148,8 +149,9 @@ void Lvd1_IrqHandler(void)
  ** \retval None
  **
  ******************************************************************************/
-static void Pvd2_IrqHandler(void)
+static void Pvd2_IrqCallBack(void)
 {
+    PWC_ClearPvdFlag(PvdU2);
     PORT_Unlock();
     LED0_OFF();
     LED2_ON();
@@ -185,7 +187,7 @@ int32_t main(void)
     /* Enable output compared result. */
     stcPwcPvdCfg.stcPvd1Ctl.enPvdCmpOutEn = Enable;
     /* PVD1 Threshold Voltage 2.8V. */
-    stcPwcPvdCfg.enPvd1Level = Pvd1Level28;
+    stcPwcPvdCfg.enPvd1Level = Pvd1Level6;
 
     /* Config PVD2.*/
     /* Disable filter. */
@@ -199,7 +201,7 @@ int32_t main(void)
     /* Enable output compared result. */
     stcPwcPvdCfg.stcPvd2Ctl.enPvdCmpOutEn = Enable;
     /* PVD2 Threshold Voltage 2.3V. */
-    stcPwcPvdCfg.enPvd2Level = Pvd2Level23;
+    stcPwcPvdCfg.enPvd2Level = Pvd2Level1;
 
     PWC_PvdCfg(&stcPwcPvdCfg);
 
@@ -209,7 +211,7 @@ int32_t main(void)
     /* Disbale filter. */
     stcNmiCfd.enFilterEn = Disable;
     /* Set Pvd2 interrupt callback. */
-    stcNmiCfd.pfnNmiCallback = &Pvd2_IrqHandler;
+    stcNmiCfd.pfnNmiCallback = &Pvd2_IrqCallBack;
 
     NMI_Init(&stcNmiCfd);
 

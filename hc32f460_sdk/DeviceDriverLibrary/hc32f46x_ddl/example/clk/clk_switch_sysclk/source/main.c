@@ -104,35 +104,42 @@ int32_t main(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;
     CLK_SysClkConfig(&stcSysClkCfg);
 
-    /* Switch system clock source to MPLL. */
-    /* Use Xtal as MPLL source. */
+    /* Config Xtal and Enable Xtal */
     stcXtalCfg.enMode = ClkXtalModeOsc;
     stcXtalCfg.enDrv = ClkXtalLowDrv;
     stcXtalCfg.enFastStartup = Enable;
     CLK_XtalConfig(&stcXtalCfg);
     CLK_XtalCmd(Enable);
 
-    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 168M). */
+    /* SW2 16MHz->8MHz */
+    while(0 != PORT_GetBit(PortD, Pin03))
+    {
+        /* Switch system clock source to XTAL. */
+        CLK_SetSysClkSource(ClkSysSrcXTAL);
+    }
+
+    /* Use Xtal as MPLL source. */
+    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 50M). */
     stcMpllCfg.pllmDiv = 1ul;
-    stcMpllCfg.plln =50ul;
+    stcMpllCfg.plln = 50ul;
     stcMpllCfg.PllpDiv = 8ul;
-    stcMpllCfg.PllqDiv = 2ul;
-    stcMpllCfg.PllrDiv = 2ul;
+    stcMpllCfg.PllqDiv = 8ul;
+    stcMpllCfg.PllrDiv = 8ul;
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_4);
+    EFM_SetLatency(EFM_LATENCY_1);
     EFM_Lock();
 
     /* sram init include read/write wait cycle setting */
@@ -153,28 +160,37 @@ int32_t main(void)
         ;
     }
 
-    /* Switch system clock source to MPLL. */
-    CLK_SetSysClkSource(ClkSysSrcHRC);
+    /* SW4 8MHz->50MHz */
+    while(0 != PORT_GetBit(PortD, Pin04))
+    {
+        /* Switch system clock source to MPLL. */
+        CLK_SetSysClkSource(CLKSysSrcMPLL);
+    }
 
-    /* Check source and frequence. */
+    /* Check source and frequency. */
     enSysClkSrc = CLK_GetSysClkSource();
     CLK_GetClockFreq(&stcClkFreq);
 
     /* Clk output.*/
     stcOutputClkCfg.enOutputSrc = ClkOutputSrcSysclk;
-    stcOutputClkCfg.enOutputDiv = ClkOutputDiv1;
+    stcOutputClkCfg.enOutputDiv = ClkOutputDiv8;
     CLK_OutputClkConfig(ClkOutputCh1,&stcOutputClkCfg);
     CLK_OutputClkCmd(ClkOutputCh1,Enable);
 
     PORT_SetFunc(PortA, Pin08, Func_Mclkout, Disable);
 
-    /* SW2 */
+    /* SW2 50MHz->200MHz */
     while(0 != PORT_GetBit(PortD, Pin03))
     {
         ;
     }
 
-    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 168M). */
+    /* flash read wait cycle setting */
+    EFM_Unlock();
+    EFM_SetLatency(EFM_LATENCY_4);
+    EFM_Lock();
+
+    /* MPLL config (XTAL / pllmDiv * plln / PllpDiv = 200M). */
     stcMpllCfg.pllmDiv = 1ul;
     stcMpllCfg.plln =50ul;
     stcMpllCfg.PllpDiv = 2ul;
@@ -183,6 +199,7 @@ int32_t main(void)
     CLK_SetPllSource(ClkPllSrcXTAL);
     CLK_MpllConfig(&stcMpllCfg);
 
+    PWC_HS2HP();
 
     while(1)
     {

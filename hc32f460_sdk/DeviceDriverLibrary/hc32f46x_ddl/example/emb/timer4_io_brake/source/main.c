@@ -178,13 +178,13 @@ static void ClkInit(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   /* Max 168MHz */
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  /* Max 84MHz */
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  /* Max 168MHz */
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  /* Max 84MHz */
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  /* Max 60MHz */
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  /* Max 42MHz */
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  /* Max 84MHz */
+    stcSysClkCfg.enHclkDiv  = ClkSysclkDiv1;
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;
     CLK_SysClkConfig(&stcSysClkCfg);
 
     CLK_HrcCmd(Enable);      /* Enable HRC */

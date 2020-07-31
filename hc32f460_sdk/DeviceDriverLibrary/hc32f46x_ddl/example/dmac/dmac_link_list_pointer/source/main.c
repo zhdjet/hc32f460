@@ -274,7 +274,7 @@ int32_t main(void)
     DMA_InitChannel(DMA_UNIT, DMA_CH, &stcDmaCfg);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
     /* Set dma trigger source. */
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_PORT_EIRQ4);
 

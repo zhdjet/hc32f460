@@ -144,10 +144,8 @@ static void Port_Init(void)
 int32_t main(void)
 {
     stc_pwc_pwr_mode_cfg_t  stcPwcPwrMdCfg;
-    stc_pwc_wkup_edge_cfg_t stcPwcWkupEdgCfg;
 
     MEM_ZERO_STRUCT(stcPwcPwrMdCfg);
-    MEM_ZERO_STRUCT(stcPwcWkupEdgCfg);
 
     Led_Init();
     Port_Init();
@@ -167,7 +165,7 @@ int32_t main(void)
     stcPwcPwrMdCfg.enRetSram = Disable;
     stcPwcPwrMdCfg.enVHrc = Enable;
     stcPwcPwrMdCfg.enVPll = Disable;
-    stcPwcPwrMdCfg.enDynVol =  Voltage09;
+    stcPwcPwrMdCfg.enRunDrvs =  RunUlowspeed;
     stcPwcPwrMdCfg.enDrvAbility = Ulowspeed;
     stcPwcPwrMdCfg.enPwrDWkupTm = Vcap0047;
 
@@ -186,8 +184,7 @@ int32_t main(void)
 
     /* NMI wake_up. */
     PWC_ClearWakeup0Flag(PWC_NMI_WKUPFLAG);
-    stcPwcWkupEdgCfg.enNmiEdge = EdgeFalling;
-    PWC_PdWkupEdgeCfg(&stcPwcWkupEdgCfg);
+    PWC_PdWakeupEvtEdgeCfg(PWC_PDWKUP_EDGE_NMI, EdgeFalling);
     PWC_PdWakeup2Cmd(PWC_PDWKEN2_NMI,Enable);
 
     LED0_TOGGLE();

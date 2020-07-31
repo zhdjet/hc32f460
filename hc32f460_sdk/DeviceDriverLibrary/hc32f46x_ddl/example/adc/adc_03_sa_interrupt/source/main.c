@@ -152,13 +152,13 @@ static uint32_t  m_u32AdcIrqFlag = 0u;
 static stc_clk_sysclk_cfg_t m_stcSysclkCfg =
 {
     /* Default system clock division. */
-    .enHclkDiv  = ClkSysclkDiv1,  // Max 168MHz
-    .enExclkDiv = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk0Div = ClkSysclkDiv1,  // Max 168MHz
-    .enPclk1Div = ClkSysclkDiv2,  // Max 84MHz
-    .enPclk2Div = ClkSysclkDiv4,  // Max 60MHz
-    .enPclk3Div = ClkSysclkDiv4,  // Max 42MHz
-    .enPclk4Div = ClkSysclkDiv2,  // Max 84MHz
+    .enHclkDiv  = ClkSysclkDiv1,  // 168MHz
+    .enExclkDiv = ClkSysclkDiv2,  // 84MHz
+    .enPclk0Div = ClkSysclkDiv1,  // 168MHz
+    .enPclk1Div = ClkSysclkDiv2,  // 84MHz
+    .enPclk2Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk3Div = ClkSysclkDiv4,  // 42MHz
+    .enPclk4Div = ClkSysclkDiv2,  // 84MHz
 };
 
 /*******************************************************************************
@@ -277,7 +277,7 @@ static void SystemClockConfig(void)
 
     /* Flash read wait cycle setting. */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* If the system clock frequency is higher than 100MHz and SRAM1, SRAM2, SRAM3 or Ret_SRAM is used,
@@ -337,8 +337,8 @@ static void AdcClockConfig(void)
 {
 #if (ADC_CLK == ADC_CLK_PCLK)
     /* Set bus clock division, depends on the system clock frequency. */
-    m_stcSysclkCfg.enPclk2Div = ClkSysclkDiv32; // Max 60MHz
-    m_stcSysclkCfg.enPclk4Div = ClkSysclkDiv8;  // Max 84MHz.
+    m_stcSysclkCfg.enPclk2Div = ClkSysclkDiv32; // 60MHz
+    m_stcSysclkCfg.enPclk4Div = ClkSysclkDiv8;  // 84MHz.
     CLK_SysClkConfig(&m_stcSysclkCfg);
     CLK_SetPeriClkSource(ClkPeriSrcPclk);
 
@@ -507,7 +507,7 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     /* Select EVT_TMR02_GCMA as ADC2 sequence A trigger source. */
     stcTrgCfg.u8Sequence = ADC_SEQ_A;

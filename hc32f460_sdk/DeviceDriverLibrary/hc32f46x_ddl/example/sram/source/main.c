@@ -195,16 +195,16 @@ int32_t main(void)
     Led_Init();
 
     /* enable HS RAM source clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_RAMHS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_SRAMH, Enable);
 
     /* enable RAM0 source clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_RAM0, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_SRAM12, Enable);
 
     /* enable ECCRAM source clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_ECCRAM, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_SRAM3, Enable);
 
     /* enable Retention RAM source clock */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_RetRAM, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_SRAMRET, Enable);
 
     stcSramConfig.u8SramIdx = Sram12Idx | Sram3Idx | SramHsIdx | SramRetIdx;
     stcSramConfig.enSramRC = SramCycle5;

@@ -1046,13 +1046,13 @@ void Nmi_IrqCallback(void)
         NMI_IrqFlgClr(NmiSrcSwdt);
     }
 
-    /* LVD1 detected */
+    /* PVD1 detected */
     if (Set == NMI_IrqFlgGet(NmiSrcVdu1))
     {
         NMI_IrqFlgClr(NmiSrcVdu1);
     }
 
-    /* LVD2 detected */
+    /* PVD2 detected */
     if (Set == NMI_IrqFlgGet(NmiSrcVdu2))
     {
         NMI_IrqFlgClr(NmiSrcVdu2);

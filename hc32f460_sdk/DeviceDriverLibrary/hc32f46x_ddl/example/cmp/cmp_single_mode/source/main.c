@@ -160,7 +160,6 @@ int32_t main(void)
 
     /* Enable peripheral clock */
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_CMP, Enable);
-    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_DAC, Enable);
 
     /* Set DAC */
     stcDacInitCfg.u8DacData = 0x80u;

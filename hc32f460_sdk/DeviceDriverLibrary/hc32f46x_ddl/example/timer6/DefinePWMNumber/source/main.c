@@ -154,13 +154,13 @@ static void SysClkIni(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 168MHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     CLK_HrcCmd(Enable);       //Enable HRC
@@ -176,7 +176,7 @@ static void SysClkIni(void)
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */
@@ -221,7 +221,7 @@ int32_t main(void)
 
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM61, Enable);
     PWC_Fcg2PeriphClockCmd(PWC_FCG2_PERIPH_TIM62, Enable);
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     PORT_SetFunc(PortE, Pin09, Func_Tim6, Disable);    //Timer61 PWMA
     PORT_SetFunc(PortE, Pin08, Func_Tim6, Disable);    //Timer61 PWMB

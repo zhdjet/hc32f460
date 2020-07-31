@@ -187,30 +187,30 @@ static void SysClkIni(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   /* 168MHz */
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  /* 84MHz */
 
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // PCLK0 Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // PCLK1 Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // PCLK2 Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // PCLK3 Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // PCLK4 Max 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  /* PCLK0 168MHz */
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  /* PCLK1 84MHz */
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  /* PCLK2 42MHz */
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  /* PCLK3 42MHz */
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  /* PCLK4 84MHz */
     CLK_SysClkConfig(&stcSysClkCfg);
 
     CLK_HrcCmd(Enable);
 
     /* MPLL config. */
-    stcMpllCfg.pllmDiv = 2ul;   //HRC 16M / 2
-    stcMpllCfg.plln = 42ul;     //8M*42 = 336M
-    stcMpllCfg.PllpDiv = 2ul;   //MLLP = 168M
-    stcMpllCfg.PllqDiv = 2ul;   //MLLQ = 168M
-    stcMpllCfg.PllrDiv = 2ul;   //MLLR = 168M
+    stcMpllCfg.pllmDiv = 2ul;   /* HRC 16M / 2 */
+    stcMpllCfg.plln = 42ul;     /* 8M*42 = 336M */
+    stcMpllCfg.PllpDiv = 2ul;   /* MLLP = 168M */
+    stcMpllCfg.PllqDiv = 2ul;   /* MLLQ = 168M */
+    stcMpllCfg.PllrDiv = 2ul;   /* MLLR = 168M */
     CLK_SetPllSource(ClkPllSrcHRC);
     CLK_MpllConfig(&stcMpllCfg);
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */
@@ -342,7 +342,6 @@ static void M4_CMP_Init(void)
     MEM_ZERO_STRUCT(stcDacInitCfg);
 
     PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_CMP, Enable);
-    PWC_Fcg3PeriphClockCmd(PWC_FCG3_PERIPH_DAC, Enable);
 
 #ifdef DAC_Enable
     /* Set DAC */

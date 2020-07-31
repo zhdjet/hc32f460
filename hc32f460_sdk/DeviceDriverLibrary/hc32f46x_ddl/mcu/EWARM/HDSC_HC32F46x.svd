@@ -1322,8 +1322,8 @@
                     </fields>
                 </register>
                 <register>
-                    <name>DMATRGSELRC</name>
-                    <description>desc DMATRGSELRC</description>
+                    <name>DMA_TRGSELRC</name>
+                    <description>desc DMA_TRGSELRC</description>
                     <addressOffset>0x34</addressOffset>
                     <size>32</size>
                     <access>read-write</access>
@@ -1551,56 +1551,6 @@
                             <description>desc TRGSEL</description>
                             <msb>8</msb>
                             <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>COMTRG1</name>
-                    <description>desc COMTRG1</description>
-                    <addressOffset>0x68</addressOffset>
-                    <size>32</size>
-                    <access>read-write</access>
-                    <resetValue>0x1FF</resetValue>
-                    <resetMask>0xC00001FF</resetMask>
-                    <fields>
-                        <field>
-                            <name>TRGSEL</name>
-                            <description>desc TRGSEL</description>
-                            <msb>8</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>COMTRG_EN</name>
-                            <description>desc COMTRG_EN</description>
-                            <msb>31</msb>
-                            <lsb>30</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
-                </register>
-                <register>
-                    <name>COMTRG2</name>
-                    <description>desc COMTRG2</description>
-                    <addressOffset>0x6C</addressOffset>
-                    <size>32</size>
-                    <access>read-write</access>
-                    <resetValue>0x1FF</resetValue>
-                    <resetMask>0xC00001FF</resetMask>
-                    <fields>
-                        <field>
-                            <name>TRGSEL</name>
-                            <description>desc TRGSEL</description>
-                            <msb>8</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>COMTRG_EN</name>
-                            <description>desc COMTRG_EN</description>
-                            <msb>31</msb>
-                            <lsb>30</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -5128,8 +5078,8 @@
             </addressBlock>
             <registers>
                 <register>
-                    <name>RBUF0</name>
-                    <description>desc RBUF0</description>
+                    <name>RBUF</name>
+                    <description>desc RBUF</description>
                     <addressOffset>0x0</addressOffset>
                     <size>32</size>
                     <access>read-only</access>
@@ -5137,63 +5087,9 @@
                     <resetMask>0xFFFFFFFF</resetMask>
                 </register>
                 <register>
-                    <name>RBUF1</name>
-                    <description>desc RBUF1</description>
-                    <addressOffset>0x4</addressOffset>
-                    <size>32</size>
-                    <access>read-only</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>RBUF2</name>
-                    <description>desc RBUF2</description>
-                    <addressOffset>0x8</addressOffset>
-                    <size>32</size>
-                    <access>read-only</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>RBUF3</name>
-                    <description>desc RBUF3</description>
-                    <addressOffset>0xC</addressOffset>
-                    <size>32</size>
-                    <access>read-only</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>TBUF0</name>
-                    <description>desc TBUF0</description>
+                    <name>TBUF</name>
+                    <description>desc TBUF</description>
                     <addressOffset>0x50</addressOffset>
-                    <size>32</size>
-                    <access>read-write</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>TBUF1</name>
-                    <description>desc TBUF1</description>
-                    <addressOffset>0x54</addressOffset>
-                    <size>32</size>
-                    <access>read-write</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>TBUF2</name>
-                    <description>desc TBUF2</description>
-                    <addressOffset>0x58</addressOffset>
-                    <size>32</size>
-                    <access>read-write</access>
-                    <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFFFFF</resetMask>
-                </register>
-                <register>
-                    <name>TBUF3</name>
-                    <description>desc TBUF3</description>
-                    <addressOffset>0x5C</addressOffset>
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
@@ -6316,6 +6212,13 @@
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
+                        <field>
+                            <name>WPRT</name>
+                            <description>desc WPRT</description>
+                            <msb>15</msb>
+                            <lsb>8</lsb>
+                            <access>read-write</access>
+                        </field>
                     </fields>
                 </register>
             </registers>
@@ -6339,8 +6242,8 @@
                     <resetMask>0x1E</resetMask>
                     <fields>
                         <field>
-                            <name>SEL</name>
-                            <description>desc SEL</description>
+                            <name>CRC_SEL</name>
+                            <description>desc CRC_SEL</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
@@ -6903,22 +6806,22 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>VDU0STP</name>
-                            <description>desc VDU0STP</description>
+                            <name>PVD0STP</name>
+                            <description>desc PVD0STP</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>VDU1STP</name>
-                            <description>desc VDU1STP</description>
+                            <name>PVD1STP</name>
+                            <description>desc PVD1STP</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>VDU2STP</name>
-                            <description>desc VDU2STP</description>
+                            <name>PVD2STP</name>
+                            <description>desc PVD2STP</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
@@ -7033,17 +6936,17 @@
                     <resetMask>0x7</resetMask>
                     <fields>
                         <field>
-                            <name>TRACEIOEN</name>
-                            <description>desc TRACEIOEN</description>
-                            <msb>0</msb>
+                            <name>TRACEMODE</name>
+                            <description>desc TRACEMODE</description>
+                            <msb>1</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>TRACEMODE</name>
-                            <description>desc TRACEMODE</description>
+                            <name>TRACEIOEN</name>
+                            <description>desc TRACEIOEN</description>
                             <msb>2</msb>
-                            <lsb>1</lsb>
+                            <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -9278,7 +9181,7 @@
             <baseAddress>0x40010400</baseAddress>
             <addressBlock>
                 <offset>0x0</offset>
-                <size>0x10C</size>
+                <size>0x208</size>
             </addressBlock>
             <registers>
                 <register>
@@ -9440,8 +9343,8 @@
                             <access>read-only</access>
                         </field>
                         <field>
-                            <name>RDCOLERR</name>
-                            <description>desc RDCOLERR</description>
+                            <name>COLERR</name>
+                            <description>desc COLERR</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-only</access>
@@ -9500,8 +9403,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RDCOLERRCLR</name>
-                            <description>desc RDCOLERRCLR</description>
+                            <name>COLERRCLR</name>
+                            <description>desc COLERRCLR</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-write</access>
@@ -9532,8 +9435,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RDCOLERRITE</name>
-                            <description>desc RDCOLERRITE</description>
+                            <name>COLERRITE</name>
+                            <description>desc COLERRITE</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
@@ -9565,12 +9468,12 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFF</resetMask>
+                    <resetMask>0x7FFFF</resetMask>
                     <fields>
                         <field>
                             <name>FPMTSW</name>
                             <description>desc FPMTSW</description>
-                            <msb>19</msb>
+                            <msb>18</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
@@ -9583,12 +9486,12 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xFFFFF</resetMask>
+                    <resetMask>0x7FFFF</resetMask>
                     <fields>
                         <field>
                             <name>FPMTEW</name>
                             <description>desc FPMTEW</description>
-                            <msb>19</msb>
+                            <msb>18</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
@@ -9703,6 +9606,31 @@
                         </field>
                     </fields>
                 </register>
+                <register>
+                    <name>EFM_FRANDS</name>
+                    <description>desc EFM_FRANDS</description>
+                    <addressOffset>0x204</addressOffset>
+                    <size>32</size>
+                    <access>read-write</access>
+                    <resetValue>0x0</resetValue>
+                    <resetMask>0x17FFE</resetMask>
+                    <fields>
+                        <field>
+                            <name>FRANDS</name>
+                            <description>desc FRANDS</description>
+                            <msb>14</msb>
+                            <lsb>1</lsb>
+                            <access>read-write</access>
+                        </field>
+                        <field>
+                            <name>FRANDFG</name>
+                            <description>desc FRANDFG</description>
+                            <msb>16</msb>
+                            <lsb>16</lsb>
+                            <access>read-write</access>
+                        </field>
+                    </fields>
+                </register>
             </registers>
         </peripheral>
         <peripheral>
@@ -9745,8 +9673,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>PWMSEL</name>
-                            <description>desc PWMSEL</description>
+                            <name>PWMSEN</name>
+                            <description>desc PWMSEN</description>
                             <msb>8</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -10684,8 +10612,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SMHOSTIE</name>
-                            <description>desc SMHOSTIE</description>
+                            <name>SMBHOSTIE</name>
+                            <description>desc SMBHOSTIE</description>
                             <msb>22</msb>
                             <lsb>22</lsb>
                             <access>read-write</access>
@@ -11370,8 +11298,8 @@
                             <access>read-only</access>
                         </field>
                         <field>
-                            <name>TXBUF</name>
-                            <description>desc TXBUF</description>
+                            <name>TXBF</name>
+                            <description>desc TXBF</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-only</access>
@@ -11384,8 +11312,8 @@
                             <access>read-only</access>
                         </field>
                         <field>
-                            <name>RXBUF</name>
-                            <description>desc RXBUF</description>
+                            <name>RXBF</name>
+                            <description>desc RXBF</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
                             <access>read-only</access>
@@ -11803,7 +11731,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF3F</resetMask>
+                    <resetMask>0xF2F</resetMask>
                     <fields>
                         <field>
                             <name>NMIENR</name>
@@ -11831,13 +11759,6 @@
                             <description>desc PVD2ENR</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32STPENR</name>
-                            <description>desc XTAL32STPENR</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -11884,7 +11805,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF3F</resetMask>
+                    <resetMask>0xF2F</resetMask>
                     <fields>
                         <field>
                             <name>NMIFR</name>
@@ -11912,13 +11833,6 @@
                             <description>desc PVD2FR</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32STPFR</name>
-                            <description>desc XTAL32STPFR</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -11965,7 +11879,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF3F</resetMask>
+                    <resetMask>0xF2F</resetMask>
                     <fields>
                         <field>
                             <name>NMICFR</name>
@@ -11993,13 +11907,6 @@
                             <description>desc PVD2CFR</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32STPCFR</name>
-                            <description>desc XTAL32STPCFR</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -12624,8 +12531,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SCIWEN</name>
-                            <description>desc SCIWEN</description>
+                            <name>RXWUEN</name>
+                            <description>desc RXWUEN</description>
                             <msb>25</msb>
                             <lsb>25</lsb>
                             <access>read-write</access>
@@ -19729,7 +19636,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x3</resetMask>
+                    <resetMask>0x7</resetMask>
                     <fields>
                         <field>
                             <name>INDEX</name>
@@ -21372,29 +21279,29 @@
                     <resetMask>0x8FF3C511</resetMask>
                     <fields>
                         <field>
-                            <name>RAMHS</name>
-                            <description>desc RAMHS</description>
+                            <name>SRAMH</name>
+                            <description>desc SRAMH</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RAM0</name>
-                            <description>desc RAM0</description>
+                            <name>SRAM12</name>
+                            <description>desc SRAM12</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>ECCRAM</name>
-                            <description>desc ECCRAM</description>
+                            <name>SRAM3</name>
+                            <description>desc SRAM3</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RETRAM</name>
-                            <description>desc RETRAM</description>
+                            <name>SRAMRET</name>
+                            <description>desc SRAMRET</description>
                             <msb>10</msb>
                             <lsb>10</lsb>
                             <access>read-write</access>
@@ -21766,7 +21673,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0xFFFFFFFF</resetValue>
-                    <resetMask>0x1113</resetMask>
+                    <resetMask>0x1103</resetMask>
                     <fields>
                         <field>
                             <name>ADC1</name>
@@ -21780,13 +21687,6 @@
                             <description>desc ADC2</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>DAC</name>
-                            <description>desc DAC</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -21888,120 +21788,6 @@
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
                     <resetMask>0xFFFF</resetMask>
-                    <fields>
-                        <field>
-                            <name>TSDC0</name>
-                            <description>desc TSDC0</description>
-                            <msb>0</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC1</name>
-                            <description>desc TSDC1</description>
-                            <msb>1</msb>
-                            <lsb>1</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC2</name>
-                            <description>desc TSDC2</description>
-                            <msb>2</msb>
-                            <lsb>2</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC3</name>
-                            <description>desc TSDC3</description>
-                            <msb>3</msb>
-                            <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC4</name>
-                            <description>desc TSDC4</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC5</name>
-                            <description>desc TSDC5</description>
-                            <msb>5</msb>
-                            <lsb>5</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC6</name>
-                            <description>desc TSDC6</description>
-                            <msb>6</msb>
-                            <lsb>6</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC7</name>
-                            <description>desc TSDC7</description>
-                            <msb>7</msb>
-                            <lsb>7</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC8</name>
-                            <description>desc TSDC8</description>
-                            <msb>8</msb>
-                            <lsb>8</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC9</name>
-                            <description>desc TSDC9</description>
-                            <msb>9</msb>
-                            <lsb>9</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC10</name>
-                            <description>desc TSDC10</description>
-                            <msb>10</msb>
-                            <lsb>10</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC11</name>
-                            <description>desc TSDC11</description>
-                            <msb>11</msb>
-                            <lsb>11</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC12</name>
-                            <description>desc TSDC12</description>
-                            <msb>12</msb>
-                            <lsb>12</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC13</name>
-                            <description>desc TSDC13</description>
-                            <msb>13</msb>
-                            <lsb>13</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC14</name>
-                            <description>desc TSDC14</description>
-                            <msb>14</msb>
-                            <lsb>14</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC15</name>
-                            <description>desc TSDC15</description>
-                            <msb>15</msb>
-                            <lsb>15</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
                 </register>
                 <register>
                     <name>DR2</name>
@@ -22011,120 +21797,6 @@
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
                     <resetMask>0xFFFF</resetMask>
-                    <fields>
-                        <field>
-                            <name>TSDC0</name>
-                            <description>desc TSDC0</description>
-                            <msb>0</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC1</name>
-                            <description>desc TSDC1</description>
-                            <msb>1</msb>
-                            <lsb>1</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC2</name>
-                            <description>desc TSDC2</description>
-                            <msb>2</msb>
-                            <lsb>2</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC3</name>
-                            <description>desc TSDC3</description>
-                            <msb>3</msb>
-                            <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC4</name>
-                            <description>desc TSDC4</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC5</name>
-                            <description>desc TSDC5</description>
-                            <msb>5</msb>
-                            <lsb>5</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC6</name>
-                            <description>desc TSDC6</description>
-                            <msb>6</msb>
-                            <lsb>6</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC7</name>
-                            <description>desc TSDC7</description>
-                            <msb>7</msb>
-                            <lsb>7</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC8</name>
-                            <description>desc TSDC8</description>
-                            <msb>8</msb>
-                            <lsb>8</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC9</name>
-                            <description>desc TSDC9</description>
-                            <msb>9</msb>
-                            <lsb>9</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC10</name>
-                            <description>desc TSDC10</description>
-                            <msb>10</msb>
-                            <lsb>10</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC11</name>
-                            <description>desc TSDC11</description>
-                            <msb>11</msb>
-                            <lsb>11</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC12</name>
-                            <description>desc TSDC12</description>
-                            <msb>12</msb>
-                            <lsb>12</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC13</name>
-                            <description>desc TSDC13</description>
-                            <msb>13</msb>
-                            <lsb>13</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC14</name>
-                            <description>desc TSDC14</description>
-                            <msb>14</msb>
-                            <lsb>14</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSDC15</name>
-                            <description>desc TSDC15</description>
-                            <msb>15</msb>
-                            <lsb>15</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
                 </register>
                 <register>
                     <name>ECR</name>
@@ -22134,120 +21806,6 @@
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
                     <resetMask>0xFFFF</resetMask>
-                    <fields>
-                        <field>
-                            <name>TSEC0</name>
-                            <description>desc TSEC0</description>
-                            <msb>0</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC1</name>
-                            <description>desc TSEC1</description>
-                            <msb>1</msb>
-                            <lsb>1</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC2</name>
-                            <description>desc TSEC2</description>
-                            <msb>2</msb>
-                            <lsb>2</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC3</name>
-                            <description>desc TSEC3</description>
-                            <msb>3</msb>
-                            <lsb>3</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC4</name>
-                            <description>desc TSEC4</description>
-                            <msb>4</msb>
-                            <lsb>4</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC5</name>
-                            <description>desc TSEC5</description>
-                            <msb>5</msb>
-                            <lsb>5</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC6</name>
-                            <description>desc TSEC6</description>
-                            <msb>6</msb>
-                            <lsb>6</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC7</name>
-                            <description>desc TSEC7</description>
-                            <msb>7</msb>
-                            <lsb>7</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC8</name>
-                            <description>desc TSEC8</description>
-                            <msb>8</msb>
-                            <lsb>8</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC9</name>
-                            <description>desc TSEC9</description>
-                            <msb>9</msb>
-                            <lsb>9</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC10</name>
-                            <description>desc TSEC10</description>
-                            <msb>10</msb>
-                            <lsb>10</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC11</name>
-                            <description>desc TSEC11</description>
-                            <msb>11</msb>
-                            <lsb>11</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC12</name>
-                            <description>desc TSEC12</description>
-                            <msb>12</msb>
-                            <lsb>12</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC13</name>
-                            <description>desc TSEC13</description>
-                            <msb>13</msb>
-                            <lsb>13</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC14</name>
-                            <description>desc TSEC14</description>
-                            <msb>14</msb>
-                            <lsb>14</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>TSEC15</name>
-                            <description>desc TSEC15</description>
-                            <msb>15</msb>
-                            <lsb>15</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
                 </register>
                 <register>
                     <name>LPR</name>
@@ -22317,27 +21875,13 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF</resetMask>
+                    <resetMask>0xA</resetMask>
                     <fields>
-                        <field>
-                            <name>ABINT1</name>
-                            <description>desc ABINT1</description>
-                            <msb>0</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
                         <field>
                             <name>SELMMC1</name>
                             <description>desc SELMMC1</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>ABINT2</name>
-                            <description>desc ABINT2</description>
-                            <msb>2</msb>
-                            <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -35538,15 +35082,15 @@
                     <resetMask>0xEB</resetMask>
                     <fields>
                         <field>
-                            <name>WAIT</name>
-                            <description>desc WAIT</description>
+                            <name>RWREQ</name>
+                            <description>desc RWREQ</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>WAITF</name>
-                            <description>desc WAITF</description>
+                            <name>RWEN</name>
+                            <description>desc RWEN</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
@@ -37316,22 +36860,22 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NXTDLE</name>
-                            <description>desc NXTDLE</description>
+                            <name>MIDIE</name>
+                            <description>desc MIDIE</description>
                             <msb>13</msb>
                             <lsb>13</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SSDLE</name>
-                            <description>desc SSDLE</description>
+                            <name>MSSDLE</name>
+                            <description>desc MSSDLE</description>
                             <msb>14</msb>
                             <lsb>14</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SCKDLE</name>
-                            <description>desc SCKDLE</description>
+                            <name>MSSIE</name>
+                            <description>desc MSSIE</description>
                             <msb>15</msb>
                             <lsb>15</lsb>
                             <access>read-write</access>
@@ -37386,57 +36930,57 @@
                     <resetMask>0x77777777</resetMask>
                     <fields>
                         <field>
-                            <name>SRAMSYSRWT</name>
-                            <description>desc SRAMSYSRWT</description>
+                            <name>SRAM12_RWT</name>
+                            <description>desc SRAM12_RWT</description>
                             <msb>2</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMSYSWWT</name>
-                            <description>desc SRAMSYSWWT</description>
+                            <name>SRAM12_WWT</name>
+                            <description>desc SRAM12_WWT</description>
                             <msb>6</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMECCRWT</name>
-                            <description>desc SRAMECCRWT</description>
+                            <name>SRAM3_RWT</name>
+                            <description>desc SRAM3_RWT</description>
                             <msb>10</msb>
                             <lsb>8</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMECCWWT</name>
-                            <description>desc SRAMECCWWT</description>
+                            <name>SRAM3_WWT</name>
+                            <description>desc SRAM3_WWT</description>
                             <msb>14</msb>
                             <lsb>12</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMHSRWT</name>
-                            <description>desc SRAMHSRWT</description>
+                            <name>SRAMH_RWT</name>
+                            <description>desc SRAMH_RWT</description>
                             <msb>18</msb>
                             <lsb>16</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMHSWWT</name>
-                            <description>desc SRAMHSWWT</description>
+                            <name>SRAMH_WWT</name>
+                            <description>desc SRAMH_WWT</description>
                             <msb>22</msb>
                             <lsb>20</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMBKRWT</name>
-                            <description>desc SRAMBKRWT</description>
+                            <name>SRAMR_RWT</name>
+                            <description>desc SRAMR_RWT</description>
                             <msb>26</msb>
                             <lsb>24</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMBKWWT</name>
-                            <description>desc SRAMBKWWT</description>
+                            <name>SRAMR_WWT</name>
+                            <description>desc SRAMR_WWT</description>
                             <msb>30</msb>
                             <lsb>28</lsb>
                             <access>read-write</access>
@@ -37535,36 +37079,36 @@
                     <resetMask>0x1F</resetMask>
                     <fields>
                         <field>
-                            <name>SRAMECC1ERR</name>
-                            <description>desc SRAMECC1ERR</description>
+                            <name>SRAM3_1ERR</name>
+                            <description>desc SRAM3_1ERR</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMECC2ERR</name>
-                            <description>desc SRAMECC2ERR</description>
+                            <name>SRAM3_2ERR</name>
+                            <description>desc SRAM3_2ERR</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMSYSPYERR</name>
-                            <description>desc SRAMSYSPYERR</description>
+                            <name>SRAM12_PYERR</name>
+                            <description>desc SRAM12_PYERR</description>
                             <msb>2</msb>
                             <lsb>2</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMHSPYERR</name>
-                            <description>desc SRAMHSPYERR</description>
+                            <name>SRAMH_PYERR</name>
+                            <description>desc SRAMH_PYERR</description>
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>SRAMBKPYERR</name>
-                            <description>desc SRAMBKPYERR</description>
+                            <name>SRAMR_PYERR</name>
+                            <description>desc SRAMR_PYERR</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-write</access>
@@ -37649,7 +37193,7 @@
                     <addressOffset>0xC</addressOffset>
                     <size>16</size>
                     <access>read-write</access>
-                    <resetValue>0x0</resetValue>
+                    <resetValue>0x4000</resetValue>
                     <resetMask>0x8003</resetMask>
                     <fields>
                         <field>
@@ -37810,19 +37354,10 @@
                     <name>PWR_RAMOPM</name>
                     <description>desc PWR_RAMOPM</description>
                     <addressOffset>0x18</addressOffset>
-                    <size>32</size>
+                    <size>16</size>
                     <access>read-write</access>
                     <resetValue>0x8043</resetValue>
                     <resetMask>0xFFFF</resetMask>
-                    <fields>
-                        <field>
-                            <name>RAMOPM</name>
-                            <description>desc RAMOPM</description>
-                            <msb>15</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                    </fields>
                 </register>
                 <register>
                     <name>MPU_IPPR</name>
@@ -38600,13 +38135,27 @@
                     <size>8</size>
                     <access>read-write</access>
                     <resetValue>0x11</resetValue>
-                    <resetMask>0x22</resetMask>
+                    <resetMask>0x33</resetMask>
                     <fields>
+                        <field>
+                            <name>PVD1MON</name>
+                            <description>desc PVD1MON</description>
+                            <msb>0</msb>
+                            <lsb>0</lsb>
+                            <access>read-write</access>
+                        </field>
                         <field>
                             <name>PVD1DETFLG</name>
                             <description>desc PVD1DETFLG</description>
                             <msb>1</msb>
                             <lsb>1</lsb>
+                            <access>read-write</access>
+                        </field>
+                        <field>
+                            <name>PVD2MON</name>
+                            <description>desc PVD2MON</description>
+                            <msb>4</msb>
+                            <lsb>4</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -38872,7 +38421,7 @@
                     <addressOffset>0x403</addressOffset>
                     <size>8</size>
                     <access>read-write</access>
-                    <resetValue>0x0</resetValue>
+                    <resetValue>0x7</resetValue>
                     <resetMask>0x4</resetMask>
                     <fields>
                         <field>
@@ -39025,7 +38574,7 @@
                     <size>8</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF7</resetMask>
+                    <resetMask>0xB7</resetMask>
                     <fields>
                         <field>
                             <name>VD1WKE</name>
@@ -39060,13 +38609,6 @@
                             <description>desc RTCALMWKE</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32ERWKE</name>
-                            <description>desc XTAL32ERWKE</description>
-                            <msb>6</msb>
-                            <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -39205,7 +38747,7 @@
                     <size>8</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0xF8</resetMask>
+                    <resetMask>0xB8</resetMask>
                     <fields>
                         <field>
                             <name>RXD0WKF</name>
@@ -39226,13 +38768,6 @@
                             <description>desc RTCALMWKF</description>
                             <msb>5</msb>
                             <lsb>5</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32ERWKF</name>
-                            <description>desc XTAL32ERWKF</description>
-                            <msb>6</msb>
-                            <lsb>6</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -39482,15 +39017,8 @@
                         <field>
                             <name>XTAL32DRV</name>
                             <description>desc XTAL32DRV</description>
-                            <msb>1</msb>
-                            <lsb>0</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>XTAL32SUPDRV</name>
-                            <description>desc XTAL32SUPDRV</description>
                             <msb>2</msb>
-                            <lsb>2</lsb>
+                            <lsb>0</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -39546,7 +39074,7 @@
                     <addressOffset>0x42B</addressOffset>
                     <size>8</size>
                     <access>read-write</access>
-                    <resetValue>0x0</resetValue>
+                    <resetValue>0x2</resetValue>
                     <resetMask>0x80</resetMask>
                     <fields>
                         <field>
@@ -42765,7 +42293,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x1FFF1FFF</resetMask>
+                    <resetMask>0x19FF19FF</resetMask>
                     <fields>
                         <field>
                             <name>CAPMDA</name>
@@ -42814,13 +42342,6 @@
                             <description>desc OUTENA</description>
                             <msb>8</msb>
                             <lsb>8</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>EMBSELA</name>
-                            <description>desc EMBSELA</description>
-                            <msb>10</msb>
-                            <lsb>9</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -42877,13 +42398,6 @@
                             <description>desc OUTENB</description>
                             <msb>24</msb>
                             <lsb>24</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>EMBSELB</name>
-                            <description>desc EMBSELB</description>
-                            <msb>26</msb>
-                            <lsb>25</lsb>
                             <access>read-write</access>
                         </field>
                         <field>
@@ -44998,8 +44512,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45065,8 +44579,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45132,8 +44646,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45199,8 +44713,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45266,8 +44780,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45333,8 +44847,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45400,8 +44914,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -45467,8 +44981,8 @@
                     <resetMask>0x7371</resetMask>
                     <fields>
                         <field>
-                            <name>CAPMDA</name>
-                            <description>desc CAPMDA</description>
+                            <name>CAPMD</name>
+                            <description>desc CAPMD</description>
                             <msb>0</msb>
                             <lsb>0</lsb>
                             <access>read-write</access>
@@ -46436,7 +45950,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x10003</resetMask>
+                    <resetMask>0x3</resetMask>
                     <fields>
                         <field>
                             <name>PSC</name>
@@ -46485,6 +45999,31 @@
                 <size>0xE04</size>
             </addressBlock>
             <registers>
+                <register>
+                    <name>USBFS_GVBUSCFG</name>
+                    <description>desc USBFS_GVBUSCFG</description>
+                    <addressOffset>0x0</addressOffset>
+                    <size>32</size>
+                    <access>read-write</access>
+                    <resetValue>0x0</resetValue>
+                    <resetMask>0xC0</resetMask>
+                    <fields>
+                        <field>
+                            <name>VBUSOVEN</name>
+                            <description>desc VBUSOVEN</description>
+                            <msb>6</msb>
+                            <lsb>6</lsb>
+                            <access>read-write</access>
+                        </field>
+                        <field>
+                            <name>VBUSVAL</name>
+                            <description>desc VBUSVAL</description>
+                            <msb>7</msb>
+                            <lsb>7</lsb>
+                            <access>read-write</access>
+                        </field>
+                    </fields>
+                </register>
                 <register>
                     <name>GAHBCFG</name>
                     <description>desc GAHBCFG</description>
@@ -46675,8 +46214,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>RXFLNE</name>
-                            <description>desc RXFLNE</description>
+                            <name>RXFNE</name>
+                            <description>desc RXFNE</description>
                             <msb>4</msb>
                             <lsb>4</lsb>
                             <access>read-only</access>
@@ -46696,8 +46235,8 @@
                             <access>read-only</access>
                         </field>
                         <field>
-                            <name>GOUTNAKEFF</name>
-                            <description>desc GOUTNAKEFF</description>
+                            <name>GONAKEFF</name>
+                            <description>desc GONAKEFF</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-only</access>
@@ -46766,8 +46305,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>IPXFR_INCOMPISO</name>
-                            <description>desc IPXFR_INCOMPISO</description>
+                            <name>IPXFR_INCOMPISOOUT</name>
+                            <description>desc IPXFR_INCOMPISOOUT</description>
                             <msb>21</msb>
                             <lsb>21</lsb>
                             <access>read-write</access>
@@ -46875,8 +46414,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>GOUTNAKEFFM</name>
-                            <description>desc GOUTNAKEFFM</description>
+                            <name>GONAKEFFM</name>
+                            <description>desc GONAKEFFM</description>
                             <msb>7</msb>
                             <lsb>7</lsb>
                             <access>read-write</access>
@@ -50740,7 +50279,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x2</resetValue>
-                    <resetMask>0xFFF</resetMask>
+                    <resetMask>0xF8F</resetMask>
                     <fields>
                         <field>
                             <name>RWUSIG</name>
@@ -50769,13 +50308,6 @@
                             <msb>3</msb>
                             <lsb>3</lsb>
                             <access>read-only</access>
-                        </field>
-                        <field>
-                            <name>TCTL</name>
-                            <description>desc TCTL</description>
-                            <msb>6</msb>
-                            <lsb>4</lsb>
-                            <access>read-write</access>
                         </field>
                         <field>
                             <name>SGINAK</name>
@@ -50898,8 +50430,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>IINEPNEM</name>
-                            <description>desc IINEPNEM</description>
+                            <name>INEPNEM</name>
+                            <description>desc INEPNEM</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -51132,8 +50664,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -51339,8 +50871,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -51361,7 +50893,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x7FFFFFFF</resetMask>
+                    <resetMask>0x1FFFFFFF</resetMask>
                     <fields>
                         <field>
                             <name>XFRSIZ</name>
@@ -51375,13 +50907,6 @@
                             <description>desc PKTCNT</description>
                             <msb>28</msb>
                             <lsb>19</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>MC</name>
-                            <description>desc MC</description>
-                            <msb>30</msb>
-                            <lsb>29</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -51553,8 +51078,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -51575,7 +51100,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x7FFFFFFF</resetMask>
+                    <resetMask>0x1FFFFFFF</resetMask>
                     <fields>
                         <field>
                             <name>XFRSIZ</name>
@@ -51589,13 +51114,6 @@
                             <description>desc PKTCNT</description>
                             <msb>28</msb>
                             <lsb>19</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>MC</name>
-                            <description>desc MC</description>
-                            <msb>30</msb>
-                            <lsb>29</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -51767,8 +51285,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -51789,7 +51307,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x7FFFFFFF</resetMask>
+                    <resetMask>0x1FFFFFFF</resetMask>
                     <fields>
                         <field>
                             <name>XFRSIZ</name>
@@ -51803,13 +51321,6 @@
                             <description>desc PKTCNT</description>
                             <msb>28</msb>
                             <lsb>19</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>MC</name>
-                            <description>desc MC</description>
-                            <msb>30</msb>
-                            <lsb>29</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -51981,8 +51492,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -52003,7 +51514,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x7FFFFFFF</resetMask>
+                    <resetMask>0x1FFFFFFF</resetMask>
                     <fields>
                         <field>
                             <name>XFRSIZ</name>
@@ -52017,13 +51528,6 @@
                             <description>desc PKTCNT</description>
                             <msb>28</msb>
                             <lsb>19</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>MC</name>
-                            <description>desc MC</description>
-                            <msb>30</msb>
-                            <lsb>29</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>
@@ -52195,8 +51699,8 @@
                             <access>read-write</access>
                         </field>
                         <field>
-                            <name>NEPNE</name>
-                            <description>desc NEPNE</description>
+                            <name>INEPNE</name>
+                            <description>desc INEPNE</description>
                             <msb>6</msb>
                             <lsb>6</lsb>
                             <access>read-write</access>
@@ -52217,7 +51721,7 @@
                     <size>32</size>
                     <access>read-write</access>
                     <resetValue>0x0</resetValue>
-                    <resetMask>0x7FFFFFFF</resetMask>
+                    <resetMask>0x1FFFFFFF</resetMask>
                     <fields>
                         <field>
                             <name>XFRSIZ</name>
@@ -52231,13 +51735,6 @@
                             <description>desc PKTCNT</description>
                             <msb>28</msb>
                             <lsb>19</lsb>
-                            <access>read-write</access>
-                        </field>
-                        <field>
-                            <name>MC</name>
-                            <description>desc MC</description>
-                            <msb>30</msb>
-                            <lsb>29</lsb>
                             <access>read-write</access>
                         </field>
                     </fields>

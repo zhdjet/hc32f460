@@ -200,7 +200,7 @@ int32_t main(void)
     DMA_ClearIrqFlag(DMA_UNIT, DMA_CH,TrnCpltIrq);
 
     /* Enable PTDIS(AOS) clock*/
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS,Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS,Enable);
 
     DMA_SetTriggerSrc(DMA_UNIT, DMA_CH, EVT_AOS_STRG);
 

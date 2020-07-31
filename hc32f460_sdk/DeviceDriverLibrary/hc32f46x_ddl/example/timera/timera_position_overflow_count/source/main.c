@@ -161,13 +161,13 @@ static void SystemClk_Init(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 168MHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -189,7 +189,7 @@ static void SystemClk_Init(void)
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */

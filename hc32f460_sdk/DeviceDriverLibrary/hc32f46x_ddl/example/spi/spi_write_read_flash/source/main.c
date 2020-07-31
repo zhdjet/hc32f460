@@ -223,13 +223,13 @@ static void SystemClk_Init(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 168MHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -251,7 +251,7 @@ static void SystemClk_Init(void)
 
     /* flash read wait cycle setting */
     EFM_Unlock();
-    EFM_SetLatency(EFM_LATENCY_5);
+    EFM_SetLatency(EFM_LATENCY_4);
     EFM_Lock();
 
     /* Enable MPLL. */
@@ -359,6 +359,9 @@ void SpiFlash_WriteEnable(void)
 {
     SPI_NSS_LOW();
     SpiFlash_WriteReadByte(FLASH_INSTR_WRITE_ENABLE);
+    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSpiIdle))
+    {
+    }
     SPI_NSS_HIGH();
 }
 
@@ -393,6 +396,9 @@ en_result_t SpiFlash_WaitForWriteEnd(void)
     if (FLASH_BUSY_BIT_MASK == u8Status)
     {
         enRet = ErrorTimeout;
+    }
+    while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSpiIdle))
+    {
     }
     SPI_NSS_HIGH();
 
@@ -435,6 +441,9 @@ en_result_t SpiFlash_WritePage(uint32_t u32Addr, const uint8_t pData[], uint16_t
         {
             SpiFlash_WriteReadByte(pData[u16Index]);
             u16Index++;
+        }
+        while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSpiIdle))
+        {
         }
         SPI_NSS_HIGH();
         /* Wait for flash idle */
@@ -481,6 +490,9 @@ en_result_t SpiFlash_ReadData(uint32_t u32Addr, uint8_t pData[], uint16_t len)
             pData[u16Index] = SpiFlash_WriteReadByte(FLASH_DUMMY_BYTE_VALUE);
             u16Index++;
         }
+        while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSpiIdle))
+        {
+        }
         SPI_NSS_HIGH();
     }
 
@@ -514,6 +526,9 @@ en_result_t SpiFlash_Erase4KbSector(uint32_t u32Addr)
         SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF0000ul) >> 16u));
         SpiFlash_WriteReadByte((uint8_t)((u32Addr & 0xFF00u) >> 8u));
         SpiFlash_WriteReadByte((uint8_t)(u32Addr & 0xFFu));
+        while (Reset == SPI_GetFlag(SPI_UNIT, SpiFlagSpiIdle))
+        {
+        }
         SPI_NSS_HIGH();
         /* Wait for flash idle */
         enRet = SpiFlash_WaitForWriteEnd();

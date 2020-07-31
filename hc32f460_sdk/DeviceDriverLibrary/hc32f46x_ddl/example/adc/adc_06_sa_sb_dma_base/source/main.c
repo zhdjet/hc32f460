@@ -253,13 +253,13 @@ static void AdcClockConfig(void)
     stc_clk_sysclk_cfg_t stcSysclkCfg;
 
     /* Set bus clock division, depends on the system clock frequency. */
-    stcSysclkCfg.enHclkDiv  = ClkSysclkDiv1;  // Max 168MHz
-    stcSysclkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysclkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysclkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysclkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysclkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysclkCfg.enPclk4Div = ClkSysclkDiv1;  // Max 84MHz.
+    stcSysclkCfg.enHclkDiv  = ClkSysclkDiv1;  // 168MHz
+    stcSysclkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysclkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysclkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysclkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysclkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysclkCfg.enPclk4Div = ClkSysclkDiv1;  // 84MHz.
     CLK_SysClkConfig(&stcSysclkCfg);
     CLK_SetPeriClkSource(ClkPeriSrcPclk);
 
@@ -419,7 +419,7 @@ static void AdcTriggerConfig(void)
      * If select an event(@ref en_event_src_t) to trigger ADC,
      * AOS must be enabled first.
      */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
 
     /* ADC1 sequence A will be started by software. */
     ADC_TriggerSrcCmd(M4_ADC1, ADC_SEQ_A, Disable);
@@ -486,7 +486,7 @@ static void AdcDmaConfig(void)
     /* AOS must be enabled to use DMA */
     /* AOS enabled at first. */
     /* If you have enabled AOS before, then the following statement is not needed. */
-    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_PTDIS, Enable);
+    PWC_Fcg0PeriphClockCmd(PWC_FCG0_PERIPH_AOS, Enable);
     DMA_SetTriggerSrc(ADC1_SA_DMA_UNIT, ADC1_SA_DMA_CH, ADC1_SA_DMA_TRGSRC);
 
     stcDmaCfg.u32DesAddr = (uint32_t)(&m_au16Adc1SbValue[0]);

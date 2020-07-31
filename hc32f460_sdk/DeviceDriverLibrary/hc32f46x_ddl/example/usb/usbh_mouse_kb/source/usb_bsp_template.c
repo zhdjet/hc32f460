@@ -92,13 +92,13 @@ static void SysClkIni(void)
     MEM_ZERO_STRUCT(stcMpllCfg);
 
     /* Set bus clk div. */
-    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // Max 168MHz
-    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // Max 168MHz
-    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // Max 84MHz
-    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // Max 60MHz
-    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // Max 42MHz
-    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // Max 84MHz
+    stcSysClkCfg.enHclkDiv = ClkSysclkDiv1;   // 168MHz
+    stcSysClkCfg.enExclkDiv = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk0Div = ClkSysclkDiv1;  // 168MHz
+    stcSysClkCfg.enPclk1Div = ClkSysclkDiv2;  // 84MHz
+    stcSysClkCfg.enPclk2Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk3Div = ClkSysclkDiv4;  // 42MHz
+    stcSysClkCfg.enPclk4Div = ClkSysclkDiv2;  // 84MHz
     CLK_SysClkConfig(&stcSysClkCfg);
 
     /* Switch system clock source to MPLL. */
@@ -111,8 +111,8 @@ static void SysClkIni(void)
 
     /* MPLL config. */
     stcMpllCfg.pllmDiv = 1u;
-    stcMpllCfg.plln =42u;
-    stcMpllCfg.PllpDiv = 4u;     //MPLLP = 84
+    stcMpllCfg.plln = 42u;
+    stcMpllCfg.PllpDiv = 4u;    //MPLLP = 84
     stcMpllCfg.PllqDiv = 2u;
     stcMpllCfg.PllrDiv = 7u;    //MPLLR 168/4 = 48
     CLK_SetPllSource(ClkPllSrcXTAL);

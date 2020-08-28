@@ -103,8 +103,8 @@
 /* SPI unit and clock definition */
 #define SPI_UNIT                        (M4_SPI3)
 #define SPI_UNIT_CLOCK                  (PWC_FCG1_PERIPH_SPI3)
-#define SPI_TX_INT_SOURCE               (INT_SPI3_SRTI)
-#define SPI_RX_INT_SOURCE               (INT_SPI3_SRRI)
+#define SPI_TX_INT_SOURCE               (INT_SPI3_SPTI)
+#define SPI_RX_INT_SOURCE               (INT_SPI3_SPRI)
 
 /* Choose SPI master or slave mode */
 #define SPI_MASTER_MODE

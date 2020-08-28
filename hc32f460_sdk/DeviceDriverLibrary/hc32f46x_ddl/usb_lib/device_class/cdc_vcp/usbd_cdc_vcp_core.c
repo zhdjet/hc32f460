@@ -508,8 +508,6 @@ uint8_t  usbd_cdc_DeInit (void  *pdev, uint8_t cfgidx)
 uint8_t  usbd_cdc_Setup (void  *pdev,
                                 USB_SETUP_REQ *req)
 {
-    uint16_t len=USB_CDC_DESC_SIZ;
-    uint8_t  *pbuf=usbd_cdc_CfgDesc + 9;
     uint8_t u8Res = USBD_OK;
 
     switch (req->bmRequest & USB_REQ_TYPE_MASK)
@@ -555,18 +553,8 @@ uint8_t  usbd_cdc_Setup (void  *pdev,
             switch (req->bRequest)
             {
                 case USB_REQ_GET_DESCRIPTOR:
-                    if( (req->wValue >> 8) == CDC_DESCRIPTOR_TYPE)
-                    {
-#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
-                        pbuf = usbd_cdc_Desc;
-#else
-                        pbuf = usbd_cdc_CfgDesc + 9u + (9u * USBD_ITF_MAX_NUM);
-#endif
-                        len = __MIN(USB_CDC_DESC_SIZ , req->wLength);
-                    }
-                    USBD_CtlSendData (pdev,
-                                      pbuf,
-                                      len);
+                    USBD_CtlError (pdev);
+                    u8Res = USBD_FAIL;
                     break;
 
                 case USB_REQ_GET_INTERFACE :

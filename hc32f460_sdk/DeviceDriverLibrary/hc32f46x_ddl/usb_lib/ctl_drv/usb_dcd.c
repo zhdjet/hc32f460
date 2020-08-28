@@ -127,8 +127,6 @@ void DCD_Init(USB_OTG_CORE_HANDLE *pdev ,
         ep->xfer_len = 0u;
     }
 
-    pdev->dev.device_address = pdev->dev.device_address;
-
     USB_OTG_DisableGlobalInt(pdev);
 
     /*Init the Core (common init.) */

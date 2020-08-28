@@ -1,5 +1,12 @@
 version     date           comment
 1.1.1
+            Aug 28,2020    1. Fix bug for example usbd_mouse.
+                           2. Modify macro define in usb_conf.h file.
+                           3. Modify usbd_cdc_Setup() function for USBD CDC class.
+                           4. Update the drivers and examples based on the header file.
+                           5. Fix bug for i2c_slave_polling.
+                           6. Update headfile for i2c DTR and DRR register.
+
             Jul 31,2020    1. Synchronize driver register with chip manual.
 
             Jul 20,2020    1. Add wait RDY at begin of func. EFM_SetErasePgmMode().

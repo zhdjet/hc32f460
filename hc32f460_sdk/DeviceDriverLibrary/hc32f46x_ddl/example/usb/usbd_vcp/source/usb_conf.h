@@ -165,7 +165,7 @@
  #ifdef USE_EMBEDDED_PHY
     #define USB_OTG_EMBEDDED_PHY_ENABLED
  #endif
- #define USB_OTG_HS_INTERNAL_DMA_ENABLED
+// #define USB_OTG_HS_INTERNAL_DMA_ENABLED
 //#define USB_OTG_HS_DEDICATED_EP1_ENABLED
 //#define USB_OTG_HS_LOW_PWR_MGMT_SUPPORT
 #endif
@@ -233,7 +233,7 @@
     #define __USB_ALIGN_END    __attribute__ ((aligned (4)))
     #define __USB_ALIGN_BEGIN
   #else
-    #define __ALIGN_END
+    #define __USB_ALIGN_END
     #if defined   (__CC_ARM)      /* ARM Compiler */
       #define __USB_ALIGN_BEGIN    __align(4)
     #elif defined (__ICCARM__)    /* IAR Compiler */

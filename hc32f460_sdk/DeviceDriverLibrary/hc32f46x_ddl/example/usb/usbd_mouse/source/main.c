@@ -148,16 +148,16 @@ static uint8_t* USBD_HID_GetPos (void)
     switch (Key_ReadIOPin_continuous())
     {
         case BUTTON_UP:
-            x -= (int8_t)CURSOR_STEP;
+            y -= (int8_t)CURSOR_STEP;
             break;
         case BUTTON_DOWN:
-            x += (int8_t)CURSOR_STEP;
-            break;
-        case BUTTON_LEFT:
             y += (int8_t)CURSOR_STEP;
             break;
+        case BUTTON_LEFT:
+            x -= (int8_t)CURSOR_STEP;
+            break;
         case BUTTON_RIGHT:
-            y -= (int8_t)CURSOR_STEP;
+            x += (int8_t)CURSOR_STEP;
             break;
         default:
             break;

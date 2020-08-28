@@ -156,6 +156,19 @@ static uint8_t Slave_WriteData(uint8_t *pTxData, uint32_t u32Size)
         }
     }
 
+    /* Wait stop condition */
+    u32TimeOut = TIMEOUT;
+    while(Reset == I2C_GetStatus(I2C_CH, I2C_SR_STOPF))
+    {
+        /* Release SCL pin */
+        I2C_ReadData(I2C_CH);
+        if(0U == (u32TimeOut))
+        {
+            return I2C_RET_ERROR;
+        }
+        u32TimeOut--;
+    }
+
     return I2C_RET_OK;
 }
 

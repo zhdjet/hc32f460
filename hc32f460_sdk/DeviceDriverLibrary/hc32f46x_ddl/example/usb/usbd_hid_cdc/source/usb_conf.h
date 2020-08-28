@@ -235,7 +235,7 @@
     #define __USB_ALIGN_END    __attribute__ ((aligned (4)))
     #define __USB_ALIGN_BEGIN
   #else
-    #define __ALIGN_END
+    #define __USB_ALIGN_END
     #if defined   (__CC_ARM)      /* ARM Compiler */
       #define __USB_ALIGN_BEGIN    __align(4)
     #elif defined (__ICCARM__)    /* IAR Compiler */

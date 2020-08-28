@@ -47,7 +47,7 @@
  **
  ** History:
  **
- **   - 2020-07-31  1.03   First version for Device Driver Library of HC32F46X series MCU.
+ **   - 2020-08-27  1.03   First version for Device Driver Library of HC32F46X series MCU.
  **
  ******************************************************************************/
 
@@ -403,23 +403,23 @@ typedef enum en_event_src
     EVT_USART4_RTO          = 297u,
 
     /* SPI */
-    EVT_SPI1_SRRI           = 299u,
-    EVT_SPI1_SRTI           = 300u,
+    EVT_SPI1_SPRI           = 299u,
+    EVT_SPI1_SPTI           = 300u,
     EVT_SPI1_SPII           = 301u,
     EVT_SPI1_SPEI           = 302u,
     EVT_SPI1_SPTEND         = 303u,
-    EVT_SPI2_SRRI           = 304u,
-    EVT_SPI2_SRTI           = 305u,
+    EVT_SPI2_SPRI           = 304u,
+    EVT_SPI2_SPTI           = 305u,
     EVT_SPI2_SPII           = 306u,
     EVT_SPI2_SPEI           = 307u,
     EVT_SPI2_SPTEND         = 308u,
-    EVT_SPI3_SRRI           = 309u,
-    EVT_SPI3_SRTI           = 310u,
+    EVT_SPI3_SPRI           = 309u,
+    EVT_SPI3_SPTI           = 310u,
     EVT_SPI3_SPII           = 311u,
     EVT_SPI3_SPEI           = 312u,
     EVT_SPI3_SPTEND         = 313u,
-    EVT_SPI4_SRRI           = 314u,
-    EVT_SPI4_SRTI           = 315u,
+    EVT_SPI4_SPRI           = 314u,
+    EVT_SPI4_SPTI           = 315u,
     EVT_SPI4_SPII           = 316u,
     EVT_SPI4_SPEI           = 317u,
     EVT_SPI4_SPTEND         = 318u,
@@ -708,20 +708,20 @@ typedef enum en_int_src
     INT_USART4_RTO          = 297u,
 
     /* SPI */
-    INT_SPI1_SRRI           = 299u,
-    INT_SPI1_SRTI           = 300u,
+    INT_SPI1_SPRI           = 299u,
+    INT_SPI1_SPTI           = 300u,
     INT_SPI1_SPII           = 301u,
     INT_SPI1_SPEI           = 302u,
-    INT_SPI2_SRRI           = 304u,
-    INT_SPI2_SRTI           = 305u,
+    INT_SPI2_SPRI           = 304u,
+    INT_SPI2_SPTI           = 305u,
     INT_SPI2_SPII           = 306u,
     INT_SPI2_SPEI           = 307u,
-    INT_SPI3_SRRI           = 309u,
-    INT_SPI3_SRTI           = 310u,
+    INT_SPI3_SPRI           = 309u,
+    INT_SPI3_SPTI           = 310u,
     INT_SPI3_SPII           = 311u,
     INT_SPI3_SPEI           = 312u,
-    INT_SPI4_SRRI           = 314u,
-    INT_SPI4_SRTI           = 315u,
+    INT_SPI4_SPRI           = 314u,
+    INT_SPI4_SPTI           = 315u,
     INT_SPI4_SPII           = 316u,
     INT_SPI4_SPEI           = 317u,
 
@@ -2308,14 +2308,12 @@ typedef struct
 
 typedef struct
 {
-    __IO uint32_t DT                        : 8;
-    uint32_t RESERVED8                      :24;
+    __IO uint8_t DT                         : 8;
 } stc_i2c_dtr_field_t;
 
 typedef struct
 {
-    __IO uint32_t DR                        : 8;
-    uint32_t RESERVED8                      :24;
+    __IO uint8_t DR                         : 8;
 } stc_i2c_drr_field_t;
 
 typedef struct
@@ -7203,14 +7201,16 @@ typedef struct
     };
     union
     {
-        __IO uint32_t DTR;
+        __IO uint8_t DTR;
         stc_i2c_dtr_field_t DTR_f;
     };
+    uint8_t RESERVED9[3];
     union
     {
-        __IO uint32_t DRR;
+        __IO uint8_t DRR;
         stc_i2c_drr_field_t DRR_f;
     };
+    uint8_t RESERVED10[3];
     union
     {
         __IO uint32_t CCR;

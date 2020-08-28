@@ -109,8 +109,8 @@
 #define SPI_DMA_CLOCK_UNIT              (PWC_FCG0_PERIPH_DMA1)
 #define SPI_DMA_TX_CHANNEL              (DmaCh1)
 #define SPI_DMA_RX_CAHNNEL              (DmaCh0)
-#define SPI_DMA_TX_TRIG_SOURCE          (EVT_SPI3_SRTI)
-#define SPI_DMA_RX_TRIG_SOURCE          (EVT_SPI3_SRRI)
+#define SPI_DMA_TX_TRIG_SOURCE          (EVT_SPI3_SPTI)
+#define SPI_DMA_RX_TRIG_SOURCE          (EVT_SPI3_SPRI)
 
 /* Choose SPI master or slave mode */
 #define SPI_MASTER_MODE
